@@ -1,5 +1,6 @@
 ThirdParty/*
 *.swp
+*.swo
 *.hex
 build-*
 
