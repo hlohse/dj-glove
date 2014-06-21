@@ -1,12 +1,12 @@
 #include "Bluetooth.h"
 #include "../Platform.h"
 #include <SoftwareSerial.h>
-using namespace Platform;
 
-SoftwareSerial Bluetooth(bluetooth_pin_rx, bluetooth_pin_tx);
+SoftwareSerial Bluetooth(Platform::bluetooth_pin_rx,
+                         Platform::bluetooth_pin_tx);
 
 void BluetoothSetup()
 {
-    Bluetooth.begin(bluetooth_baud);
+    Bluetooth.begin(Platform::bluetooth_baud);
 }
 
