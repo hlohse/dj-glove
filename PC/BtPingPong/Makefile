@@ -1,18 +1,19 @@
 include ../Config.mk
 
 TARGET    = $(notdir $(shell pwd))
+LD_FLAGS += -lbluetooth
 
 all: dir $(OBJ) $(TARGET)
 
-$(TARGET): $(OBJ)
-	$(CC) $(LD_FLAGS) -o build/$@.run $^  ../common/build/* -lbluetooth
+$(TARGET): $(OBJ) $(COMMON)
+	$(CC) -o $(PC_BUILD_DIR)/$@$(PC_EXT) $^ $(LD_FLAGS)
 
-build/lib%.o: %.cpp
+build/%.o: %.cpp
 	$(CC) -c $(CC_FLAGS) $^ -o $@
 
 dir:
-	-@mkdir build 2>/dev/null || true
+	-@mkdir $(PC_BUILD_DIR) 2>/dev/null || true
 
 clean:
-	-@rm -rf build 2>/dev/null || true
+	-@rm -rf $(PC_BUILD_DIR) 2>/dev/null || true
 

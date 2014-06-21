@@ -1,6 +1,7 @@
 CC       = g++
-CC_FLAGS = -O3 -Wall -Wextra -march=native -I../common
+CC_FLAGS = -O3 -Wall -Wextra -march=native -I../$(COMMON_DIR)
 LD_FLAGS = 
 SRC      = $(wildcard *.cpp)
-OBJ      = $(SRC:%.cpp=build/lib%.o)
+OBJ      = $(SRC:%.cpp=$(PC_BUILD_DIR)/%.o)
+COMMON   = ../$(COMMON_DIR)/$(PC_BUILD_DIR)/*
 

@@ -1,22 +1,35 @@
 include Config.mk
-.PHONY: all pc_common $(PROJECTS) clean
 
 MAKE           = make
 BOARD_TAG      = nano328
 MAKEFILE       = $(ARDMK_DIR)/Arduino.mk
 USER_LIB_PATH  = $(ARDMK_DIR)/common
 CPPFLAGS      += -I$(USER_LIB_PATH)
+CLEAN_SUFFIX   = .clean
 
-ARDUINO_BUILD_DIR    = build-$(BOARD_TAG)
-ARDUINO_PROJECT_DIR  = $(shell find Arduino -maxdepth 1 -type d)
-ARDUINO_PROJECTS     = $(filter-out Arduino Arduino/common,$(ARDUINO_PROJECT_DIR))
-ARDUINO_BUILD_DIRS   = $(ARDUINO_PROJECTS:%=%/$(ARDUINO_BUILD_DIR))
-ARDUINO_CLEANS       = $(ARDUINO_PROJECTS:%=%.clean.arduino)
+ARDUINO_DIR_   = Arduino
+PC_DIR         = PC
+COMMON_DIR     = common
+ARDUINO_EXT    = .hex
+PC_EXT         = .run
 
-PC_PROJECT_DIR  = $(shell find PC -maxdepth 1 -type d)
-PC_PROJECTS     = $(filter-out PC PC/common,$(PC_PROJECT_DIR))
-PC_BUILD_DIRS   = $(PC_PROJECTS:%=%/build)
-PC_CLEANS       = $(PC_PROJECTS:%=%.clean.pc)
+ARDUINO_BUILD_DIR     = build-$(BOARD_TAG)
+ARDUINO_TARGET_SUFFIX = .arduino
+ARDUINO_PROJECT_DIR   = $(shell find $(ARDUINO_DIR_) -maxdepth 1 -type d)
+ARDUINO_PROJECTS      = $(filter-out $(ARDUINO_DIR_) $(ARDUINO_DIR_)/$(COMMON_DIR),$(ARDUINO_PROJECT_DIR))
+ARDUINO_TARGETS       = $(ARDUINO_PROJECTS:$(ARDUINO_DIR_)/%=%$(ARDUINO_TARGET_SUFFIX))
+ARDUINO_BUILD_DIRS    = $(ARDUINO_PROJECTS:%=%/$(ARDUINO_BUILD_DIR))
+ARDUINO_CLEANS        = $(ARDUINO_PROJECTS:%=%$(CLEAN_SUFFIX))
+
+PC_BUILD_DIR     = build
+PC_TARGET_SUFFIX = .pc
+PC_PROJECT_DIR   = $(shell find $(PC_DIR) -maxdepth 1 -type d)
+PC_PROJECTS      = $(filter-out $(PC_DIR) $(PC_DIR)/$(COMMON_DIR),$(PC_PROJECT_DIR))
+PC_TARGETS       = $(PC_PROJECTS:$(PC_DIR)/%=%$(PC_TARGET_SUFFIX))
+PC_BUILD_DIRS    = $(PC_PROJECTS:%=%/$(PC_BUILD_DIR))
+PC_CLEANS        = $(PC_PROJECTS:%=%$(CLEAN_SUFFIX))
+
+.PHONY: all pc_common $(ARDUINO_TARGETS) $(PC_TARGETS) clean
 
 export ARDUINO_DIR
 export AVR_TOOLS_DIR
@@ -26,30 +39,35 @@ export BOARD_TAG
 export USER_LIB_PATH
 export CPPFLAGS
 export MAKEFILE
+export COMMON_DIR
+export PC_BUILD_DIR
+export ARDUINO_EXT
+export PC_EXT
 
-all: $(ARDUINO_PROJECTS:Arduino/%=%.arduino) pc_common $(PC_PROJECTS:PC/%=%.pc)
-	$(foreach dir,$(ARDUINO_BUILD_DIRS), cp $(dir)/*.hex .;)
-	$(foreach dir,$(PC_BUILD_DIRS), cp $(dir)/*.run .;)
+all: $(ARDUINO_TARGETS) pc_common $(PC_TARGETS)
+	$(foreach dir,$(ARDUINO_BUILD_DIRS), cp $(dir)/*$(ARDUINO_EXT) .;)
+	$(foreach dir,$(PC_BUILD_DIRS), cp $(dir)/*$(PC_EXT) .;)
 
-$(ARDUINO_PROJECTS:Arduino/%=%.arduino):
-	$(MAKE) -C Arduino/$(@:%.arduino=%)
+$(ARDUINO_TARGETS):
+	echo $(ARDUINO_PROJECTS)
+	$(MAKE) -C $(ARDUINO_DIR_)/$(@:%$(ARDUINO_TARGET_SUFFIX)=%)
 
 pc_common:
-	$(MAKE) -C PC/common
+	$(MAKE) -C $(PC_DIR)/$(COMMON_DIR)
 
-$(PC_PROJECTS:PC/%=%.pc):
-	$(MAKE) -C PC/$(@:%.pc=%)
+$(PC_TARGETS):
+	$(MAKE) -C $(PC_DIR)/$(@:%$(PC_TARGET_SUFFIX)=%)
 
 clean: $(ARDUINO_CLEANS) pc_common_clean $(PC_CLEANS)
-	-@rm -rf *.hex 2>/dev/null || true
-	-@rm -rf *.run 2>/dev/null || true
+	-@rm -rf *$(ARDUINO_EXT) 2>/dev/null || true
+	-@rm -rf *$(PC_EXT) 2>/dev/null || true
 
 $(ARDUINO_CLEANS):
-	$(MAKE) clean -C $(ARDUINO_CLEANS:%.clean.arduino=%)
+	$(MAKE) clean -C $(ARDUINO_CLEANS:%$(CLEAN_SUFFIX)=%)
 
 pc_common_clean:
-	$(MAKE) clean -C PC/common
+	$(MAKE) clean -C $(PC_DIR)/$(COMMON_DIR)
 
 $(PC_CLEANS):
-	$(MAKE) clean -C $(PC_CLEANS:%.clean.pc=%)
+	$(MAKE) clean -C $(PC_CLEANS:%$(CLEAN_SUFFIX)=%)
 
