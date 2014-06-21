@@ -1,4 +1,7 @@
 ThirdParty/*
+*.swp
+*.hex
+build-*
 
 # Sources:
 # - GitHub C++.gitingore
