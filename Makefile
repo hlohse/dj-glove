@@ -29,7 +29,7 @@ PC_TARGETS       = $(PC_PROJECTS:$(PC_DIR)/%=%$(PC_TARGET_SUFFIX))
 PC_BUILD_DIRS    = $(PC_PROJECTS:%=%/$(PC_BUILD_DIR))
 PC_CLEANS        = $(PC_PROJECTS:%=%$(CLEAN_SUFFIX))
 
-.PHONY: all pc_common $(ARDUINO_TARGETS) $(PC_TARGETS) clean
+.PHONY: all pc_common $(ARDUINO_TARGETS) $(PC_TARGETS)
 
 export ARDUINO_DIR
 export AVR_TOOLS_DIR
@@ -63,11 +63,11 @@ clean: $(ARDUINO_CLEANS) pc_common_clean $(PC_CLEANS)
 	-@rm -rf *$(PC_EXT) 2>/dev/null || true
 
 $(ARDUINO_CLEANS):
-	$(MAKE) clean -C $(ARDUINO_CLEANS:%$(CLEAN_SUFFIX)=%)
+	-@$(MAKE) clean -C $(ARDUINO_CLEANS:%$(CLEAN_SUFFIX)=%)
 
 pc_common_clean:
-	$(MAKE) clean -C $(PC_DIR)/$(COMMON_DIR)
+	-@$(MAKE) clean -C $(PC_DIR)/$(COMMON_DIR)
 
 $(PC_CLEANS):
-	$(MAKE) clean -C $(PC_CLEANS:%$(CLEAN_SUFFIX)=%)
+	-@$(MAKE) clean -C $(PC_CLEANS:%$(CLEAN_SUFFIX)=%)
 
