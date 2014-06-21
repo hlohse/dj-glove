@@ -2,6 +2,7 @@ ThirdParty/*
 *.swp
 *.swo
 *.hex
+*.run
 build-*
 
 # Sources:
