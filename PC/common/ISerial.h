@@ -2,12 +2,15 @@
  *  This interfaces defines functionality provided by serial interfaces such as
  *  Bluetooth or USB.
  *
- *  Example, loopback:
+ *  Example, echo back input data:
  *
  *      ISerial serial = ... (use implementing subclass)
  *
- *      if (serial.HasAvailable()) {
+ *      if (serial.WaitUntilAvailable()) {
  *          serial.Write(serial.Read());
+ *      }
+ *      else {
+ *          cout << "ERROR: " << serial.GetLastError() << endl;
  *      }
  */
 
@@ -23,6 +26,10 @@ public:
     
     // Number of input bytes available to be read.
     virtual int Available() const = 0;
+
+    // Blocks execution until input becomes available.
+    // Returns false if an error occured, true otherwise. (See GetLastError.)
+    virtual bool WaitUntilAvailable() = 0;
 
     // Returns all available input bytes.
     virtual std::string Read() = 0;
@@ -41,6 +48,9 @@ public:
     // Writes output bytes with line break.
     // Returns number of actually written bytes of output.
     virtual int WriteLine(const std::string& output) = 0;
+
+    // Returns error message of the last occured error.
+    virtual std::string GetLastError() const = 0;
 };
 
 #endif // DJ_GLOVE_PC_COMMON_ISERIAL_H_

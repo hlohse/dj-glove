@@ -13,11 +13,13 @@ public:
     // ISerial
     virtual bool HasAvailable() const;
     virtual int Available() const;
+    virtual bool WaitUntilAvailable();
     virtual std::string Read();
     virtual std::string Read(const int length);
     virtual int Write(const std::string& output);
     virtual int Write(const std::string& output, const int length);
     virtual int WriteLine(const std::string& output);
+    virtual std::string GetLastError() const;
 };
 
 #endif // DJ_GLOVE_PC_COMMON_BLUETOOTH_H_

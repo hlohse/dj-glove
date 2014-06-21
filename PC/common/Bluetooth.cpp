@@ -20,6 +20,11 @@ int Bluetooth::Available() const
     return 0;
 }
 
+bool Bluetooth::WaitUntilAvailable()
+{
+    return true;
+}
+
 string Bluetooth::Read()
 {
     return "";
@@ -43,5 +48,10 @@ int Bluetooth::Write(const string& output, const int length)
 int Bluetooth::WriteLine(const string& output)
 {
     return 0;
+}
+
+string Bluetooth::GetLastError() const
+{
+    return "";
 }
 
