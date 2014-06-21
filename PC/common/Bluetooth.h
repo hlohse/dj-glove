@@ -1,25 +1,20 @@
 #ifndef DJ_GLOVE_PC_COMMON_BLUETOOTH_H_
 #define DJ_GLOVE_PC_COMMON_BLUETOOTH_H_
 
-#include "ISerial.h"
+#include "Serial.h"
 
 class BluetoothDevice;
 
-class Bluetooth : public ISerial {
+class Bluetooth : public Serial {
 public:
     Bluetooth(const BluetoothDevice& device);
     ~Bluetooth();
 
-    // ISerial
-    virtual bool HasAvailable() const;
+    // Serial
     virtual int Available() const;
-    virtual bool WaitUntilAvailable();
-    virtual std::string Read();
+    virtual void WaitUntilAvailable();
     virtual std::string Read(const int length);
-    virtual int Write(const std::string& output);
     virtual int Write(const std::string& output, const int length);
-    virtual int WriteLine(const std::string& output);
-    virtual std::string GetLastError() const;
 };
 
 #endif // DJ_GLOVE_PC_COMMON_BLUETOOTH_H_

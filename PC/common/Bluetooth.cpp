@@ -10,24 +10,13 @@ Bluetooth::~Bluetooth()
 {
 }
 
-bool Bluetooth::HasAvailable() const
-{
-    return false;
-}
-
 int Bluetooth::Available() const
 {
     return 0;
 }
 
-bool Bluetooth::WaitUntilAvailable()
+void Bluetooth::WaitUntilAvailable()
 {
-    return true;
-}
-
-string Bluetooth::Read()
-{
-    return "";
 }
 
 string Bluetooth::Read(const int length)
@@ -35,23 +24,8 @@ string Bluetooth::Read(const int length)
     return "";
 }
 
-int Bluetooth::Write(const string& output)
-{
-    return 0;
-}
-
 int Bluetooth::Write(const string& output, const int length)
 {
     return 0;
-}
-
-int Bluetooth::WriteLine(const string& output)
-{
-    return 0;
-}
-
-string Bluetooth::GetLastError() const
-{
-    return "";
 }
 
