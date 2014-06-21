@@ -1,13 +1,16 @@
-/*
- *  This abstract class defines functionality provided by serial interfaces such
- *  as Bluetooth or USB. Specific methods have to be implemented by subclasses.
+/*      ISerial (interface)
  *
- *  Example, echo back input data:
+ *  This interface defines functionality provided by serial interfaces such
+ *  as Bluetooth or USB.
  *
- *      Serial serial = ... (use implementing subclass)
+ *  Example, echo back input data twice:
+ *
+ *      ISerial serial = ... (use implementing subclass)
  *
  *      serial.WaitUntilAvailable();
  *      serial.Write(serial.Read());
+ *
+ *      serial.WriteLine(serial.ReadNextAvailable());
  */
 
 #ifndef DJ_GLOVE_PC_COMMON_ISERIAL_H_
@@ -15,26 +18,30 @@
 
 #include <string>
 
-class Serial {
+class ISerial {
 public:
+    // Blocks execution until input becomes available.
+    virtual void WaitUntilAvailable() = 0;
+    
     // Signals if input contains data.
-    bool HasAvailable() const;
+    virtual bool HasAvailable() const = 0;
     
     // Number of input bytes available to be read.
     virtual int Available() const = 0;
 
     // Blocks execution until input becomes available.
-    virtual void WaitUntilAvailable() = 0;
+    // Returns all available input bytes.
+    virtual std::string ReadNextAvailable() = 0;
 
     // Returns all available input bytes.
-    std::string Read();
+    virtual std::string Read() = 0;
 
     // Returns up to length available input bytes.
     virtual std::string Read(const int length) = 0;
 
     // Writes output bytes.
     // Returns number of actually written bytes of output.
-    int Write(const std::string& output);
+    virtual int Write(const std::string& output) = 0;
 
     // Writes up to length bytes of output.
     // Returns number of actually written bytes of output.
@@ -42,7 +49,7 @@ public:
 
     // Writes output bytes with line break.
     // Returns number of actually written bytes of output.
-    int WriteLine(const std::string& output);
+    virtual int WriteLine(const std::string& output) = 0;
 };
 
 #endif // DJ_GLOVE_PC_COMMON_ISERIAL_H_

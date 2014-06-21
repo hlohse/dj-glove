@@ -1,16 +1,16 @@
 #ifndef DJ_GLOVE_PC_COMMON_BLUETOOTH_H_
 #define DJ_GLOVE_PC_COMMON_BLUETOOTH_H_
 
-#include "Serial.h"
+#include "CommonSerial.h"
 
 class BluetoothDevice;
 
-class Bluetooth : public Serial {
+class Bluetooth : public CommonSerial {
 public:
     Bluetooth(const BluetoothDevice& device);
     ~Bluetooth();
 
-    // Serial
+    // ISerial
     virtual int Available() const;
     virtual void WaitUntilAvailable();
     virtual std::string Read(const int length);
