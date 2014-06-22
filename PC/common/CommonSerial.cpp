@@ -11,21 +11,11 @@ bool CommonSerial::HasAvailable()
     return Available() > 0;
 }
 
-string CommonSerial::ReadNextAvailable()
+string CommonSerial::ReadNextAvailable(const int length)
 {
-    WaitUntilAvailable();
+    WaitUntilAvailable(length);
 
-    return Read();
-}
-
-string CommonSerial::Read()
-{
-    return Read(Available());
-}
-
-int CommonSerial::Write(const string& output)
-{
-    return Write(output, output.length());
+    return Read(length);
 }
 
 int CommonSerial::WriteLine(const string& output)

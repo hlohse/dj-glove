@@ -18,17 +18,15 @@ public:
     // ISerial
     virtual std::string GetLastError() const;
     virtual bool HasAvailable();
-    virtual std::string ReadNextAvailable();
-    virtual std::string Read();
-    virtual int Write(const std::string& output);
+    virtual std::string ReadNextAvailable(const int length);
     virtual int WriteLine(const std::string& output);
 
     // ISerial, implement in subclass
     virtual bool IsReady() const = 0;
-    virtual void WaitUntilAvailable() = 0;
+    virtual void WaitUntilAvailable(const int length) = 0;
     virtual int Available() = 0;
     virtual std::string Read(const int length) = 0;
-    virtual int Write(const std::string& output, const int length) = 0;
+    virtual int Write(const std::string& output) = 0;
 
 protected:
     // Used by subclasses to store last error message
