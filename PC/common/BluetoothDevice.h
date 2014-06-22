@@ -25,7 +25,8 @@
 class BluetoothDevice {
 public:
     BluetoothDevice(const std::string& name,
-                    const std::string& address);
+                    const std::string& address,
+                    const int channel);
     ~BluetoothDevice();
     
     struct sockaddr_rc GetSocketAddress() const;
@@ -36,6 +37,7 @@ public:
 private:
     std::string name_;
     std::string address_;
+    int channel_;
     struct sockaddr_rc socket_address_;
     bool is_valid_;
 };

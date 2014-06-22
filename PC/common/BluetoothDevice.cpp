@@ -3,13 +3,20 @@
 using namespace std;
 
 BluetoothDevice::BluetoothDevice(const string& name,
-                                 const string& address)
+                                 const string& address,
+                                 const int channel)
 :   name_(name),
-    address_(address)
+    address_(address),
+    channel_(channel)
 {
     const int result = str2ba(address_.c_str(), &socket_address_.rc_bdaddr);
 
-    is_valid_ = result == 0;
+    is_valid_ = result == 0 && channel >= 1 && channel <= 12;
+
+    if (is_valid_) {
+        socket_address_.rc_family  = AF_BLUETOOTH;
+        socket_address_.rc_channel = channel_;
+    }
 }
 
 BluetoothDevice::~BluetoothDevice()
@@ -32,7 +39,8 @@ string BluetoothDevice::ToString() const
 
     result << "BluetoothDevice"
            << " \"" << name_ << "\""
-           << " @ " << address_;
+           << " @ " << address_
+           << " on channel " << channel_;
 
     return result.str();
 }
