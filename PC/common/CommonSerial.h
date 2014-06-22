@@ -17,7 +17,7 @@ class CommonSerial : public ISerial {
 public:
     // ISerial
     virtual std::string GetLastError() const;
-    virtual bool HasAvailable() const;
+    virtual bool HasAvailable();
     virtual std::string ReadNextAvailable();
     virtual std::string Read();
     virtual int Write(const std::string& output);
@@ -26,7 +26,7 @@ public:
     // ISerial, implement in subclass
     virtual bool IsReady() const = 0;
     virtual void WaitUntilAvailable() = 0;
-    virtual int Available() const = 0;
+    virtual int Available() = 0;
     virtual std::string Read(const int length) = 0;
     virtual int Write(const std::string& output, const int length) = 0;
 

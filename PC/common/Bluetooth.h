@@ -14,7 +14,7 @@ public:
 
     // ISerial
     virtual bool IsReady() const;
-    virtual int Available() const;
+    virtual int Available();
     virtual void WaitUntilAvailable();
     virtual std::string Read(const int length);
     virtual int Write(const std::string& output, const int length);
@@ -24,6 +24,7 @@ private:
     int socket_;
     bool is_ready_;
 
+    void ShutdownSocket();
     void ConnectSocket(struct timeval timeout, fd_set sockets);
 
     void SetSocketBlocking() const;
