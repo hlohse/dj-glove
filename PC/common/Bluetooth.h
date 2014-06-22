@@ -3,6 +3,7 @@
 
 #include "CommonSerial.h"
 #include "BluetoothDevice.h"
+#include <sys/time.h>
 
 class Bluetooth : public CommonSerial {
 public:
@@ -23,8 +24,11 @@ private:
     int socket_;
     bool is_ready_;
 
-    void SetSocketBlocking();
-    void SetSocketNonBlocking();
+    void ConnectSocket(struct timeval timeout, fd_set sockets);
+
+    void SetSocketBlocking() const;
+    void SetSocketNonBlocking() const;
+    int GetSocketError() const;
 };
 
 #endif // DJ_GLOVE_PC_COMMON_BLUETOOTH_H_

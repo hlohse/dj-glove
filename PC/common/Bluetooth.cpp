@@ -1,6 +1,5 @@
 #include "Bluetooth.h"
 #include <sys/socket.h>
-#include <sys/time.h>
 #include <fcntl.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
@@ -21,11 +20,11 @@ Bluetooth::~Bluetooth()
 void Bluetooth::Connect(const int timeout_s)
 {
     struct timeval timeout;
-    struct sockaddr_rc address;
     fd_set sockets;
+    
+    last_error_.clear();
 
     if (!device_.IsValid()) {
-        last_error_.clear();
         last_error_ << "Invalid " << device_.ToString();
         return;
     }
@@ -33,48 +32,56 @@ void Bluetooth::Connect(const int timeout_s)
     timeout.tv_sec  = timeout_s;
     timeout.tv_usec = 0;
 
-    address = device_.GetSocketAddress();
-
     FD_ZERO(&sockets);
     FD_SET(socket_, &sockets);
+
+    ConnectSocket(timeout, sockets);
+}
+
+void Bluetooth::ConnectSocket(struct timeval timeout, fd_set sockets)
+{
+    struct sockaddr_rc address = device_.GetSocketAddress();
 
     SetSocketNonBlocking();
     connect(socket_, (struct sockaddr*) &address, sizeof(address));
 
     if (select(socket_ + 1, NULL, &sockets, NULL, &timeout) == 1) {
-        int error;
-        socklen_t length = sizeof(error);
-
-        getsockopt(socket_, SOL_SOCKET, SO_ERROR, &error, &length);
+        int error = GetSocketError();
     
         if (error == 0) {
             is_ready_ = true;
         }
         else {
-            last_error_.clear();
             last_error_ << "Error " << error << " on socket";
         }
     }
     else {
-        last_error_.clear();
         last_error_ << "Error while connecting socket";
     }
 
     SetSocketBlocking();
 }
 
-void Bluetooth::SetSocketBlocking()
+void Bluetooth::SetSocketBlocking() const
 {
     int socket_flags = fcntl(socket_, F_GETFL, 0);
     socket_flags ^= O_NONBLOCK;
     fcntl(socket_, F_SETFL, socket_flags);
 }
 
-void Bluetooth::SetSocketNonBlocking()
+void Bluetooth::SetSocketNonBlocking() const
 {
     int socket_flags = fcntl(socket_, F_GETFL, 0);
     socket_flags |= O_NONBLOCK;
     fcntl(socket_, F_SETFL, socket_flags);
+}
+
+int Bluetooth::GetSocketError() const
+{
+    int error;
+    socklen_t length = sizeof(error);
+    getsockopt(socket_, SOL_SOCKET, SO_ERROR, &error, &length);
+    return error;
 }
 
 bool Bluetooth::IsReady() const
