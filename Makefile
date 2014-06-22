@@ -4,7 +4,7 @@ MAKE           = make
 BOARD_TAG      = nano328
 MAKEFILE       = $(ARDMK_DIR)/Arduino.mk
 USER_LIB_PATH  = $(ARDMK_DIR)/common
-CPPFLAGS      += -I$(USER_LIB_PATH)
+CPPFLAGS      += -I$(USER_LIB_PATH) -I../../
 CLEAN_SUFFIX   = .clean
 
 ARDUINO_DIR_   = Arduino

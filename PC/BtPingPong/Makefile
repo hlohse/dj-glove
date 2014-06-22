@@ -1,4 +1,4 @@
-include ../Config.mk
+include ../Common.mk
 
 TARGET    = $(notdir $(shell pwd))
 LD_FLAGS += -lbluetooth

@@ -1,5 +1,5 @@
 #include "Bluetooth.h"
-#include "../Platform.h"
+#include "Platform.h"
 #include <SoftwareSerial.h>
 
 SoftwareSerial Bluetooth(Platform::bluetooth_pin_rx,

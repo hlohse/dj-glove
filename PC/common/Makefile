@@ -1,4 +1,4 @@
-include ../Config.mk
+include ../Common.mk
 
 all: dir $(OBJ)
 
