@@ -9,6 +9,7 @@ namespace BtLatency {
 
 const int   num_messages = 1000;
 const char* message      = "PING";
+const char  start_signal = '!';
 
 }
 

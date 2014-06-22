@@ -8,19 +8,27 @@
 #include <bluetooth/rfcomm.h>
 using namespace std;
 
-Bluetooth::Bluetooth(const BluetoothDevice& device)
+Bluetooth::Bluetooth(const BluetoothDevice& device,
+                     const int read_socket_buffer_bytes)
 :   device_(device),
     socket_(socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM)),
     is_ready_(false),
     buffer_(""),
-    read_socket_buffer_(new char[read_socket_buffer_bytes])
+    read_socket_buffer_bytes_(read_socket_buffer_bytes),
+    read_socket_buffer_(NULL)
 {
+    if (read_socket_buffer_bytes_ > 0) {
+        read_socket_buffer_ = new char[read_socket_buffer_bytes_ + 1];
+    }
 }
 
 Bluetooth::~Bluetooth()
 {
     ShutdownSocket();
-    delete read_socket_buffer_;
+
+    if (read_socket_buffer_ != NULL) {
+        delete read_socket_buffer_;
+    }   
 }
 
 void Bluetooth::ShutdownSocket()
@@ -135,11 +143,18 @@ void Bluetooth::WaitUntilAvailable(const int length)
 void Bluetooth::ReadSocket()
 {
     int bytes_read;
-    memset(read_socket_buffer_, 0, read_socket_buffer_bytes);
+
+    if (read_socket_buffer_ == NULL) {
+        last_error_ << "No read socket buffer available";
+        ShutdownSocket();
+        return;
+    }
+
+    memset(read_socket_buffer_, 0, read_socket_buffer_bytes_ + 1);
     
     bytes_read = read(socket_,
                       read_socket_buffer_,
-                      read_socket_buffer_bytes - 1);
+                      read_socket_buffer_bytes_);
     
     if (bytes_read < 0) {
         last_error_ << "Error while reading socket data";
