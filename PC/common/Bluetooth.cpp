@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
@@ -10,14 +11,16 @@ using namespace std;
 Bluetooth::Bluetooth(const BluetoothDevice& device)
 :   device_(device),
     socket_(socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM)),
-    is_ready_(false)
+    is_ready_(false),
+    buffer_(""),
+    read_socket_buffer_(new char[read_socket_buffer_bytes])
 {
-    SetSocketNonBlocking();
 }
 
 Bluetooth::~Bluetooth()
 {
     ShutdownSocket();
+    delete read_socket_buffer_;
 }
 
 void Bluetooth::ShutdownSocket()
@@ -50,6 +53,7 @@ void Bluetooth::ConnectSocket(struct timeval timeout, fd_set sockets)
 {
     struct sockaddr_rc address = device_.GetSocketAddress();
 
+    SetSocketNonBlocking();
     connect(socket_, (struct sockaddr*) &address, sizeof(address));
 
     if (select(socket_ + 1, NULL, &sockets, NULL, &timeout) == 1) {
@@ -67,6 +71,8 @@ void Bluetooth::ConnectSocket(struct timeval timeout, fd_set sockets)
         last_error_.clear();
         last_error_ << "Timeout while connecting socket";
     }
+
+    SetSocketBlocking();
 }
 
 void Bluetooth::SetSocketBlocking() const
@@ -98,84 +104,85 @@ bool Bluetooth::IsReady() const
     return is_ready_;
 }
 
-int Bluetooth::Available()
-{
-    int available;
-    int error;
-
-    error = ioctl(socket_, FIONREAD, &available);
-
-    if (error != 0) {
-        last_error_.clear();
-        last_error_ << "Error " << error << " while counting socket data";
-        ShutdownSocket();
-        return 0;
-    }
-
-    return available;
-}
-
-void Bluetooth::WaitUntilAvailable()
+void Bluetooth::WaitUntilAvailable(const int length)
 {
     fd_set sockets;
     FD_ZERO(&sockets);
     FD_SET(socket_, &sockets);
 
-    if (select(socket_ + 1, NULL, &sockets, NULL, NULL) == 1) {
-        int error = GetSocketError();
+    while ((int) buffer_.length() < length) {
+        if (select(socket_ + 1, NULL, &sockets, NULL, NULL) == 1) {
+            int error = GetSocketError();
 
-        if (error != 0) {
+            if (error != 0) {
+                last_error_.clear();
+                last_error_ << "Error " << error << " on socket while waiting for data";
+                ShutdownSocket();
+                return;
+            }
+
+            ReadSocket();
+        }
+        else {
             last_error_.clear();
-            last_error_ << "Error " << error << " on socket while waiting for data";
+            last_error_ << "Error while waiting for socket data";
             ShutdownSocket();
+            return;
         }
     }
-    else {
-        last_error_.clear();
-        last_error_ << "Error while waiting for socket data";
+}
+
+void Bluetooth::ReadSocket()
+{
+    int bytes_read;
+    memset(read_socket_buffer_, 0, read_socket_buffer_bytes);
+    
+    bytes_read = read(socket_,
+                      read_socket_buffer_,
+                      read_socket_buffer_bytes - 1);
+    
+    if (bytes_read < 0) {
+        last_error_ << "Error while reading socket data";
         ShutdownSocket();
+        return;
     }
+
+    if (bytes_read > 0) {
+        buffer_ += read_socket_buffer_;
+    }
+}
+
+int Bluetooth::Available()
+{
+    return buffer_.length();
 }
 
 string Bluetooth::Read(const int length)
 {
-    string result;
-    int status;
-
-    if (length <= 0) {
-        return "";
-    }
-
-    result.resize(length);
-    status = read(socket_, (void*) result.c_str(), length);
+    string input;
     
-    if (status < 0) {
-        last_error_ << "Error while reading socket data";
-        ShutdownSocket();
+    if (buffer_.length() == 0 || length <= 0) {
         return "";
     }
 
-    return result;
+    input = string(buffer_, 0, length);
+    buffer_.erase(0, length);
+    
+    return input;
 }
 
-int Bluetooth::Write(const string& output, const int length)
+int Bluetooth::Write(const string& output)
 {
-    int status;
-    int output_length = (int) output.length();
-    int max_length = output_length < length ? output_length : length;
+    int bytes_written = write(socket_,
+                              output.c_str(),
+                              output.length());
 
-    if (length <= 0) {
-        return 0;
-    }
-
-    status = write(socket_, output.c_str(), max_length);
-
-    if (status < 0) {
+    if (bytes_written < 0) {
         last_error_ << "Error while writing socket data";
         ShutdownSocket();
         return 0;
     }
 
-    return status;
+    return bytes_written;
 }
 

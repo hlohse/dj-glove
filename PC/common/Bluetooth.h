@@ -14,18 +14,23 @@ public:
 
     // ISerial
     virtual bool IsReady() const;
+    virtual void WaitUntilAvailable(const int length);
     virtual int Available();
-    virtual void WaitUntilAvailable();
     virtual std::string Read(const int length);
-    virtual int Write(const std::string& output, const int length);
+    virtual int Write(const std::string& output);
 
 private:
+    static const int read_socket_buffer_bytes = 64;
+
     BluetoothDevice device_;
     int socket_;
     bool is_ready_;
+    std::string buffer_;
+    char* read_socket_buffer_;
 
     void ShutdownSocket();
     void ConnectSocket(struct timeval timeout, fd_set sockets);
+    void ReadSocket();
 
     void SetSocketBlocking() const;
     void SetSocketNonBlocking() const;
