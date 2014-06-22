@@ -1,5 +1,6 @@
 #include "BluetoothDevice.h"
 #include <sstream>
+#include <stdint.h>
 using namespace std;
 
 BluetoothDevice::BluetoothDevice(const string& name,
@@ -15,7 +16,7 @@ BluetoothDevice::BluetoothDevice(const string& name,
 
     if (is_valid_) {
         socket_address_.rc_family  = AF_BLUETOOTH;
-        socket_address_.rc_channel = channel_;
+        socket_address_.rc_channel = (uint8_t) channel_;
     }
 }
 
