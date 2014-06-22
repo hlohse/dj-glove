@@ -1,6 +1,10 @@
 #include "CommonSerial.h"
-#include <sstream>
 using namespace std;
+
+string CommonSerial::GetLastError() const
+{
+    return last_error_.str();
+}
 
 bool CommonSerial::HasAvailable() const
 {
