@@ -7,10 +7,15 @@
  *
  *      ISerial serial = ... (use implementing subclass)
  *
- *      serial.WaitUntilAvailable();
- *      serial.Write(serial.Read());
+ *      if (serial.IsReady()) {
+ *          serial.WaitUntilAvailable();
+ *          serial.Write(serial.Read());
  *
- *      serial.WriteLine(serial.ReadNextAvailable());
+ *          serial.WriteLine(serial.ReadNextAvailable());
+ *      }
+ *      else {
+ *          cout << serial.GetLastError() << endl;
+ *      }
  */
 
 #ifndef DJ_GLOVE_PC_COMMON_ISERIAL_H_
@@ -20,6 +25,12 @@
 
 class ISerial {
 public:
+    // Returns true if serial interface is useable
+    virtual bool IsReady() const = 0;
+
+    // Returns last error message once serial interface is not ready anymore
+    virtual std::string GetLastError() const = 0;
+
     // Blocks execution until input becomes available.
     virtual void WaitUntilAvailable() = 0;
     
