@@ -8,7 +8,7 @@
 class Bluetooth : public CommonSerial {
 public:
     Bluetooth(const BluetoothDevice& device);
-    ~Bluetooth();
+    virtual ~Bluetooth();
 
     void Connect(const int timeout_s);
 

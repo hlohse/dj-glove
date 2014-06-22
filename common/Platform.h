@@ -4,8 +4,8 @@
  *  Changes to the hardware platform must be reflected here accordingly.
  */
 
-#ifndef DJ_GLOVE_PLATFORM_H_
-#define DJ_GLOVE_PLATFORM_H_
+#ifndef DJ_GLOVE_COMMON_PLATFORM_H_
+#define DJ_GLOVE_COMMON_PLATFORM_H_
 
 namespace Platform {
 
@@ -17,5 +17,5 @@ const char* bluetooth_mac     = "98:D3:31:B3:0A:25";  // Bluetooth module's MAC
 
 }
 
-#endif // DJ_GLOVE_PLATFORM_H_
+#endif // DJ_GLOVE_COMMON_PLATFORM_H_
 

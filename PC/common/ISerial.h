@@ -26,6 +26,8 @@
 
 class ISerial {
 public:
+    virtual ~ISerial() {}
+
     // Returns true if serial interface is useable, false otherwise.
     virtual bool IsReady() const = 0;
 

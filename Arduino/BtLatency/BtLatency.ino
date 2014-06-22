@@ -1,7 +1,7 @@
+#include "BtLatency.h"
 #include <Bluetooth.h>
 #include <SoftwareSerial.h>
 
-const int max_count = 1000;
 int count = 0;
 
 void setup()  
@@ -11,8 +11,8 @@ void setup()
 
 void loop()
 {
-    for (; count < max_count; ++count) {
-        Bluetooth.print("PING");
+    for (; count < BtLatency::num_messages; ++count) {
+        Bluetooth.print(BtLatency::message);
     }
 }
 

@@ -1,43 +1,65 @@
+#include "BtLatency.h"
+#include "Platform.h"
 #include "Bluetooth.h"
 #include "BluetoothDevice.h"
-#include "Platform.h"
 #include <string>
 #include <iostream>
-#include <cstdlib>
 #include <unistd.h>
 using namespace std;
 
-#define MSG_SIZE 4
-#define MSG_SEND "PONG"
-#define MSG_RECV "PING"
+static const int timeout_s = 5;
 
-static const int default_timeout_s = 1;
-
-void Error(const ISerial* serial, const BluetoothDevice& device)
+ISerial* GetSerial()
 {
-    cout << "Bluetooth not ready for "
-         << device.ToString() << ": "
-         << serial->GetLastError() << endl;
-}
-
-int main(const int argc, const char* argv[])
-{
-    const int timeout_s = argc > 1 ? atoi(argv[1]) : default_timeout_s;
     BluetoothDevice arduino("Arduino",
                             Platform::bluetooth_mac,
                             Platform::bluetooth_channel);
-    Bluetooth bluetooth(arduino);
-    bluetooth.Connect(timeout_s);
-    ISerial* serial = &bluetooth;
-    string ping;
-
-    while (serial->IsReady()) {
-        ping = serial->ReadNextAvailable(4);
-        cout << ping << endl;
-    }
+    Bluetooth* bluetooth = new Bluetooth(arduino);
     
-    Error(serial, arduino);
+    bluetooth->Connect(timeout_s);
+    
+    return bluetooth;
+}
 
+int main()
+{
+    ISerial* serial = GetSerial();
+    struct timeval start, stop;
+    double start_time_us, stop_time_us, total_time_ms;
+    string expected_message(BtLatency::message);
+    string message;
+
+    gettimeofday(&start, NULL);
+
+    for (int i = 0; i < BtLatency::num_messages; ++i) {
+        message = serial->ReadNextAvailable(expected_message.length());
+
+        if (!serial->IsReady()) {
+            cout << "Serial error: " << serial->GetLastError() << endl;
+            break;
+        }
+
+        if (message.compare(expected_message) != 0) {
+            cout << "ERROR: Received \"" << message
+                 << "\", expected \"" << expected_message << "\"" << endl;
+        }
+
+        if (i % (BtLatency::num_messages / 10) == 0) {
+            cout << "Received " << i << " of "
+                 << BtLatency::num_messages << " messages" << endl;
+        }
+    }
+
+    gettimeofday(&stop, NULL);
+
+    start_time_us = start.tv_sec * 1e6 + start.tv_usec;
+    stop_time_us  = stop.tv_sec  * 1e6 + stop.tv_usec;
+    total_time_ms = (stop_time_us - start_time_us) / 1e3;
+
+    cout << "Total time [ms]:       " << total_time_ms << endl;
+    cout << "Time per message [ms]: " << total_time_ms / BtLatency::num_messages << endl;
+
+    delete serial;
     return 0;
 }
 
