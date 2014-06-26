@@ -49,7 +49,6 @@ all: $(ARDUINO_TARGETS) pc_common $(PC_TARGETS)
 	$(foreach dir,$(PC_BUILD_DIRS), cp $(dir)/*$(PC_EXT) .;)
 
 $(ARDUINO_TARGETS):
-	echo $(ARDUINO_PROJECTS)
 	$(MAKE) -C $(ARDUINO_DIR_)/$(@:%$(ARDUINO_TARGET_SUFFIX)=%)
 
 pc_common:
@@ -63,11 +62,11 @@ clean: $(ARDUINO_CLEANS) pc_common_clean $(PC_CLEANS)
 	-@rm -rf *$(PC_EXT) 2>/dev/null || true
 
 $(ARDUINO_CLEANS):
-	-@$(MAKE) clean -C $(ARDUINO_CLEANS:%$(CLEAN_SUFFIX)=%)
+	-@$(MAKE) clean -C $(@:%$(CLEAN_SUFFIX)=%)
 
 pc_common_clean:
 	-@$(MAKE) clean -C $(PC_DIR)/$(COMMON_DIR)
 
 $(PC_CLEANS):
-	-@$(MAKE) clean -C $(PC_CLEANS:%$(CLEAN_SUFFIX)=%)
+	-@$(MAKE) clean -C $(@:%$(CLEAN_SUFFIX)=%)
 
