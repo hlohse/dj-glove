@@ -11,6 +11,8 @@
 #include <unistd.h>
 #include <float.h>
 #include <cmath>
+#include <sys/time.h>
+#include <sys/resource.h>
 using namespace std;
 
 typedef pair<struct timeval, struct timeval> time_tuple;
@@ -37,10 +39,11 @@ ISerial* GetSerial()
     return bluetooth;
 }
 
-void SendStartSignal(ISerial* serial)
+void SyncStart(ISerial* serial)
 {
     string start_signal(&BtLatency::start_signal,
                         sizeof(BtLatency::start_signal));
+    
     serial->Write(start_signal);
 }
 
@@ -51,11 +54,10 @@ void DetermineTimes(ISerial* serial, vector<time_tuple>& times)
     string message;
 
     times.reserve(BtLatency::num_messages);
-    SendStartSignal(serial);
+    SyncStart(serial);
 
-    for (int i = 0; i < BtLatency::num_messages; ++i) {
+    for (unsigned int i = 0; i < BtLatency::num_messages; ++i) {
         gettimeofday(&start, NULL);
-        serial->Write(string(expected_message));
         message = serial->ReadNextAvailable(expected_message.length());
         gettimeofday(&stop, NULL);
 
@@ -83,22 +85,23 @@ void DetermineTimesMs(const vector<time_tuple>& times, vector<double>& times_ms)
         double stop_time_us  = it->second.tv_sec * 1e6 + it->second.tv_usec;
 
         double total_time_ms = (stop_time_us - start_time_us) / 1e3;
-        
+       
         times_ms.push_back(total_time_ms);
     }
 }
 
 Result GetResult(vector<double>& times_ms)
 {
+    vector<double> times_ms_sorted(times_ms);
     vector<double>::const_iterator it;
     Result result;
     
-    sort(times_ms.begin(), times_ms.end());
+    sort(times_ms_sorted.begin(), times_ms_sorted.end());
 
     result.min    = DBL_MAX;
     result.max    = DBL_MIN;
     result.mean   = 0;
-    result.median = times_ms[times_ms.size() / 2];
+    result.median = times_ms[times_ms_sorted.size() / 2];
     result.var    = 0;
 
     for (it = times_ms.begin(); it != times_ms.end(); ++it) {
@@ -151,7 +154,12 @@ int main()
     ISerial* serial = GetSerial();
     vector<time_tuple> times;
     vector<double> times_ms;
-   
+
+    if (!serial->IsReady()) {
+        cout << "Serial error: " << serial->GetLastError() << endl;
+        return -1;
+    }
+
     DetermineTimes(serial, times);
 
     if (times.size() == BtLatency::num_messages) {
