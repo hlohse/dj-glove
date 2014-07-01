@@ -1,21 +1,30 @@
 #include "Bluetooth.h"
+#include <sys/stat.h>
+#include <fcntl.h>
+using namespace std;
+
+#ifdef __linux__
 #include <unistd.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
-using namespace std;
+#elif _WIN32
+#include <io.h>
+#endif
 
 Bluetooth::Bluetooth(const BluetoothDevice& device,
                      const int read_socket_buffer_bytes)
 :   device_(device),
-    socket_(socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM)),
     is_ready_(false),
     buffer_(""),
     read_socket_buffer_bytes_(read_socket_buffer_bytes),
-    read_socket_buffer_(NULL)
+	read_socket_buffer_(NULL),
+#ifdef __linux__
+	socket_(socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM))
+#elif _WIN32
+	socket_(socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM))
+#endif
 {
     if (read_socket_buffer_bytes_ > 0) {
         read_socket_buffer_ = new char[read_socket_buffer_bytes_ + 1];
@@ -33,7 +42,12 @@ Bluetooth::~Bluetooth()
 
 void Bluetooth::ShutdownSocket()
 {
+#ifdef __linux__
     shutdown(socket_, SHUT_RDWR);
+#elif _WIN32
+	shutdown(socket_, SD_BOTH);
+#endif
+
     is_ready_ = false;
 }
 
@@ -59,7 +73,7 @@ void Bluetooth::Connect(const int timeout_s)
 
 void Bluetooth::ConnectSocket(struct timeval timeout, fd_set sockets)
 {
-    struct sockaddr_rc address = device_.GetSocketAddress();
+    BluetoothDevice::SocketAddress address = device_.GetSocketAddress();
 
     SetSocketNonBlocking();
     connect(socket_, (struct sockaddr*) &address, sizeof(address));
@@ -85,23 +99,40 @@ void Bluetooth::ConnectSocket(struct timeval timeout, fd_set sockets)
 
 void Bluetooth::SetSocketBlocking() const
 {
+#ifdef __linux__
     int socket_flags = fcntl(socket_, F_GETFL, 0);
     socket_flags ^= O_NONBLOCK;
     fcntl(socket_, F_SETFL, socket_flags);
+#elif _WIN32
+	ULONG non_blocking = 0;
+	ioctlsocket(socket_, FIONBIO, &non_blocking);
+#endif
 }
 
 void Bluetooth::SetSocketNonBlocking() const
 {
+#ifdef __linux__
     int socket_flags = fcntl(socket_, F_GETFL, 0);
     socket_flags |= O_NONBLOCK;
     fcntl(socket_, F_SETFL, socket_flags);
+#elif _WIN32
+	ULONG non_blocking = 1;
+	ioctlsocket(socket_, FIONBIO, &non_blocking);
+#endif
 }
 
 int Bluetooth::GetSocketError() const
 {
     int error;
-    socklen_t length = sizeof(error);
-    getsockopt(socket_, SOL_SOCKET, SO_ERROR, &error, &length);
+
+#ifdef __linux__
+    socklen_t
+#elif _WIN32
+	int
+#endif
+	length = sizeof(error);
+
+    getsockopt(socket_, SOL_SOCKET, SO_ERROR, (char*) &error, &length);
     return error;
 }
 
@@ -152,9 +183,15 @@ void Bluetooth::ReadSocket()
 
     memset(read_socket_buffer_, 0, read_socket_buffer_bytes_ + 1);
     
+#ifdef __linux__
     bytes_read = read(socket_,
                       read_socket_buffer_,
                       read_socket_buffer_bytes_);
+#elif _WIN32
+	bytes_read = _read(socket_,
+					   read_socket_buffer_,
+					   read_socket_buffer_bytes_);
+#endif
     
     if (bytes_read < 0) {
         last_error_ << "Error while reading socket data";
@@ -188,9 +225,15 @@ string Bluetooth::Read(const int length)
 
 int Bluetooth::Write(const string& output)
 {
+#ifdef __linux__
     int bytes_written = write(socket_,
                               output.c_str(),
-                              output.length());
+							  output.length());
+#elif _WIN32
+	int bytes_written = _write(socket_,
+							   output.c_str(),
+							   output.length());
+#endif
 
     if (bytes_written < 0) {
         last_error_ << "Error while writing socket data";

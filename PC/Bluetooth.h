@@ -3,10 +3,19 @@
 
 #include "CommonSerial.h"
 #include "BluetoothDevice.h"
-#include <sys/time.h>
+
+#ifdef __linux__
+#include <sys/time.h> // Automagically included under Windows
+#endif
 
 class Bluetooth : public CommonSerial {
 public:
+#ifdef __linux__
+	using Socket = int;
+#elif _WIN32
+	using Socket = SOCKET;
+#endif
+
     Bluetooth(const BluetoothDevice& device,
               const int read_socket_buffer_bytes);
     virtual ~Bluetooth();
@@ -22,11 +31,11 @@ public:
 
 private:
     BluetoothDevice device_;
-    int socket_;
     bool is_ready_;
     std::string buffer_;
     int read_socket_buffer_bytes_;
-    char* read_socket_buffer_;
+	char* read_socket_buffer_;
+	Socket socket_;
 
     void ShutdownSocket();
     void ConnectSocket(struct timeval timeout, fd_set sockets);
