@@ -1,5 +1,4 @@
 #include "BtLatency.h"
-#include "Platform.h"
 #include "Bluetooth.h"
 #include "BluetoothDevice.h"
 #include <string>
@@ -29,11 +28,9 @@ typedef struct {
 
 ISerial* GetSerial()
 {
-    BluetoothDevice arduino("Arduino",
-                            Platform::bluetooth_mac,
-                            Platform::bluetooth_channel);
-    Bluetooth* bluetooth = new Bluetooth(arduino, string(BtLatency::message).length());
-    
+    Bluetooth* bluetooth = new Bluetooth(
+        BluetoothDevice::Arduino,
+        string(BtLatency::message).length());
     bluetooth->Connect(timeout_s);
     
     return bluetooth;

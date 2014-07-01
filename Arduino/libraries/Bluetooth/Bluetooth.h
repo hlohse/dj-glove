@@ -11,8 +11,8 @@
  *      }
  */
 
-#ifndef DJ_GLOVE_ARDUINO_COMMON_BLUETOOTH_H_
-#define DJ_GLOVE_ARDUINO_COMMON_BLUETOOTH_H_
+#ifndef DJ_GLOVE_ARDUINO_LIBRARIES_BLUETOOTH_H_
+#define DJ_GLOVE_ARDUINO_LIBRARIES_BLUETOOTH_H_
 
 class SoftwareSerial;
 
@@ -22,5 +22,5 @@ extern SoftwareSerial Bluetooth;
 // Call once, e.g. in setup function
 void BluetoothSetup();
 
-#endif // DJ_GLOVE_ARDUINO_COMMON_BLUETOOTH_H_
+#endif // DJ_GLOVE_ARDUINO_LIBRARIES_BLUETOOTH_H_
 

@@ -3,6 +3,8 @@
 #include <stdint.h>
 using namespace std;
 
+const BluetoothDevice BluetoothDevice::Arduino("Arduino", "98:D3:31:B3:0A:25", 1);
+
 BluetoothDevice::BluetoothDevice(const string& name,
                                  const string& address,
                                  const int channel)

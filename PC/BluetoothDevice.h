@@ -15,15 +15,18 @@
  *      }
  */
 
-#ifndef DJ_GLOVE_PC_COMMON_BLUETOOTH_DEVICE_H_
-#define DJ_GLOVE_PC_COMMON_BLUETOOTH_DEVICE_H_
+#ifndef DJ_GLOVE_PC_BLUETOOTH_DEVICE_H_
+#define DJ_GLOVE_PC_BLUETOOTH_DEVICE_H_
 
 #include <string>
+#include <cstdint>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
 
 class BluetoothDevice {
 public:
+    static const BluetoothDevice Arduino;
+
     BluetoothDevice(const std::string& name,
                     const std::string& address,
                     const int channel);
@@ -42,5 +45,5 @@ private:
     bool is_valid_;
 };
 
-#endif // DJ_GLOVE_PC_COMMON_BLUETOOTH_DEVICE_H_
+#endif // DJ_GLOVE_PC_BLUETOOTH_DEVICE_H_
 

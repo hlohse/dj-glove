@@ -1,4 +1,5 @@
 ThirdParty/*
+data/*
 *.swp
 *.swo
 *.hex

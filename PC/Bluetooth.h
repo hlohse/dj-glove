@@ -1,5 +1,5 @@
-#ifndef DJ_GLOVE_PC_COMMON_BLUETOOTH_H_
-#define DJ_GLOVE_PC_COMMON_BLUETOOTH_H_
+#ifndef DJ_GLOVE_PC_BLUETOOTH_H_
+#define DJ_GLOVE_PC_BLUETOOTH_H_
 
 #include "CommonSerial.h"
 #include "BluetoothDevice.h"
@@ -37,5 +37,5 @@ private:
     int GetSocketError() const;
 };
 
-#endif // DJ_GLOVE_PC_COMMON_BLUETOOTH_H_
+#endif // DJ_GLOVE_PC_BLUETOOTH_H_
 

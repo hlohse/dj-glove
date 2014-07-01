@@ -7,8 +7,8 @@
  *  See ISerial for example usage.
  */
 
-#ifndef DJ_GLOVE_PC_COMMON_COMMON_SERIAL_H_
-#define DJ_GLOVE_PC_COMMON_COMMON_SERIAL_H_
+#ifndef DJ_GLOVE_PC_COMMON_SERIAL_H_
+#define DJ_GLOVE_PC_COMMON_SERIAL_H_
 
 #include "ISerial.h"
 #include <sstream>
@@ -33,5 +33,5 @@ protected:
     std::ostringstream last_error_;
 };
 
-#endif // DJ_GLOVE_PC_COMMON_COMMON_SERIAL_H_
+#endif // DJ_GLOVE_PC_COMMON_SERIAL_H_
 

@@ -5,6 +5,9 @@
  *  IsValidCommand checks whether a given string corresponds to a command.
  */
 
+#ifndef DJ_GLOVE_ARDUINO_LIBRARIES_BLUETOOTH_COMMANDS_H_
+#define DJ_GLOVE_ARDUINO_LIBRARIES_BLUETOOTH_COMMANDS_H_
+
 #include <Arduino.h>
 
 namespace BluetoothCommands {
@@ -35,4 +38,6 @@ extern Command set_baud_57600;
 extern Command set_baud_115200;
 
 }
+
+#endif // DJ_GLOVE_ARDUINO_LIBRARIES_BLUETOOTH_COMMANDS_H_
 

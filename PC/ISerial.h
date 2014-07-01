@@ -19,8 +19,8 @@
  *      }
  */
 
-#ifndef DJ_GLOVE_PC_COMMON_ISERIAL_H_
-#define DJ_GLOVE_PC_COMMON_ISERIAL_H_
+#ifndef DJ_GLOVE_PC_ISERIAL_H_
+#define DJ_GLOVE_PC_ISERIAL_H_
 
 #include <string>
 
@@ -59,5 +59,5 @@ public:
     virtual int WriteLine(const std::string& output) = 0;
 };
 
-#endif // DJ_GLOVE_PC_COMMON_ISERIAL_H_
+#endif // DJ_GLOVE_PC_ISERIAL_H_
 
