@@ -20,8 +20,17 @@
 
 #include <string>
 #include <cstdint>
+
+#ifdef __linux__
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
+#elif _WIN32
+//#include <Windows.h>
+#include <WinSock2.h>
+#include <ws2bth.h>
+#include <bthsdpdef.h>
+#include <bluetoothapis.h>
+#endif
 
 class BluetoothDevice {
 public:
@@ -31,18 +40,34 @@ public:
                     const std::string& address,
                     const int channel);
     ~BluetoothDevice();
-    
-    struct sockaddr_rc GetSocketAddress() const;
 
     bool IsValid() const;
-    std::string ToString() const;
+	std::string ToString() const;
+
+#ifdef __linux__
+	struct sockaddr_rc
+#elif _WIN32
+	SOCKADDR_BTH
+#endif
+	GetSocketAddress() const;
 
 private:
     std::string name_;
     std::string address_;
     int channel_;
-    struct sockaddr_rc socket_address_;
-    bool is_valid_;
+	bool is_valid_;
+
+#ifdef __linux__
+	struct sockaddr_rc
+#elif _WIN32
+	SOCKADDR_BTH
+#endif
+	socket_address_;
+
+#ifdef _WIN32
+	int StringToAddress(IN const std::string& address_string,
+						OUT BTH_ADDR& address);
+#endif
 };
 
 #endif // DJ_GLOVE_PC_BLUETOOTH_DEVICE_H_
