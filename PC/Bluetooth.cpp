@@ -13,6 +13,39 @@ using namespace std;
 #include <io.h>
 #endif
 
+bool Bluetooth::SetUp()
+{
+#ifdef __linux__
+	return true;	// Nothing to do on Linux
+#elif _WIN32
+	const int version[2] = { 2, 2 };	// Use Winsock 2.2
+	const WORD required_version = MAKEWORD(version[0], version[1]);
+	WSADATA winsock_data;
+
+	if (WSAStartup(required_version, &winsock_data) != 0) {
+		return false;
+	}
+
+	if (LOBYTE(winsock_data.wVersion) != version[1]
+	||  HIBYTE(winsock_data.wVersion) != version[0])
+	{
+		Bluetooth::TearDown();
+		return false;
+	}
+
+	return true;
+#endif
+}
+
+void Bluetooth::TearDown()
+{
+#ifdef __linux__
+	return;	// Nothing to do on Linux
+#elif _WIN32
+	WSACleanup();
+#endif
+}
+
 Bluetooth::Bluetooth(const BluetoothDevice& device,
                      const int read_socket_buffer_bytes)
 :   device_(device),
@@ -77,22 +110,33 @@ void Bluetooth::ConnectSocket(struct timeval timeout, fd_set sockets)
 
     SetSocketNonBlocking();
     connect(socket_, (struct sockaddr*) &address, sizeof(address));
+	
+	switch (select(socket_ + 1, NULL, &sockets, NULL, &timeout)) {
+	case 1: {
+		int error = GetSocketError();
 
-    if (select(socket_ + 1, NULL, &sockets, NULL, &timeout) == 1) {
-        int error = GetSocketError();
-    
-        if (error == 0) {
-            is_ready_ = true;
-        }
-        else {
-            last_error_.clear();
-            last_error_ << "Error " << error << " on socket";
-        }
-    }
-    else {
-        last_error_.clear();
-        last_error_ << "Timeout while connecting socket";
-    }
+		if (error == 0) {
+			is_ready_ = true;
+		}
+		else {
+			last_error_.clear();
+			last_error_ << "Error " << error << " on socket";
+		}
+		break;
+	}
+	case 0:
+		last_error_.clear();
+		last_error_ << "Timeout while connecting socket";
+		break;
+	default:
+		last_error_.clear();
+#ifdef __linux__
+		last_error_ << "Error " << errno << " while connecting socket";
+#elif _WIN32
+		last_error_ << "Error " << WSAGetLastError() << " while connecting socket";
+#endif
+		break;
+	}
 
     SetSocketBlocking();
 }

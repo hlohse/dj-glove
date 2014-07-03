@@ -169,12 +169,18 @@ void ShowResult(const Result& result, const vector<double>& times_ms)
 
 int main()
 {
+	if (!Bluetooth::SetUp()) {
+		cout << "Failed to set up Bluetooth!" << endl;
+		return -1;
+	}
+
     ISerial* serial = GetSerial();
     vector<TimeTuple> times;
     vector<double> times_ms;
 
     if (!serial->IsReady()) {
-        cout << "Serial error: " << serial->GetLastError() << endl;
+		cout << "Serial error: " << serial->GetLastError() << endl;
+		Bluetooth::TearDown();
         return -1;
     }
 
@@ -188,6 +194,7 @@ int main()
         ShowResult(result, times_ms);
     }
 
+	Bluetooth::TearDown();
     delete serial;
     return 0;
 }

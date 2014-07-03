@@ -16,6 +16,12 @@ public:
 	using Socket = SOCKET;
 #endif
 
+	// Call once first
+	static bool SetUp();
+
+	// Call on termination
+	static void TearDown();
+
     Bluetooth(const BluetoothDevice& device,
               const int read_socket_buffer_bytes);
     virtual ~Bluetooth();
