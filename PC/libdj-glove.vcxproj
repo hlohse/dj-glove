@@ -62,11 +62,13 @@
     <ClInclude Include="ISerial.h" />
     <ClInclude Include="Export.h" />
     <ClInclude Include="LibDjGlove.h" />
+    <ClInclude Include="MidiSignal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bluetooth.cpp" />
     <ClCompile Include="BluetoothDevice.cpp" />
     <ClCompile Include="CommonSerial.cpp" />
+    <ClCompile Include="MidiSignal.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
