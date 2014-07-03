@@ -9,7 +9,7 @@
 
 namespace BtLatency {
 
-const unsigned int num_messages = 65535;  // Max. 16 bit
+const unsigned int num_messages = 100;  // Max. 16 bit
 const char* message             = "PING";
 const char  start_signal        = '!';
 

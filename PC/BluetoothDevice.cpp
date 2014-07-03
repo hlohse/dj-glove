@@ -3,7 +3,7 @@
 #include <cstdint>
 using namespace std;
 
-const BluetoothDevice BluetoothDevice::Arduino("Arduino", "98:D3:31:B3:0A:25", 1);
+const BluetoothDevice BluetoothDevice::Arduino("Arduino", "98:d3:31:b3:0a:25", 1);
 
 BluetoothDevice::BluetoothDevice(const string& name,
                                  const string& address,
@@ -28,7 +28,7 @@ BluetoothDevice::BluetoothDevice(const string& name,
 	if (is_valid_) {
 		socket_address_.addressFamily  = AF_BTH;
 		socket_address_.serviceClassId = GUID_NULL;
-		socket_address_.port           = BT_PORT_ANY;
+		socket_address_.port		   = channel_;
 	}
 #endif
 }

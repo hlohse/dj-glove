@@ -9,8 +9,6 @@ using namespace std;
 #include <sys/ioctl.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
-#elif _WIN32
-#include <io.h>
 #endif
 
 bool Bluetooth::SetUp()
@@ -109,7 +107,7 @@ void Bluetooth::ConnectSocket(struct timeval timeout, fd_set sockets)
     BluetoothDevice::SocketAddress address = device_.GetSocketAddress();
 
     SetSocketNonBlocking();
-    connect(socket_, (struct sockaddr*) &address, sizeof(address));
+    connect(socket_, (sockaddr*) &address, sizeof(address));
 	
 	switch (select(socket_ + 1, NULL, &sockets, NULL, &timeout)) {
 	case 1: {
@@ -232,9 +230,10 @@ void Bluetooth::ReadSocket()
                       read_socket_buffer_,
                       read_socket_buffer_bytes_);
 #elif _WIN32
-	bytes_read = _read(socket_,
-					   read_socket_buffer_,
-					   read_socket_buffer_bytes_);
+	bytes_read = recv(socket_,
+					  read_socket_buffer_,
+					  read_socket_buffer_bytes_,
+					  0);
 #endif
     
     if (bytes_read < 0) {
@@ -274,9 +273,10 @@ int Bluetooth::Write(const string& output)
                               output.c_str(),
 							  output.length());
 #elif _WIN32
-	int bytes_written = _write(socket_,
-							   output.c_str(),
-							   output.length());
+	int bytes_written = send(socket_,
+							 output.c_str(),
+							 output.length(),
+							 0);
 #endif
 
     if (bytes_written < 0) {

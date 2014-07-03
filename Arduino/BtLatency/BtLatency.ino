@@ -2,7 +2,7 @@
 #include <SoftwareSerial.h>
 
 // NOTE: USE THIS VALUES IN PC PROJECT, TOO!
-const unsigned int num_messages = 65535;
+const unsigned int num_messages = 100;
 const char*        message      = "PING";
 const char         start_signal = '!';
 

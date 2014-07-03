@@ -22,7 +22,7 @@ using Time = SYSTEMTIME;
 #endif
 
 using TimeTuple = pair<Time, Time>;
-static const int timeout_s = 5;
+static const int timeout_s = 10;
 
 typedef struct {
     double min;
