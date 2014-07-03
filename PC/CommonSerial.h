@@ -11,9 +11,10 @@
 #define DJ_GLOVE_PC_COMMON_SERIAL_H_
 
 #include "ISerial.h"
+#include "Export.h"
 #include <sstream>
 
-class CommonSerial : public ISerial {
+class EXPORT CommonSerial : public ISerial {
 public:
     // ISerial
     virtual std::string GetLastError() const;
@@ -30,7 +31,7 @@ public:
 
 protected:
     // Used by subclasses to store last error message
-    std::ostringstream last_error_;
+	std::ostringstream last_error_;
 };
 
 #endif // DJ_GLOVE_PC_COMMON_SERIAL_H_

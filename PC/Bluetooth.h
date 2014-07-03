@@ -3,12 +3,13 @@
 
 #include "CommonSerial.h"
 #include "BluetoothDevice.h"
+#include "Export.h"
 
 #ifdef __linux__
-#include <sys/time.h> // Automagically included under Windows
+#include <sys/time.h>
 #endif
 
-class Bluetooth : public CommonSerial {
+class EXPORT Bluetooth : public CommonSerial {
 public:
 #ifdef __linux__
 	using Socket = int;

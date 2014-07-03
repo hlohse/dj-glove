@@ -22,9 +22,10 @@
 #ifndef DJ_GLOVE_PC_ISERIAL_H_
 #define DJ_GLOVE_PC_ISERIAL_H_
 
+#include "Export.h"
 #include <string>
 
-class ISerial {
+class EXPORT ISerial {
 public:
     virtual ~ISerial() {}
 

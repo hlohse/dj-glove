@@ -18,6 +18,7 @@
 #ifndef DJ_GLOVE_PC_BLUETOOTH_DEVICE_H_
 #define DJ_GLOVE_PC_BLUETOOTH_DEVICE_H_
 
+#include "Export.h"
 #include <string>
 #include <cstdint>
 
@@ -25,14 +26,13 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
 #elif _WIN32
-//#include <Windows.h>
 #include <WinSock2.h>
 #include <ws2bth.h>
 #include <bthsdpdef.h>
 #include <bluetoothapis.h>
 #endif
 
-class BluetoothDevice {
+class EXPORT BluetoothDevice {
 public:
     static const BluetoothDevice Arduino;
 
