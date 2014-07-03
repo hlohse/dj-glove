@@ -1,6 +1,5 @@
 #include "BtLatency.h"
-#include "Bluetooth.h"
-#include "BluetoothDevice.h"
+#include "LibDjGlove.h"
 #include <string>
 #include <vector>
 #include <utility>

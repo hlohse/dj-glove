@@ -15,22 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bluetooth.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BluetoothDevice.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BtLatency.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CommonSerial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Export.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ISerial.h">
+    <ClInclude Include="LibDjGlove.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
