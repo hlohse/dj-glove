@@ -6,6 +6,17 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Bluetooth.h" />
+    <ClInclude Include="BluetoothDevice.h" />
+    <ClInclude Include="BtLatency.h" />
+    <ClInclude Include="CommonSerial.h" />
+    <ClInclude Include="Export.h" />
+    <ClInclude Include="ISerial.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BtLatency.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9B084F4A-A0EE-4B16-A01B-7FBD7A83215E}</ProjectGuid>
     <RootNamespace>djglove</RootNamespace>
@@ -26,7 +37,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\</OutDir>
+    <IntDir>build\$(ProjectName)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -40,25 +54,16 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;libdj-glove.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>del $(OutDir)\BtLatency.lib
+del $(OutDir)\BtLatency.exp
+del $(OutDir)\BtLatency.pdb
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="PC\Bluetooth.h" />
-    <ClInclude Include="PC\BluetoothDevice.h" />
-    <ClInclude Include="PC\BtLatency.h" />
-    <ClInclude Include="PC\CommonSerial.h" />
-    <ClInclude Include="PC\ISerial.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="PC\Bluetooth.cpp" />
-    <ClCompile Include="PC\BluetoothDevice.cpp" />
-    <ClCompile Include="PC\BtLatency.cpp" />
-    <ClCompile Include="PC\CommonSerial.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Full</Optimization>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Speed</FavorSizeOrSpeed>
-    </ClCompile>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

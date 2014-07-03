@@ -3,7 +3,12 @@
 #include <cstdint>
 using namespace std;
 
-const BluetoothDevice BluetoothDevice::Arduino("Arduino", "98:d3:31:b3:0a:25", 1);
+const BluetoothDevice BluetoothDevice::ArduinoDevice("Arduino", "98:d3:31:b3:0a:25", 1);
+
+const BluetoothDevice& BluetoothDevice::Arduino()
+{
+	return BluetoothDevice::ArduinoDevice;
+}
 
 BluetoothDevice::BluetoothDevice(const string& name,
                                  const string& address,

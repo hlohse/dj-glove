@@ -34,7 +34,7 @@
 
 class EXPORT BluetoothDevice {
 public:
-    static const BluetoothDevice Arduino;
+	static const BluetoothDevice& Arduino();
 
 #ifdef __linux__
 	using SocketAddress = struct sockaddr_rc;
@@ -53,6 +53,8 @@ public:
 	SocketAddress GetSocketAddress() const;
 
 private:
+	static const BluetoothDevice ArduinoDevice;
+
     std::string name_;
     std::string address_;
     int channel_;

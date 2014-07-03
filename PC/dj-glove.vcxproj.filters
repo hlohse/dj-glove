@@ -15,33 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PC\Bluetooth.h">
+    <ClInclude Include="Bluetooth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PC\BluetoothDevice.h">
+    <ClInclude Include="BluetoothDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PC\BtLatency.h">
+    <ClInclude Include="BtLatency.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PC\CommonSerial.h">
+    <ClInclude Include="CommonSerial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PC\ISerial.h">
+    <ClInclude Include="Export.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ISerial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PC\CommonSerial.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PC\Bluetooth.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PC\BluetoothDevice.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PC\BtLatency.cpp">
+    <ClCompile Include="BtLatency.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

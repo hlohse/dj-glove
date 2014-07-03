@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BtLatency", "dj-glove.vcxproj", "{9B084F4A-A0EE-4B16-A01B-7FBD7A83215E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9BA54EB7-FB4F-486F-AF69-34B15797CC70} = {9BA54EB7-FB4F-486F-AF69-34B15797CC70}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libdj-glove", "libdj-glove.vcxproj", "{9BA54EB7-FB4F-486F-AF69-34B15797CC70}"
 EndProject

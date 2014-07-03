@@ -36,7 +36,7 @@ typedef struct {
 ISerial* GetSerial()
 {
     Bluetooth* bluetooth = new Bluetooth(
-        BluetoothDevice::Arduino,
+		BluetoothDevice::Arduino(),
         string(BtLatency::message).length());
     bluetooth->Connect(timeout_s);
     
@@ -171,6 +171,7 @@ int main()
 {
 	if (!Bluetooth::SetUp()) {
 		cout << "Failed to set up Bluetooth!" << endl;
+		cin.ignore();
 		return -1;
 	}
 
@@ -180,6 +181,7 @@ int main()
 
     if (!serial->IsReady()) {
 		cout << "Serial error: " << serial->GetLastError() << endl;
+		cin.ignore();
 		Bluetooth::TearDown();
         return -1;
     }
@@ -193,6 +195,8 @@ int main()
         result = GetResult(times_ms);
         ShowResult(result, times_ms);
     }
+
+	cin.ignore();
 
 	Bluetooth::TearDown();
     delete serial;
