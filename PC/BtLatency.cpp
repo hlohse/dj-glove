@@ -7,14 +7,21 @@
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
-#include <unistd.h>
-#include <float.h>
+#include <cfloat>
 #include <cmath>
-#include <sys/time.h>
-#include <sys/resource.h>
 using namespace std;
 
-typedef pair<struct timeval, struct timeval> time_tuple;
+#ifdef __linux__
+#include <unistd.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+using Time = struct timeval;
+#elif _WIN32
+#include <windows.h>
+using Time = SYSTEMTIME;
+#endif
+
+using TimeTuple = pair<Time, Time>;
 static const int timeout_s = 5;
 
 typedef struct {
@@ -44,19 +51,30 @@ void SyncStart(ISerial* serial)
     serial->Write(start_signal);
 }
 
-void DetermineTimes(ISerial* serial, vector<time_tuple>& times)
+void DetermineTimes(ISerial* serial, vector<TimeTuple>& times)
 {
-    struct timeval start, stop;
-    string expected_message(BtLatency::message);
+    Time start, stop;
+    const string expected_message(BtLatency::message);
     string message;
 
     times.reserve(BtLatency::num_messages);
     SyncStart(serial);
 
-    for (unsigned int i = 0; i < BtLatency::num_messages; ++i) {
+    for (unsigned int i = 0; i < BtLatency::num_messages; ++i)
+	{
+#ifdef __linux__
         gettimeofday(&start, NULL);
-        message = serial->ReadNextAvailable(expected_message.length());
-        gettimeofday(&stop, NULL);
+#elif _WIN32
+		GetSystemTime(&start);
+#endif
+
+		message = serial->ReadNextAvailable(expected_message.length());
+
+#ifdef __linux__
+		gettimeofday(&stop, NULL);
+#elif _WIN32
+		GetSystemTime(&stop);
+#endif
 
         if (!serial->IsReady()) {
             cout << "Serial error: " << serial->GetLastError() << endl;
@@ -69,19 +87,25 @@ void DetermineTimes(ISerial* serial, vector<time_tuple>& times)
             break;
         }
 
-        times.push_back(time_tuple(start, stop));
+		times.push_back(TimeTuple(start, stop));
     }
 }
 
-void DetermineTimesMs(const vector<time_tuple>& times, vector<double>& times_ms)
+void DetermineTimesMs(const vector<TimeTuple>& times, vector<double>& times_ms)
 {
-    vector<time_tuple>::const_iterator it;
+    for (auto it = times.cbegin(); it != times.cend(); ++it)
+	{
+		double total_time_ms;
 
-    for (it = times.begin(); it != times.end(); ++it) {
+#ifdef __linux__
         double start_time_us = it->first.tv_sec  * 1e6 + it->first.tv_usec;
         double stop_time_us  = it->second.tv_sec * 1e6 + it->second.tv_usec;
-
-        double total_time_ms = (stop_time_us - start_time_us) / 1e3;
+        total_time_ms = (stop_time_us - start_time_us) / 1e3;
+#elif _WIN32
+		double start_time_ms = it->first.wSecond  * 1e3 + it->first.wMilliseconds;
+		double stop_time_ms  = it->second.wSecond * 1e3 + it->second.wMilliseconds;
+		total_time_ms = stop_time_ms - start_time_ms;
+#endif
        
         times_ms.push_back(total_time_ms);
     }
@@ -90,7 +114,6 @@ void DetermineTimesMs(const vector<time_tuple>& times, vector<double>& times_ms)
 Result GetResult(vector<double>& times_ms)
 {
     vector<double> times_ms_sorted(times_ms);
-    vector<double>::const_iterator it;
     Result result;
     
     sort(times_ms_sorted.begin(), times_ms_sorted.end());
@@ -101,7 +124,7 @@ Result GetResult(vector<double>& times_ms)
     result.median = times_ms[times_ms_sorted.size() / 2];
     result.var    = 0;
 
-    for (it = times_ms.begin(); it != times_ms.end(); ++it) {
+    for (auto it = times_ms.cbegin(); it != times_ms.cend(); ++it) {
         const double time = *it;
 
         if (time < result.min) {
@@ -116,7 +139,7 @@ Result GetResult(vector<double>& times_ms)
 
     result.mean /= times_ms.size();
     
-    for (it = times_ms.begin(); it != times_ms.end(); ++it) {
+    for (auto it = times_ms.cbegin(); it != times_ms.cend(); ++it) {
         const double time = *it;
         result.var += (time - result.mean) * (time - result.mean);
     }
@@ -129,11 +152,9 @@ Result GetResult(vector<double>& times_ms)
 
 void ShowResult(const Result& result, const vector<double>& times_ms)
 {
-    vector<double>::const_iterator it;
-
     cout << setprecision(2) << fixed;
     
-    for (it = times_ms.begin(); it != times_ms.end(); ++it) {
+    for (auto it = times_ms.cbegin(); it != times_ms.cend(); ++it) {
         cout << it - times_ms.begin() << " " << *it << " ms" << endl;
     }
 
@@ -149,7 +170,7 @@ void ShowResult(const Result& result, const vector<double>& times_ms)
 int main()
 {
     ISerial* serial = GetSerial();
-    vector<time_tuple> times;
+    vector<TimeTuple> times;
     vector<double> times_ms;
 
     if (!serial->IsReady()) {
