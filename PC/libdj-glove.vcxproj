@@ -32,6 +32,8 @@
     <IntDir>build\$(ProjectName)\</IntDir>
     <TargetExt>.lib</TargetExt>
     <TargetName>dj-glove</TargetName>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../ThirdParty</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);../ThirdParty</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -62,12 +64,14 @@
     <ClInclude Include="ISerial.h" />
     <ClInclude Include="Export.h" />
     <ClInclude Include="LibDjGlove.h" />
+    <ClInclude Include="MidiPort.h" />
     <ClInclude Include="MidiSignal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bluetooth.cpp" />
     <ClCompile Include="BluetoothDevice.cpp" />
     <ClCompile Include="CommonSerial.cpp" />
+    <ClCompile Include="MidiPort.cpp" />
     <ClCompile Include="MidiSignal.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
