@@ -30,19 +30,26 @@
 class Midi {
 public:
     typedef unsigned char byte_t;
+    typedef unsigned int  word_t;
 
-    static byte_t Limit(const byte_t value,
-                        const byte_t upper_bound,
-                        const byte_t lower_bound);
-
-    enum class Limits : byte_t {
-        ChannelMin  = 0,
-        ChannelMax  = 15,
-        Min         = 0,
-        Max         = 127
+    enum ValueType {
+        Channel,
+        Value
     };
 
-    enum class Status : byte_t {
+    static byte_t Limit(const byte_t value, const ValueType type);
+
+    static void SplitPitchBend(const word_t pitch_bend,
+                               byte_t& coarse,
+                               byte_t& fine);
+
+    enum Limits {
+        Min          = 0,
+        Max          = 127,
+        ChannelMax   = 15
+    };
+
+    enum Status {
         NoteOff             = 0x80, // 1000 0000
         NoteOn              = 0x90, // 1001 0000
         PolyKeyPressure     = 0xA0, // 1010 0000
@@ -53,7 +60,7 @@ public:
     };
 
     // http://www.indiana.edu/~emusic/etext/MIDI/chapter3_MIDI6.shtml
-    enum class Controller : byte_t {
+    enum Controller {
         BankSelect          = 0x00,
         ModulationWheel     = 0x01,
         Breath              = 0x02,
