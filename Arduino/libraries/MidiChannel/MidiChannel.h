@@ -1,3 +1,20 @@
+/*      MidiChannel
+ *
+ *  Provides functionality to control MIDI signals on a single channel. Controls
+ *  range from key and velocity to program presets etc.
+ *  The resulting signal bytes can be retrieved via Signal.
+ *
+ *  Example, send middle C on channel 1 via Serial:
+ *
+ *      MidiChannel channel(1);
+ *
+ *      channel.Status(Midi::NoteOn);
+ *      channel.Key(60); // Middle C
+ *      channel.Velocity(64);
+ *
+ *      Serial.write(channel.Signal());
+ */
+
 #ifndef DJ_GLOVE_ARDUINO_LIBRARY_MIDI_CHANNEL_H_
 #define DJ_GLOVE_ARDUINO_LIBRARY_MIDI_CHANNEL_H_
 

@@ -39,10 +39,15 @@ public:
 
     static byte_t Limit(const byte_t value, const ValueType type);
 
+    static void SplitStatusChannel(const byte_t status_channel,
+                                   byte_t& status,
+                                   byte_t& channel);
+    static byte_t CombineStatusChannel(const byte_t status, const byte_t channel);
+
     static void SplitPitchBend(const word_t pitch_bend,
-                               byte_t& coarse,
-                               byte_t& fine);
-    static word_t CombinePitchBend(const byte_t coarse, const byte_t fine);
+                               byte_t& fine,
+                               byte_t& coarse);
+    static word_t CombinePitchBend(const byte_t fine, const byte_t coarse);
 
     enum Limits {
         Min          = 0,

@@ -20,14 +20,14 @@ char* MidiChannel::Signal()
 
 int MidiChannel::Channel() const
 {
-    return (int) (data_[0] & 0x0F);
+    Midi::byte_t status, channel;
+    Midi::SplitStatusChannel(data_[0], status, channel);
+    return (int) channel;
 }
 
 void MidiChannel::Status(const Midi::Status status)
 {
-    const Midi::byte_t status_byte  = ((Midi::byte_t) status)   & 0xF0;
-    const Midi::byte_t channel_byte = ((Midi::byte_t) data_[0]) & 0x0F;
-    data_[0] = status_byte | channel_byte;
+    data_[0] = Midi::CombineStatusChannel((Midi::byte_t) status, (Midi::byte_t) Channel());
 
     switch (status) {
         case Midi::ProgramChange:
@@ -42,7 +42,9 @@ void MidiChannel::Status(const Midi::Status status)
 
 Midi::Status MidiChannel::Status() const
 {
-    return (Midi::Status) (data_[0] & 0xF0);
+    Midi::byte_t status, channel;
+    Midi::SplitStatusChannel(data_[0], status, channel);
+    return (Midi::Status) status;
 }
 
 void MidiChannel::Value(const int value, const int data_index)
@@ -78,11 +80,11 @@ int  MidiChannel::ChannelPressure() const                       { return Value(1
     
 void MidiChannel::PitchBend(const int pitch_bend)
 {
-    Midi::SplitPitchBend((Midi::word_t) pitch_bend, data_[2], data_[1]);
+    Midi::SplitPitchBend((Midi::word_t) pitch_bend, data_[1], data_[2]);
 }
 
 int MidiChannel::PitchBend() const
 {
-    return (int) Midi::CombinePitchBend(data_[2], data_[1]);
+    return (int) Midi::CombinePitchBend(data_[1], data_[2]);
 }
 
