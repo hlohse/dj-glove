@@ -23,7 +23,7 @@ void Midi::SplitStatusChannel(const Midi::byte_t status_channel,
     channel = status_channel & 0x0F; // 0000 1111
 }
 
-Midi::byte_t CombineStatusChannel(const Midi::byte_t status, const Midi::byte_t channel)
+Midi::byte_t Midi::CombineStatusChannel(const Midi::byte_t status, const Midi::byte_t channel)
 {
     return (status << 4) | channel; // ssss cccc
 }
