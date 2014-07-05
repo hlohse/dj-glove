@@ -58,9 +58,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\ThirdParty\teVirtualMIDI.h" />
     <ClInclude Include="Bluetooth.h" />
     <ClInclude Include="BluetoothDevice.h" />
     <ClInclude Include="CommonSerial.h" />
+    <ClInclude Include="Formatter.h" />
     <ClInclude Include="ISerial.h" />
     <ClInclude Include="Export.h" />
     <ClInclude Include="LibDjGlove.h" />

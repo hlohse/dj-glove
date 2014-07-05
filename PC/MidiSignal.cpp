@@ -1,4 +1,6 @@
 #include "MidiSignal.h"
+#include <sstream>
+#include <iomanip>
 using namespace std;
 
 MidiSignal::MidiSignal(const string& bytes)
@@ -32,4 +34,11 @@ MidiSignal::Byte* MidiSignal::Bytes()
 int MidiSignal::NumBytes() const
 {
 	return MidiSignal::num_bytes;
+}
+
+string MidiSignal::ToString() const
+{
+	ostringstream result;
+	result << hex << bytes_[0] << "|" << bytes_[1] << "|" << bytes_[2];
+	return result.str();
 }

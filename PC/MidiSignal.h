@@ -17,6 +17,8 @@ public:
 	Byte* Bytes();
 	int NumBytes() const;
 
+	std::string ToString() const;
+
 private:
 	static const int num_bytes = 3;
 
