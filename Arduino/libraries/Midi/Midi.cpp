@@ -19,25 +19,31 @@ void Midi::SplitStatusChannel(const Midi::byte_t status_channel,
                               Midi::byte_t& status,
                               Midi::byte_t& channel)
 {
-    status  = status_channel & 0xF0;
-    channel = status_channel & 0x0F;
+    status  = status_channel & 0xF0; // 1111 0000
+    channel = status_channel & 0x0F; // 0000 1111
 }
 
 Midi::byte_t CombineStatusChannel(const Midi::byte_t status, const Midi::byte_t channel)
 {
-    return (status << 4) | channel;
+    return (status << 4) | channel; // ssss cccc
 }
 
 void Midi::SplitPitchBend(const Midi::word_t pitch_bend,
                           Midi::byte_t& fine,
                           Midi::byte_t& coarse)
 {
-    coarse = Limit((byte_t) (pitch_bend >> 8), Midi::Value);
-    fine   = Limit((byte_t) pitch_bend, Midi::Value);
+    const byte_t fine_7bit   = (byte_t) (pitch_bend & 0x007F); // 0000 0000 0111 1111
+    const byte_t coarse_7bit = (byte_t) ((pitch_bend >> 7) & 0x007F);
+
+    fine   = Limit(fine_7bit,   Midi::Value);
+    coarse = Limit(coarse_7bit, Midi::Value);
 }
 
 Midi::word_t Midi::CombinePitchBend(const Midi::byte_t fine, const Midi::byte_t coarse)
 {
-    return ((coarse << 7) | fine) & 0x3FFF; // 14 bit resolution
+    const word_t fine_word   = ((word_t) fine) & 0x007F;          // 0000 0000 0111 1111
+    const word_t coarse_word = (((word_t) coarse) << 7) & 0x3F80; // 0011 1111 1000 0000
+    
+    return coarse_word | fine_word; // 00cc cccc cfff ffff
 }
 
