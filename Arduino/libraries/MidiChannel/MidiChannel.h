@@ -23,10 +23,13 @@
 class MidiChannel {
 public:
     MidiChannel(const int channel);
+    MidiChannel();
     ~MidiChannel();
 
     char* Signal();
+    int SignalLength() const;
 
+    void Channel(const int channel);
     int Channel() const;
 
     void Status(const Midi::Status status);
@@ -57,7 +60,7 @@ public:
     int PitchBend() const;
 
 private:
-    Midi::byte_t data_[4];  // Additional \0 at end
+    Midi::byte_t data_[3];
     int current_data_length_;
 
     void Value(const int value, const int data_index);

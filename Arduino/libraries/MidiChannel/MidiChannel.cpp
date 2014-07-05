@@ -2,10 +2,15 @@
 
 MidiChannel::MidiChannel(const int channel)
 {
-    data_[0] = Midi::Limit((Midi::byte_t) channel, Midi::Channel);
+    Channel(channel);
     Status(Midi::NoteOff);
     Key(0);
     Velocity(0);
+}
+
+MidiChannel::MidiChannel()
+:   MidiChannel(0)
+{
 }
 
 MidiChannel::~MidiChannel()
@@ -14,8 +19,17 @@ MidiChannel::~MidiChannel()
 
 char* MidiChannel::Signal()
 {
-    data_[current_data_length_] = 0;
     return (char*) data_;
+}
+
+int MidiChannel::SignalLength() const
+{
+    return current_data_length_;
+}
+
+void MidiChannel::Channel(const int channel) 
+{
+    data_[0] = Midi::CombineStatusChannel(Status(), (Midi::byte_t) channel);
 }
 
 int MidiChannel::Channel() const

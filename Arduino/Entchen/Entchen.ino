@@ -1,5 +1,6 @@
 #include <Midi.h>
 #include <MidiChannel.h>
+#include <MidiPlayer.h>
 #include <Bluetooth.h>
 #include <SoftwareSerial.h>
 
@@ -23,7 +24,8 @@ void setup() {
 }
 
 void loop() {
-    MidiChannel channel(channel_nr);
+    MidiPlayer player;
+    MidiChannel& channel = player(channel_nr);
     channel.Status(Midi::NoteOn);
     channel.Velocity(velocity);
     
@@ -32,7 +34,7 @@ void loop() {
     if (Bluetooth.read() == start_signal) {
         for (int i = 0; i < num_keys; i++) {
             channel.Key(keys[i]);
-            Bluetooth.print(channel.Signal());
+            player.Play(channel);
             delay(key_delay);
         }
     }
