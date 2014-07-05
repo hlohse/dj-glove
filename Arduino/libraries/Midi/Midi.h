@@ -42,6 +42,7 @@ public:
     static void SplitPitchBend(const word_t pitch_bend,
                                byte_t& coarse,
                                byte_t& fine);
+    static word_t CombinePitchBend(const byte_t coarse, const byte_t fine);
 
     enum Limits {
         Min          = 0,

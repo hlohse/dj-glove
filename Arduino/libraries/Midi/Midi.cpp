@@ -23,3 +23,8 @@ void Midi::SplitPitchBend(const Midi::word_t pitch_bend,
     fine   = Limit((byte_t) pitch_bend, Midi::Value);
 }
 
+Midi::word_t Midi::CombinePitchBend(const Midi::byte_t coarse, const Midi::byte_t fine)
+{
+    return fine | (coarse << 8);
+}
+
