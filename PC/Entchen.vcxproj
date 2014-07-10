@@ -7,16 +7,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BtLatency.h" />
     <ClInclude Include="LibDjGlove.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BtLatency.cpp" />
+    <ClCompile Include="Entchen.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9B084F4A-A0EE-4B16-A01B-7FBD7A83215E}</ProjectGuid>
-    <RootNamespace>djglove</RootNamespace>
-    <ProjectName>BtLatency</ProjectName>
+    <ProjectGuid>{BD407C99-ADDC-410F-891E-A49D08199413}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Entchen</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -24,7 +23,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -34,6 +33,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\</OutDir>
     <IntDir>build\$(ProjectName)\</IntDir>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../ThirdParty</IncludePath>
@@ -41,13 +41,15 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -55,10 +57,9 @@
       <AdditionalLibraryDirectories>../;../ThirdParty</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>del $(OutDir)\BtLatency.lib
-del $(OutDir)\BtLatency.exp
-del $(OutDir)\BtLatency.pdb
-</Command>
+      <Command>del $(OutDir)\Entchen.lib
+del $(OutDir)\Entchen.exp
+del $(OutDir)\Entchen.pdb</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

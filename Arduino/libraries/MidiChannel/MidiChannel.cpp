@@ -2,15 +2,17 @@
 
 MidiChannel::MidiChannel(const int channel)
 {
+	Status(Midi::NoteOff);
+	Key(0);
+	Velocity(0);
     Channel(channel);
-    Status(Midi::NoteOff);
-    Key(0);
-    Velocity(0);
 }
 
 MidiChannel::MidiChannel()
-:   MidiChannel(0)
 {
+	Status(Midi::NoteOff);
+	Key(0);
+	Velocity(0);
 }
 
 MidiChannel::~MidiChannel()
@@ -34,14 +36,15 @@ void MidiChannel::Channel(const int channel)
 
 int MidiChannel::Channel() const
 {
-    Midi::byte_t status, channel;
+	Midi::Status status;
+	Midi::byte_t channel;
     Midi::SplitStatusChannel(data_[0], status, channel);
     return (int) channel;
 }
 
 void MidiChannel::Status(const Midi::Status status)
 {
-    data_[0] = Midi::CombineStatusChannel((Midi::byte_t) status, (Midi::byte_t) Channel());
+    data_[0] = Midi::CombineStatusChannel(status, (Midi::byte_t) Channel());
 
     switch (status) {
         case Midi::ProgramChange:
@@ -56,9 +59,10 @@ void MidiChannel::Status(const Midi::Status status)
 
 Midi::Status MidiChannel::Status() const
 {
-    Midi::byte_t status, channel;
+	Midi::Status status;
+	Midi::byte_t channel;
     Midi::SplitStatusChannel(data_[0], status, channel);
-    return (Midi::Status) status;
+    return status;
 }
 
 void MidiChannel::Value(const int value, const int data_index)

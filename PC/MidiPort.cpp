@@ -1,13 +1,9 @@
 #include "MidiPort.h"
+#include "Formatter.h"
+#include <stdexcept>
 #include <locale>
 #include <codecvt>
 using namespace std;
-
-MidiPort::MidiPort(const string& name)
-:	MidiPort()
-{
-	Open(name);
-}
 
 MidiPort::MidiPort()
 :	name_(""),
@@ -32,7 +28,8 @@ void MidiPort::Open(const string& name)
 	port_ = virtualMIDICreatePortEx2(port_name, MidiPort::Callback, NULL, MidiPort::buffer_size, 0);
 
 	if (!IsOpen()) {
-		// TODO: Handle error
+		throw runtime_error(Formatter() << "Failed to open virtual MIDI port \""
+			<< name << "\": " << GetLastError());
 	}
 }
 
@@ -52,10 +49,8 @@ bool MidiPort::IsOpen() const
 void MidiPort::Play(MidiSignal& midi_signal)
 {
 	if (!virtualMIDISendData(port_, (LPBYTE) midi_signal.Bytes(), midi_signal.NumBytes())) {
-		//return GetLastError();
-	}
-	else {
-		//return 0;
+		throw runtime_error(Formatter() << "Failed to play MIDI signal "
+			<< midi_signal.ToString()  << ": " << GetLastError());
 	}
 }
 

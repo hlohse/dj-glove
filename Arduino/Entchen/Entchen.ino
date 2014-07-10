@@ -7,7 +7,7 @@
 const char start_signal = '!';
 const int  channel_nr   = 0;
 const int  velocity     = 64;
-const int  key_delay    = 100;
+const int  key_delay    = 500;
 const int  num_keys     = 27;
 
 // http://computermusicresource.com/midikeys.html

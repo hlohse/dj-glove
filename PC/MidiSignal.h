@@ -9,18 +9,16 @@ public:
 	using Byte = unsigned char;
 
 	MidiSignal(const std::string& bytes);
-	MidiSignal(const Byte byte_0,
-			   const Byte byte_1,
-			   const Byte byte_2);
 	~MidiSignal();
 
 	Byte* Bytes();
 	int NumBytes() const;
 
-private:
-	static const int num_bytes = 3;
+	std::string ToString() const;
 
-	Byte bytes_[num_bytes];
+private:
+	Byte bytes_[3];
+	int num_bytes_;
 };
 
 #endif // DJ_GLOVE_PC_MIDI_SIGNAL_H_

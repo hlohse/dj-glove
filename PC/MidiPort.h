@@ -8,7 +8,6 @@
 
 class EXPORT MidiPort {
 public:
-	MidiPort(const std::string& name);
 	MidiPort();
 	~MidiPort();
 
