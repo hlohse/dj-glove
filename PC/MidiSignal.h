@@ -9,11 +9,6 @@ public:
 	using Byte = unsigned char;
 
 	MidiSignal(const std::string& bytes);
-	MidiSignal(const Byte byte_0,
-			   const Byte byte_1,
-			   const Byte byte_2);
-	MidiSignal(const Byte byte_0,
-			   const Byte byte_1);
 	~MidiSignal();
 
 	Byte* Bytes();

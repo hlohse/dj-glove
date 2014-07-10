@@ -5,12 +5,6 @@
 #include <codecvt>
 using namespace std;
 
-MidiPort::MidiPort(const string& name)
-:	MidiPort()
-{
-	Open(name);
-}
-
 MidiPort::MidiPort()
 :	name_(""),
 	port_(nullptr)

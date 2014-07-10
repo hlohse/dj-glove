@@ -35,100 +35,100 @@ public:
     enum ValueType {
         Channel,
         Value
-    };
+	};
+
+	enum Limits {
+		Min = 0,
+		Max = 127,
+		ChannelMax = 15
+	};
+
+	enum Status {
+		NoteOff = 0x80, // 1000 0000
+		NoteOn = 0x90, // 1001 0000
+		PolyKeyPressure = 0xA0, // 1010 0000
+		ControllerChange = 0xB0, // 1011 0000
+		ProgramChange = 0xC0, // 1100 0000
+		ChannelPressure = 0xD0, // 1101 0000
+		PitchBend = 0xE0  // 1110 0000
+	};
+
+	// http://www.indiana.edu/~emusic/etext/MIDI/chapter3_MIDI6.shtml
+	enum Controller {
+		BankSelect = 0x00,
+		ModulationWheel = 0x01,
+		Breath = 0x02,
+		// Undefined        = 0x03,
+		Foot = 0x04,
+		PortamentoTime = 0x05,
+		DataEntryMsb = 0x06,
+		MainVolume = 0x07,
+		Balance = 0x08,
+		// Undefined        = 0x09,
+		Pan = 0x0A,
+		Ch0 = 0x0B,
+		Effect1 = 0x0C,
+		Effect2,
+		// Undefined        = 0x0E..0x0F
+		GeneralPurpose1 = 0x10,
+		GeneralPurpose2,
+		GeneralPurpose3,
+		GeneralPurpose4,
+		// Undefined        = 0x14..0x1F
+		// Lsb0..31         = 0x20..0x3F    // Rarely implemented
+		DamperPedalSustain = 0x40,         // Data 1: 0..64 = Off, 64..127 = On
+		Portamento = 0x41,
+		Sostenuto = 0x42,
+		SoftPedal = 0x43,
+		LegatoFootswitch = 0x44,
+		Hold2 = 0x45,
+		SoundController1 = 0x46,         // Default: Sound Variation
+		SoundController2,                   // Default: Timbre/Harmonic Content
+		SoundController3,                   // Default: Release Time
+		SoundController4,                   // Default: Attack Time
+		SoundController5,                   // Default: Brightness
+		SoundController6,
+		SoundController7,
+		SoundController8,
+		SoundController9,
+		SoundController10,
+		GeneralPurpose5 = 0x50,
+		GeneralPurpose6,
+		GeneralPurpose7,
+		GeneralPurpose8,
+		PortamentoControl = 0x54,
+		// Undefined        = 0x55..0x5A
+		EffectsDepth1 = 0x5B,         // Previously External Effects Depth
+		EffectsDepth2,                      // Previously Tremolo Depth
+		EffectsDepth3,                      // Previously Chorus Depth
+		EffectsDepth4,                      // Previously Detune Depth
+		EffectsDepth5,                      // Previously Phaser Depth
+		DataIncrement = 0x60,
+		DataDecrement = 0x61,
+		// NonRegistered... = 0x62..0x65
+		// Undefined        = 0x66..0x78
+
+		//  Channel Mode Messages
+		ResetAllControllers = 0x79,
+		LocalControl = 0x7A,
+		AllNotesOff = 0x7B,
+		OmniOff = 0x7C,
+		OmniOn = 0x7D,
+		MonoOnPolyOff = 0x7E,
+		PolyOnMonoOff = 0x7F
+	};
 
     static byte_t Limit(const byte_t value, const ValueType type);
 
     static void SplitStatusChannel(const byte_t status_channel,
-                                   byte_t& status,
+                                   Status& status,
                                    byte_t& channel);
-    static byte_t CombineStatusChannel(const byte_t status, const byte_t channel);
+    static byte_t CombineStatusChannel(const Status status, const byte_t channel);
 
     static void SplitPitchBend(const word_t pitch_bend,
                                byte_t& fine,
                                byte_t& coarse);
     static word_t CombinePitchBend(const byte_t fine, const byte_t coarse);
-
-    enum Limits {
-        Min          = 0,
-        Max          = 127,
-        ChannelMax   = 15
-    };
-
-    enum Status {
-        NoteOff             = 0x80, // 1000 0000
-        NoteOn              = 0x90, // 1001 0000
-        PolyKeyPressure     = 0xA0, // 1010 0000
-        ControllerChange    = 0xB0, // 1011 0000
-        ProgramChange       = 0xC0, // 1100 0000
-        ChannelPressure     = 0xD0, // 1101 0000
-        PitchBend           = 0xE0  // 1110 0000
-    };
-
-    // http://www.indiana.edu/~emusic/etext/MIDI/chapter3_MIDI6.shtml
-    enum Controller {
-        BankSelect          = 0x00,
-        ModulationWheel     = 0x01,
-        Breath              = 0x02,
-        // Undefined        = 0x03,
-        Foot                = 0x04,
-        PortamentoTime      = 0x05,
-        DataEntryMsb        = 0x06,
-        MainVolume          = 0x07,
-        Balance             = 0x08,
-        // Undefined        = 0x09,
-        Pan                 = 0x0A,
-        Ch0                 = 0x0B,
-        Effect1             = 0x0C,
-        Effect2,
-        // Undefined        = 0x0E..0x0F
-        GeneralPurpose1     = 0x10,
-        GeneralPurpose2,
-        GeneralPurpose3,
-        GeneralPurpose4,
-        // Undefined        = 0x14..0x1F
-        // Lsb0..31         = 0x20..0x3F    // Rarely implemented
-        DamperPedalSustain  = 0x40,         // Data 1: 0..64 = Off, 64..127 = On
-        Portamento          = 0x41,
-        Sostenuto           = 0x42,
-        SoftPedal           = 0x43,
-        LegatoFootswitch    = 0x44,
-        Hold2               = 0x45,
-        SoundController1    = 0x46,         // Default: Sound Variation
-        SoundController2,                   // Default: Timbre/Harmonic Content
-        SoundController3,                   // Default: Release Time
-        SoundController4,                   // Default: Attack Time
-        SoundController5,                   // Default: Brightness
-        SoundController6,
-        SoundController7,
-        SoundController8,
-        SoundController9,
-        SoundController10,
-        GeneralPurpose5     = 0x50,
-        GeneralPurpose6,
-        GeneralPurpose7,
-        GeneralPurpose8,
-        PortamentoControl   = 0x54,
-        // Undefined        = 0x55..0x5A
-        EffectsDepth1       = 0x5B,         // Previously External Effects Depth
-        EffectsDepth2,                      // Previously Tremolo Depth
-        EffectsDepth3,                      // Previously Chorus Depth
-        EffectsDepth4,                      // Previously Detune Depth
-        EffectsDepth5,                      // Previously Phaser Depth
-        DataIncrement       = 0x60,
-        DataDecrement       = 0x61,
-        // NonRegistered... = 0x62..0x65
-        // Undefined        = 0x66..0x78
-        
-        //  Channel Mode Messages
-        ResetAllControllers = 0x79,
-        LocalControl        = 0x7A,
-        AllNotesOff         = 0x7B,
-        OmniOff             = 0x7C,
-        OmniOn              = 0x7D,
-        MonoOnPolyOff       = 0x7E,
-        PolyOnMonoOff       = 0x7F
-    };
 };
 
 #endif // DJ_GLOVE_ARDUINO_LIBRARIES_MIDI_H_

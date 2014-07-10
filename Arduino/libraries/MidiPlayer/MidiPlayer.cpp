@@ -40,13 +40,12 @@ void MidiPlayer::Play(const int channel)
 void MidiPlayer::Play(MidiChannel& midi_channel)
 {
     const uint8_t length = (uint8_t) midi_channel.SignalLength();
-    uint8_t* signal = (uint8_t*) midi_channel.Signal();
-
     Bluetooth.write(length);
-
+	
     for (int i = 0; i < length; i++) {
-        Bluetooth.write(*signal);
-        signal++;
+		const uint8_t signal = midi_channel.Signal()[i];
+		Bluetooth.write(signal + 1);
     }
+	
 }
 

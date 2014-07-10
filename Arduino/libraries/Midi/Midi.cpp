@@ -16,16 +16,16 @@ Midi::byte_t Midi::Limit(const Midi::byte_t value,
 }
 
 void Midi::SplitStatusChannel(const Midi::byte_t status_channel,
-                              Midi::byte_t& status,
+                              Midi::Status& status,
                               Midi::byte_t& channel)
 {
-    status  = status_channel & 0xF0; // 1111 0000
+    status  = static_cast<Midi::Status>(status_channel & 0xF0); // 1111 0000
     channel = status_channel & 0x0F; // 0000 1111
 }
 
-Midi::byte_t Midi::CombineStatusChannel(const Midi::byte_t status, const Midi::byte_t channel)
+Midi::byte_t Midi::CombineStatusChannel(const Midi::Status status, const Midi::byte_t channel)
 {
-    return (status << 4) | channel; // ssss cccc
+    return static_cast<byte_t>(status) | (channel & 0x0F); // ssss cccc
 }
 
 void Midi::SplitPitchBend(const Midi::word_t pitch_bend,
