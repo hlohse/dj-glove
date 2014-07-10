@@ -3,8 +3,7 @@
 
 void setup()
 {
-    BluetoothSetup();
-    //Bluetooth.begin(9600); // Change according to baud changes
+    Bluetooth.begin(9600); // Change according to baud changes
     Serial.begin(9600);
     
     Bluetooth.print("AT");   // Expect OK answer during first loop
