@@ -6,6 +6,7 @@
 #include <string>
 
 #ifdef __linux__
+#include <alsa/asoundlib.h>
 #elif _WIN32
 #include "teVirtualMIDI.h"
 #endif
@@ -13,9 +14,9 @@
 class EXPORT MidiPort {
 public:
 #ifdef __linux__
-    using port_type = int*;
+    using port_t = snd_rawmidi_t*;
 #elif _WIN32
-    using port_type = LPVM_MIDI_PORT;
+    using port_t = LPVM_MIDI_PORT;
 #endif
 	
     MidiPort();
@@ -31,7 +32,7 @@ private:
 	static const int buffer_size = 0x1FFFE;
 
 	std::string name_;
-	port_type port_;
+	port_t      port_;
 
 #ifdef _WIN32
 	static void CALLBACK Callback(LPVM_MIDI_PORT midiPort,
