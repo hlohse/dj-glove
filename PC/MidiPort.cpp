@@ -28,7 +28,7 @@ void MidiPort::Open(const string& name)
     const int mode = SND_RAWMIDI_SYNC;
     const int status = snd_rawmidi_open(NULL,
                                         &port_,
-                                        name_.c_str(),
+                                        "virtual",
                                         mode);
 
     if (status < 0) {

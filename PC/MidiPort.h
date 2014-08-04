@@ -29,12 +29,12 @@ public:
 	void Play(MidiSignal& midi_signal);
 
 private:
-	static const int buffer_size = 0x1FFFE;
-
 	std::string name_;
 	port_t      port_;
 
 #ifdef _WIN32
+	static const int buffer_size = 0x1FFFE;
+
 	static void CALLBACK Callback(LPVM_MIDI_PORT midiPort,
 								  LPBYTE midiDataBytes,
 								  DWORD length,
