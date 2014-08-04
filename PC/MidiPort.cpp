@@ -1,9 +1,12 @@
 #include "MidiPort.h"
 #include "Formatter.h"
 #include <stdexcept>
+using namespace std;
+
+#ifdef _WIN32
 #include <locale>
 #include <codecvt>
-using namespace std;
+#endif
 
 MidiPort::MidiPort()
 :	name_(""),
@@ -21,6 +24,7 @@ void MidiPort::Open(const string& name)
 	Close();
 	name_ = name;
 
+#ifdef _WIN32
 	wstring_convert<codecvt_utf8<wchar_t>, wchar_t> converter;
 	const wstring name_utf8 = converter.from_bytes(name_);
 	const LPCWSTR port_name = name_utf8.c_str();
@@ -31,13 +35,16 @@ void MidiPort::Open(const string& name)
 		throw runtime_error(Formatter() << "Failed to open virtual MIDI port \""
 			<< name << "\": " << GetLastError());
 	}
+#endif
 }
 
 void MidiPort::Close()
 {
 	if (IsOpen()) {
+#ifdef _WIN32
 		virtualMIDIClosePort(port_);
 		port_ = nullptr;
+#endif
 	}
 }
 
@@ -48,12 +55,15 @@ bool MidiPort::IsOpen() const
 
 void MidiPort::Play(MidiSignal& midi_signal)
 {
+#ifdef _WIN32
 	if (!virtualMIDISendData(port_, (LPBYTE) midi_signal.Bytes(), midi_signal.NumBytes())) {
 		throw runtime_error(Formatter() << "Failed to play MIDI signal "
 			<< midi_signal.ToString()  << ": " << GetLastError());
 	}
+#endif
 }
 
+#ifdef _WIN32
 void CALLBACK MidiPort::Callback(LPVM_MIDI_PORT midiPort,
 								 LPBYTE midiDataBytes,
 								 DWORD length,
@@ -61,3 +71,5 @@ void CALLBACK MidiPort::Callback(LPVM_MIDI_PORT midiPort,
 {
 	// Do nothing, as we don't intend to receive MIDI data
 }
+#endif
+

@@ -1,5 +1,6 @@
 #include "LibDjGlove.h"
 #include <iostream>
+#include <stdexcept>
 using namespace std;
 
 const int buffer_size = 1024;
