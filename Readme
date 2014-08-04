@@ -1,7 +1,0 @@
-    Linux
-arduino
-alsa-lib-devel
-bluez-libs-devel
-    bluetooth.h typeof -> __typeof__ for C++
-    http://marc.info/?l=linux-bluetooth&m=133095314426234
-
