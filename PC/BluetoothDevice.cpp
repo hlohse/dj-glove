@@ -5,8 +5,9 @@ using namespace std;
 
 shared_ptr<BluetoothDevice> BluetoothDevice::Arduino()
 {
-    static BluetoothDevice arduino("Arduino", "98:d3:31:b3:0a:25", 1);
-	return shared_ptr<BluetoothDevice>(&arduino);
+    static shared_ptr<BluetoothDevice> arduino = make_shared<BluetoothDevice>(
+        "Arduino", "98:d3:31:b3:0a:25", 1);
+    return arduino;
 }
 
 BluetoothDevice::BluetoothDevice(const string& name,
