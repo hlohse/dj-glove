@@ -29,7 +29,7 @@
 
 #include <cstdint>
 
-class Midi {
+class EXPORT Midi {
 public:
     using byte_t = uint8_t;  // Unsigned for 0..127 with 7 bits
     using word_t = uint16_t; // Corresponding to byte_t
