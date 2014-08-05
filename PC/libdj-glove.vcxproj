@@ -61,9 +61,7 @@
     <ClInclude Include="..\ThirdParty\teVirtualMIDI.h" />
     <ClInclude Include="Bluetooth.h" />
     <ClInclude Include="BluetoothDevice.h" />
-    <ClInclude Include="CommonSerial.h" />
     <ClInclude Include="Formatter.h" />
-    <ClInclude Include="ISerial.h" />
     <ClInclude Include="Export.h" />
     <ClInclude Include="LibDjGlove.h" />
     <ClInclude Include="MidiPort.h" />
@@ -72,7 +70,6 @@
   <ItemGroup>
     <ClCompile Include="Bluetooth.cpp" />
     <ClCompile Include="BluetoothDevice.cpp" />
-    <ClCompile Include="CommonSerial.cpp" />
     <ClCompile Include="MidiPort.cpp" />
     <ClCompile Include="MidiSignal.cpp" />
   </ItemGroup>

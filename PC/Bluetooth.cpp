@@ -22,7 +22,7 @@ void Bluetooth::SetUp()
 	const WORD required_version = MAKEWORD(version_major, version_minor);
 	WSADATA winsock_data;
 
-	const int status = WSAStartup(required_version, &winsock_data)
+	const int status = WSAStartup(required_version, &winsock_data);
 
     if (status != 0) {
 		throw runtime_error(Formatter()

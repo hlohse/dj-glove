@@ -21,12 +21,6 @@
     <ClInclude Include="BluetoothDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CommonSerial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ISerial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Export.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -47,9 +41,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CommonSerial.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Bluetooth.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
