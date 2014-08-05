@@ -82,8 +82,8 @@ void MidiPort::Play(MidiSignal& midi_signal)
 {
 #ifdef __linux__
     const int status = snd_rawmidi_write(port_,
-                                         midi_signal.Bytes(),
-                                         midi_signal.NumBytes());
+                                         midi_signal.Signal(),
+                                         midi_signal.SignalLength());
 
     if (status < 0) {
         throw runtime_error(Formatter()
@@ -93,8 +93,8 @@ void MidiPort::Play(MidiSignal& midi_signal)
     }
 #elif _WIN32
 	if (!virtualMIDISendData(port_,
-                             (LPBYTE) midi_signal.Bytes(),
-                             midi_signal.NumBytes()))
+                             (LPBYTE) midi_signal.Signal(),
+                             midi_signal.SignalLength()))
     {
 		throw runtime_error(Formatter()
             << "Failed to play MIDI signal "

@@ -42,15 +42,10 @@ int PunchSignal::NumValues() const
     return 3;
 }
 
+// TODO: Implement
 void PunchSignal::FromNext(vector<char>& values)
 {
-    string signal_bytes;
-    
-    signal_bytes.push_back(values[0]);
-    signal_bytes.push_back(values[1]);
-    signal_bytes.push_back(values[2]);
-
-    midi_signals_.push_back(MidiSignal(signal_bytes));
+    midi_signals_.push_back(MidiSignal());
     values.erase(values.begin(), values.begin() + 3);
 }
 
@@ -70,16 +65,11 @@ int SensorsSignal::NumValues() const
     return num_midi_signals * 3;
 }
 
+// TODO: Implement
 void SensorsSignal::FromNext(vector<char>& values)
 {
     for (int i = 0; i < num_midi_signals; ++i) {
-        string signal_bytes;
-        
-        signal_bytes.push_back(values[0]);
-        signal_bytes.push_back(values[1]);
-        signal_bytes.push_back(values[2]);
-
-        midi_signals_.push_back(MidiSignal(signal_bytes));
+        midi_signals_.push_back(MidiSignal());
         values.erase(values.begin(), values.begin() + 3);
     }
 }
