@@ -1,5 +1,5 @@
 # Project must correspond to PC/*.cpp file with main function
-PROJECTS = BtLatency DjGloveServer
+PROJECTS = BtLatency
 export PROJECTS
 
 all:
