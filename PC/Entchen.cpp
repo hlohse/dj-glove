@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 
 	try {
 		port.Open(midi_port_name);
-		cout << "Opened virtual MIDI port " << midi_port_name << endl;
+		cout << "Opened virtual MIDI port " << port.Name() << endl;
 	}
 	catch (runtime_error e) {
 		cout << "Failed to open MIDI port: " << e.what() << endl;

@@ -28,6 +28,8 @@ public:
 
 	void Play(MidiSignal& midi_signal);
 
+    std::string Name() const;
+
 private:
 	std::string name_;
 	port_t      port_;

@@ -22,11 +22,12 @@ MidiPort::~MidiPort()
 void MidiPort::Open(const string& name)
 {
 	Close();
-	name_ = name;
 
 #ifdef __linux__
     const int mode = SND_RAWMIDI_SYNC;
-    const int status = snd_rawmidi_open(NULL,
+    snd_rawmidi_t* handle = NULL;
+
+    const int status = snd_rawmidi_open(&handle,
                                         &port_,
                                         "virtual",
                                         mode);
@@ -37,6 +38,8 @@ void MidiPort::Open(const string& name)
             << "Failed to open virtual MIDI port \"" << name << "\""
             << ": " << snd_strerror(status) << "(" << status << ")"); 
     }
+
+    name_ = string(snd_rawmidi_name(handle));
 #elif _WIN32
 	wstring_convert<codecvt_utf8<wchar_t>, wchar_t> converter;
 	const wstring name_utf8 = converter.from_bytes(name_);
@@ -53,6 +56,8 @@ void MidiPort::Open(const string& name)
             << "Failed to open virtual MIDI port \"" << name << "\""
             << ": " << GetLastError());
 	}
+	
+    name_ = name;
 #endif
 }
 
@@ -96,6 +101,11 @@ void MidiPort::Play(MidiSignal& midi_signal)
 			<< midi_signal.ToString()  << ": " << GetLastError());
 	}
 #endif
+}
+
+string MidiPort::Name() const
+{
+    return name_;
 }
 
 #ifdef _WIN32
