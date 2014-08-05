@@ -29,10 +29,12 @@ public:
 
     void Connect(const int timeout_s);
 
+    char PeekFirst() const;
+
     // ISerial
     virtual bool IsReady() const;
     virtual void WaitUntilAvailable(const int length);
-    virtual int Available();
+    virtual int Available() const;
     virtual std::string Read(const int length);
     virtual int Write(const std::string& output);
 

@@ -39,10 +39,10 @@ public:
     virtual void WaitUntilAvailable(const int length) = 0;
     
     // Signals if input contains data.
-    virtual bool HasAvailable() = 0;
+    virtual bool HasAvailable() const = 0;
     
     // Number of input bytes available to be read.
-    virtual int Available() = 0;
+    virtual int Available() const = 0;
 
     // Blocks execution until length input bytes become available.
     // Returns length available input bytes.

@@ -6,7 +6,7 @@ string CommonSerial::GetLastError() const
     return last_error_.str();
 }
 
-bool CommonSerial::HasAvailable()
+bool CommonSerial::HasAvailable() const
 {
     return Available() > 0;
 }

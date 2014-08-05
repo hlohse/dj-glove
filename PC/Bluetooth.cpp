@@ -178,6 +178,16 @@ int Bluetooth::GetSocketError() const
     return error;
 }
 
+char Bluetooth::PeekFirst() const
+{
+    if (Available() > 0) {
+        return buffer_[0];
+    }
+    else {
+        return 0;
+    }
+}
+
 //  ISerial
 
 bool Bluetooth::IsReady() const
@@ -247,7 +257,7 @@ void Bluetooth::ReadSocket()
     }
 }
 
-int Bluetooth::Available()
+int Bluetooth::Available() const
 {
     return buffer_.length();
 }

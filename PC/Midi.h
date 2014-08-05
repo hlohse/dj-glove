@@ -27,6 +27,7 @@
 #ifndef DJ_GLOVE_PC_MIDI_H_
 #define DJ_GLOVE_PC_MIDI_H_
 
+#include "Export.h"
 #include <cstdint>
 
 class EXPORT Midi {
