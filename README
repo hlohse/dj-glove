@@ -20,17 +20,15 @@ To make use of virtual MIDI ports, use the following 3rd party software:
         teVirtualMidi32.lib
 
 
-X.X. Linux (Fedora 20)
-----------------------
+X.X. Linux (Ubuntu 14.04)
+-------------------------
 
 Make sure the following packages are installed:
 
     g++ (>= 4.8)
     arduino
-    alsa-lib-devel
-    bluez-libs-devel
-        bluetooth.h typeof -> __typeof__ for C++
-        http://marc.info/?l=linux-bluetooth&m=133095314426234
+    libasound2-dev
+    libbluetooth-dev
 
 
 X.X. All Platforms
