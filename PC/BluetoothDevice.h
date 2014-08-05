@@ -19,6 +19,7 @@
 #define DJ_GLOVE_PC_BLUETOOTH_DEVICE_H_
 
 #include "Export.h"
+#include <memory>
 #include <string>
 #include <cstdint>
 
@@ -34,7 +35,7 @@
 
 class EXPORT BluetoothDevice {
 public:
-	static const BluetoothDevice& Arduino();
+	static std::shared_ptr<BluetoothDevice> Arduino();
 
 #ifdef __linux__
 	using SocketAddress = struct sockaddr_rc;

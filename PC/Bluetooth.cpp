@@ -1,4 +1,6 @@
 #include "Bluetooth.h"
+#include "Formatter.h"
+#include <stdexcept>
 #include <sys/stat.h>
 #include <fcntl.h>
 using namespace std;
@@ -11,51 +13,57 @@ using namespace std;
 #include <bluetooth/rfcomm.h>
 #endif
 
-bool Bluetooth::SetUp()
+void Bluetooth::SetUp()
 {
-#ifdef __linux__
-	return true;	// Nothing to do on Linux
-#elif _WIN32
-	const int version[2] = { 2, 2 };	// Use Winsock 2.2
-	const WORD required_version = MAKEWORD(version[0], version[1]);
+#ifdef _WIN32
+    // Use winsock version 2.2
+    const int version_major = 2;
+    const int version_minor = 2;
+	const WORD required_version = MAKEWORD(version_major, version_minor);
 	WSADATA winsock_data;
 
-	if (WSAStartup(required_version, &winsock_data) != 0) {
-		return false;
+	const int status = WSAStartup(required_version, &winsock_data)
+
+    if (status != 0) {
+		throw runtime_error(Formatter()
+            << "WSAStartup failed with return code " << status);
 	}
 
-	if (LOBYTE(winsock_data.wVersion) != version[1]
-	||  HIBYTE(winsock_data.wVersion) != version[0])
+    const int actual_version_major = HIBYTE(winsock_data.wVersion);
+    const int actual_version_minor = LOBYTE(winsock_data.wVersion);
+
+	if (actual_version_major != version_major
+	||  actual_version_minor != version_minor)
 	{
-		Bluetooth::TearDown();
-		return false;
+		throw runtime_error(Formatter()
+            << "Used winsock version "
+            << actual_version_major << "." << actual_version_minor
+            << " it not desired " << version_major << "." << version_minor);
 	}
-
-	return true;
 #endif
 }
 
 void Bluetooth::TearDown()
 {
-#ifdef __linux__
-	return;	// Nothing to do on Linux
-#elif _WIN32
-	WSACleanup();
+#ifdef _WIN32
+	const int status = WSACleanup();
+
+    if (status != 0) {
+        throw runtime_error(Formatter()
+            << "WSACleanup failed with return code " << status);
+    }
 #endif
 }
 
-Bluetooth::Bluetooth(const BluetoothDevice& device,
-                     const int read_socket_buffer_bytes)
-:   device_(device),
-    is_ready_(false),
-    buffer_(""),
-    read_socket_buffer_bytes_(read_socket_buffer_bytes),
-	read_socket_buffer_(NULL),
+Bluetooth::Bluetooth(const int read_socket_buffer_bytes)
+:   buffer_(""),
 #ifdef __linux__
-	socket_(socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM))
+	socket_(socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM)),
 #elif _WIN32
-	socket_(socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM))
+	socket_(socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM)),
 #endif
+    read_socket_buffer_bytes_(read_socket_buffer_bytes),
+	read_socket_buffer_(NULL)
 {
     if (read_socket_buffer_bytes_ > 0) {
         read_socket_buffer_ = new char[read_socket_buffer_bytes_ + 1];
@@ -78,20 +86,19 @@ void Bluetooth::ShutdownSocket()
 #elif _WIN32
 	shutdown(socket_, SD_BOTH);
 #endif
-
-    is_ready_ = false;
 }
 
-void Bluetooth::Connect(const int timeout_s)
+void Bluetooth::Connect(std::shared_ptr<BluetoothDevice> device,
+                        const int timeout_s)
 {
     struct timeval timeout;
     fd_set sockets;
 
-    if (!device_.IsValid()) {
-        last_error_.clear();
-        last_error_ << "Invalid " << device_.ToString();
-        return;
+    if (!device->IsValid()) {
+        throw runtime_error(Formatter() << "Invalid " << device_->ToString());
     }
+
+    device_ = device;
 
     timeout.tv_sec  = timeout_s;
     timeout.tv_usec = 0;
@@ -99,12 +106,14 @@ void Bluetooth::Connect(const int timeout_s)
     FD_ZERO(&sockets);
     FD_SET(socket_, &sockets);
 
-    ConnectSocket(timeout, sockets);
+    try {
+        ConnectSocket(timeout, sockets);
+    } catch (...) { throw; }
 }
 
 void Bluetooth::ConnectSocket(struct timeval timeout, fd_set sockets)
 {
-    BluetoothDevice::SocketAddress address = device_.GetSocketAddress();
+    BluetoothDevice::SocketAddress address = device_->GetSocketAddress();
 
     SetSocketNonBlocking();
     connect(socket_, (sockaddr*) &address, sizeof(address));
@@ -113,25 +122,22 @@ void Bluetooth::ConnectSocket(struct timeval timeout, fd_set sockets)
 	case 1: {
 		int error = GetSocketError();
 
-		if (error == 0) {
-			is_ready_ = true;
-		}
-		else {
-			last_error_.clear();
-			last_error_ << "Error " << error << " on socket";
+		if (error != 0) {
+            throw runtime_error(Formatter()
+                << "Error " << error << " on socket");
 		}
 		break;
 	}
 	case 0:
-		last_error_.clear();
-		last_error_ << "Timeout while connecting socket";
+        throw runtime_error(Formatter()
+            << "Timeout while connecting socket");
 		break;
 	default:
-		last_error_.clear();
+        throw runtime_error(Formatter()
 #ifdef __linux__
-		last_error_ << "Error " << errno << " while connecting socket";
+		    << "Error " << errno << " while connecting socket");
 #elif _WIN32
-		last_error_ << "Error " << WSAGetLastError() << " while connecting socket";
+		    << "Error " << WSAGetLastError() << " while connecting socket");
 #endif
 		break;
 	}
@@ -178,21 +184,9 @@ int Bluetooth::GetSocketError() const
     return error;
 }
 
-char Bluetooth::PeekFirst() const
+int Bluetooth::Available() const
 {
-    if (Available() > 0) {
-        return buffer_[0];
-    }
-    else {
-        return 0;
-    }
-}
-
-//  ISerial
-
-bool Bluetooth::IsReady() const
-{
-    return is_ready_;
+    return buffer_.length();
 }
 
 void Bluetooth::WaitUntilAvailable(const int length)
@@ -206,19 +200,19 @@ void Bluetooth::WaitUntilAvailable(const int length)
             int error = GetSocketError();
 
             if (error != 0) {
-                last_error_.clear();
-                last_error_ << "Error " << error << " on socket while waiting for data";
                 ShutdownSocket();
-                return;
+                throw runtime_error(Formatter()
+                    << "Error " << error << " on socket while waiting for data");
             }
-
-            ReadSocket();
+            
+            try {
+                ReadSocket();
+            } catch(...) { throw; }
         }
         else {
-            last_error_.clear();
-            last_error_ << "Error while waiting for socket data";
             ShutdownSocket();
-            return;
+            throw runtime_error(Formatter() <<
+                "Error while waiting for socket data");
         }
     }
 }
@@ -228,9 +222,9 @@ void Bluetooth::ReadSocket()
     int bytes_read;
 
     if (read_socket_buffer_ == NULL) {
-        last_error_ << "No read socket buffer available";
         ShutdownSocket();
-        return;
+        throw runtime_error(Formatter()
+            << "No read socket buffer available");
     }
 
     memset(read_socket_buffer_, 0, read_socket_buffer_bytes_ + 1);
@@ -247,9 +241,9 @@ void Bluetooth::ReadSocket()
 #endif
     
     if (bytes_read < 0) {
-        last_error_ << "Error while reading socket data";
         ShutdownSocket();
-        return;
+        throw runtime_error(Formatter()
+            << "Error " << errno << " while reading socket data");
     }
 
     if (bytes_read > 0) {
@@ -257,9 +251,23 @@ void Bluetooth::ReadSocket()
     }
 }
 
-int Bluetooth::Available() const
+char Bluetooth::PeekFirst() const
 {
-    return buffer_.length();
+    if (Available() > 0) {
+        return buffer_[0];
+    }
+    else {
+        return 0;
+    }
+}
+
+string Bluetooth::ReadNextAvailable(const int length)
+{
+    try {
+        WaitUntilAvailable(length);
+    } catch (...) { throw; }
+
+    return Read(length);
 }
 
 string Bluetooth::Read(const int length)
@@ -290,9 +298,9 @@ int Bluetooth::Write(const string& output)
 #endif
 
     if (bytes_written < 0) {
-        last_error_ << "Error while writing socket data";
         ShutdownSocket();
-        return 0;
+        throw runtime_error(Formatter()
+            << "Error " << errno << " while writing socket data");
     }
 
     return bytes_written;

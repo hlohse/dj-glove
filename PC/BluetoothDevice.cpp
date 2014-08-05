@@ -3,11 +3,10 @@
 #include <cstdint>
 using namespace std;
 
-const BluetoothDevice BluetoothDevice::ArduinoDevice("Arduino", "98:d3:31:b3:0a:25", 1);
-
-const BluetoothDevice& BluetoothDevice::Arduino()
+shared_ptr<BluetoothDevice> BluetoothDevice::Arduino()
 {
-	return BluetoothDevice::ArduinoDevice;
+    static BluetoothDevice arduino("Arduino", "98:d3:31:b3:0a:25", 1);
+	return shared_ptr<BluetoothDevice>(&arduino);
 }
 
 BluetoothDevice::BluetoothDevice(const string& name,

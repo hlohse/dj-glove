@@ -1,5 +1,6 @@
 #include "BtLatency.h"
 #include "LibDjGlove.h"
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include <utility>
@@ -32,32 +33,22 @@ typedef struct {
     double var;
 } Result;
 
-ISerial* GetSerial()
-{
-    Bluetooth* bluetooth = new Bluetooth(
-		BluetoothDevice::Arduino(),
-        string(BtLatency::message).length());
-    bluetooth->Connect(timeout_s);
-    
-    return bluetooth;
-}
-
-void SyncStart(ISerial* serial)
+void SyncStart(Bluetooth& bluetooth)
 {
     string start_signal(&BtLatency::start_signal,
                         sizeof(BtLatency::start_signal));
     
-    serial->Write(start_signal);
+    bluetooth.Write(start_signal);
 }
 
-void DetermineTimes(ISerial* serial, vector<TimeTuple>& times)
+void DetermineTimes(Bluetooth& bluetooth, vector<TimeTuple>& times)
 {
     Time start, stop;
     const string expected_message(BtLatency::message);
     string message;
 
     times.reserve(BtLatency::num_messages);
-    SyncStart(serial);
+    SyncStart(bluetooth);
 
     for (unsigned int i = 0; i < BtLatency::num_messages; ++i)
 	{
@@ -67,7 +58,9 @@ void DetermineTimes(ISerial* serial, vector<TimeTuple>& times)
 		GetSystemTime(&start);
 #endif
 
-		message = serial->ReadNextAvailable(expected_message.length());
+        try {
+		    message = bluetooth.ReadNextAvailable(expected_message.length());
+        } catch (...) { throw; }
 
 #ifdef __linux__
 		gettimeofday(&stop, NULL);
@@ -75,15 +68,10 @@ void DetermineTimes(ISerial* serial, vector<TimeTuple>& times)
 		GetSystemTime(&stop);
 #endif
 
-        if (!serial->IsReady()) {
-            cout << "Serial error: " << serial->GetLastError() << endl;
-            break;
-        }
-
         if (message.compare(expected_message) != 0) {
-            cout << "ERROR: Received \"" << message
-                 << "\", expected \"" << expected_message << "\"" << endl;
-            break;
+            throw runtime_error(Formatter()
+                 << "Received \"" << message << "\", expected \""
+                 << expected_message << "\"");
         }
 
 		times.push_back(TimeTuple(start, stop));
@@ -166,26 +154,50 @@ void ShowResult(const Result& result, const vector<double>& times_ms)
          << result.var    << endl;
 }
 
+int exit(const string& message, const runtime_error& error)
+{
+    cout << message << endl;
+    cout << error.what() << endl;
+
+    try {
+        Bluetooth::TearDown();
+    }
+    catch (runtime_error e) {
+        cout << "Failed to tear down Bluetooth" << endl;
+        cout << e.what() << endl;
+    }
+
+    cout << "Press any key to terminate." << endl;
+    cin.ignore();
+    return -1;
+}
+
 int main()
 {
-	if (!Bluetooth::SetUp()) {
-		cout << "Failed to set up Bluetooth!" << endl;
-		cin.ignore();
-		return -1;
-	}
-
-    ISerial* serial = GetSerial();
+    Bluetooth bluetooth(string(BtLatency::message).length());
     vector<TimeTuple> times;
     vector<double> times_ms;
 
-    if (!serial->IsReady()) {
-		cout << "Serial error: " << serial->GetLastError() << endl;
-		cin.ignore();
-		Bluetooth::TearDown();
-        return -1;
+    try {
+        Bluetooth::SetUp();
+    }
+    catch (runtime_error e) {
+        return exit("Failed to set up Bluetooth", e);
     }
 
-    DetermineTimes(serial, times);
+    try {
+        bluetooth.Connect(BluetoothDevice::Arduino(), timeout_s);
+    }
+    catch (runtime_error e) {
+        return exit("Failed to connect Bluetooth", e);
+    }
+
+    try {
+        DetermineTimes(bluetooth, times);
+    }
+    catch (runtime_error e) {
+        return exit("Failed to receive all data", e);
+    }
 
     if (times.size() == BtLatency::num_messages) {
         Result result;
@@ -195,10 +207,10 @@ int main()
         ShowResult(result, times_ms);
     }
 
+    cout << "Press any key to terminate." << endl;
 	cin.ignore();
 
 	Bluetooth::TearDown();
-    delete serial;
     return 0;
 }
 
