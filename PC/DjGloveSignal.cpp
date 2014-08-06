@@ -155,7 +155,8 @@ void SensorsSignal::SetFromLowBits(int& output, const char value, const int low_
 
 void SensorsSignal::SetChannelFrom(const char value)
 {
-    channel_ = (int) (value && 0x38);   // 0x38 = 0011 1000, bits 3 to 5
+    // 0x38 = 0011 1000, bits 3 to 5
+    channel_ = ((int) (value && 0x38)) >> 3;
 
     assert(channel_ >= 0);
     assert(channel_ <= 7);
