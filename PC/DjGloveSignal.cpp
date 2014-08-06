@@ -69,6 +69,26 @@ void SensorsSignal::FromNext(vector<char>& values)
 {
     assert(values.size() >= num_values);
 
+    SetSensorValues(values);
+    GenerateMidiSignals();
+
+    values.erase(values.begin(), values.begin() + num_values);
+}
+
+void SensorsSignal::GenerateMidiSignals()
+{
+    MidiSignal midi_signal;
+
+    midi_signal.Channel(0);
+    midi_signal.Status(Midi::Status::NoteOn);
+    midi_signal.Key(poti_0_);
+    midi_signal.Velocity(63);
+
+    midi_signals_.push_back(midi_signal);
+}
+
+void SensorsSignal::SetSensorValues(vector<char>& values)
+{
     SetFromBit(button_push_0_, values[1], 7);
     SetFromBit(button_push_1_, values[2], 7);
     SetFromBit(button_push_2_, values[3], 7);
@@ -96,8 +116,6 @@ void SensorsSignal::FromNext(vector<char>& values)
 
     SetChannelFrom(values[8]);
     SetFromLowBits(program_, values[8], 3);
-
-    values.erase(values.begin(), values.begin() + num_values);
 }
 
 void SensorsSignal::SetFromBit(bool& output, const char value, const int bit)

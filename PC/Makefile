@@ -1,5 +1,5 @@
 CC      = g++
-CCFLAGS = -std=c++11 -O3 -MMD -Wall -Wextra -march=native -funroll-loops
+CCFLAGS = -std=c++11 -O0 -g -MMD -Wall -Wextra -march=native -funroll-loops
 LDFLAGS = -lbluetooth -lasound
 
 SOURCES = $(wildcard *.cpp)

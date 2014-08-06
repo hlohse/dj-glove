@@ -82,6 +82,9 @@ private:
     // 71 bits + leading 0 bit = 72 bits = 9 bytes total
     static const int num_values = 9;
 
+    void GenerateMidiSignals();
+
+    void SetSensorValues(std::vector<char>& values);
     void SetFromBit(bool& output, const char value, const int bit);
     void SetFromLowBits(int& output, const char value, const int low_bits);
     void SetChannelFrom(const char value);
