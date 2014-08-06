@@ -5,7 +5,10 @@
 #include "Formatter.h"
 #include "Bluetooth.h"
 #include "BluetoothDevice.h"
+#include "Midi.h"
 #include "MidiSignal.h"
 #include "MidiPort.h"
+#include "DjGlove.h"
+#include "DataProtocol.h"
 
 #endif // DJ_GLOVE_PC_LIB_DJ_GLOVE_H_
