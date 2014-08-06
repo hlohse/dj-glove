@@ -23,6 +23,8 @@ class DjGlove;
 
 class DataProtocol {
 public:
+    static const int max_index = 10;
+
     static bool IsPunch(const char data);
 
     static void ApplyData(DjGlove& dj_glove, const char data, const int index);

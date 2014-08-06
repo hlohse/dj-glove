@@ -47,6 +47,10 @@ void DjGlove::ApplyData(const char data)
     else {
         DataProtocol::ApplyData(*this, data, data_byte_index_);
         data_byte_index_++;
+
+        if (data_byte_index_ > DataProtocol::max_index) {
+            data_byte_index_ = 0;
+        }
     }
 }
 
