@@ -19,7 +19,7 @@
 #ifndef DJ_GLOVE_PC_DATA_PROTOCOL_H_
 #define DJ_GLOVE_PC_DATA_PROTOCOL_H_
 
-struct DjGlove;
+class DjGlove;
 
 class DataProtocol {
 public:

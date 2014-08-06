@@ -1,31 +1,50 @@
 #ifndef DJ_GLOVE_PC_DJ_GLOVE_H_
 #define DJ_GLOVE_PC_DJ_GLOVE_H_
 
-struct DjGlove {
-    bool punched;
-    bool button_push_0;
-    bool button_push_1;
-    bool button_push_2;
-    bool button_push_3;
-    bool button_push_4;
-    bool button_touch_0;
-    bool button_touch_1;
-    bool button_touch_2;
-    bool button_touch_3;
-    bool button_flip;
-    int  poti_0;
-    int  poti_1;
-    int  poti_2;
-    int  distance;
-    int  orientation_x;
-    int  orientation_y;
-    int  orientation_z;
-    int  flex;
-    int  channel;
-    int  program;
+#include <deque>
 
+class DataProtocol;
+class MidiSignal;
+
+class DjGlove {
+    friend class DataProtocol;
+
+public:
     DjGlove();
     ~DjGlove();
+
+    void Process(const char data);
+
+    bool HasMidiSignal() const;
+    MidiSignal NextMidiSignal();
+
+private:
+    std::deque<MidiSignal> midi_signals_;
+    bool punched_;
+    bool button_push_0_;
+    bool button_push_1_;
+    bool button_push_2_;
+    bool button_push_3_;
+    bool button_push_4_;
+    bool button_touch_0_;
+    bool button_touch_1_;
+    bool button_touch_2_;
+    bool button_touch_3_;
+    bool button_flip_;
+    int  poti_0_;
+    int  poti_1_;
+    int  poti_2_;
+    int  distance_;
+    int  orientation_x_;
+    int  orientation_y_;
+    int  orientation_z_;
+    int  flex_;
+    int  channel_;
+    int  program_;
+    int  data_byte_index_;
+
+    void ApplyData(const char data);
+    void GenerateMidiSignals();
 };
 
 #endif // DJ_GLOVE_PC_DJ_GLOVE_H_
