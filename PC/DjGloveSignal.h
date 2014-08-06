@@ -43,9 +43,6 @@ public:
     virtual void FromNext(std::vector<char>& values);
 
 private:
-    // TODO: Adjust accordingly
-    static const int num_midi_signals = 10;
-
     /*      Sensor signals Layout
      *
      * Byte# | Bits         Signals (Members)
@@ -81,7 +78,13 @@ private:
     int  flex_;             // 6 Bit: 0..63
     int  channel_;          // 3 Bit: 0..7 (LED)
     int  program_;
-    // 71 Bit = 9 Byte total + 0 bit at start
+
+    // 71 bits + leading 0 bit = 72 bits = 9 bytes total
+    static const int num_values = 9;
+
+    void SetFromBit(bool& output, const char value, const int bit);
+    void SetFromLowBits(int& output, const char value, const int low_bits);
+    void SetChannelFrom(const char value);
 };
 
 #endif // DJ_GLOVE_PC_DJ_GLOVE_SIGNAL_H_
