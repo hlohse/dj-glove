@@ -46,6 +46,21 @@ private:
     // TODO: Adjust accordingly
     static const int num_midi_signals = 10;
 
+    /*      Sensor signals Layout
+     *
+     * Byte# | Bits         Signals (Members)
+     * ----------------------------------------------------------
+     *     0 | 0ppp pppp    0: starting zero    p: poti_0_
+     *     1 | bppp pppp    b: button_push_0_   p: poti_1_
+     *     2 | bppp pppp    b: button_push_1_   p: poti_2_
+     *     3 | booo oooo    b: button_push_2_   o: orientation_x_
+     *     4 | booo oooo    b: button_push_3_   o: orientation_y_
+     *     5 | booo oooo    b: button_push_4_   o: orientation_z_
+     *     6 | bddd dddd    b: button_flip_     d: distance_
+     *     7 | bbff ffff    b: button_touch_01_ f: flex_
+     *     8 | bbcc cppp    b: button_touch_23_ c: channel_ p: program_
+     */
+
     bool button_push_0_;    // 1 Bit: pressed/not pressed
     bool button_push_1_;
     bool button_push_2_;
@@ -66,7 +81,7 @@ private:
     int  flex_;             // 6 Bit: 0..63
     int  channel_;          // 3 Bit: 0..7 (LED)
     int  program_;
-    // 71 Bit = 9 Byte total
+    // 71 Bit = 9 Byte total + 0 bit at start
 };
 
 #endif // DJ_GLOVE_PC_DJ_GLOVE_SIGNAL_H_
