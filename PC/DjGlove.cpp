@@ -63,6 +63,8 @@ void DjGlove::GenerateMidiSignals()
                                       : Midi::Status::NoteOff);
     midi_signal.Key(poti_0_);
     midi_signal.Velocity(63);
+
+    midi_signals_.push_back(midi_signal);
 }
 
 bool DjGlove::HasMidiSignal() const
