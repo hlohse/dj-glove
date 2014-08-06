@@ -15,7 +15,7 @@ DjGloveSignal::~DjGloveSignal()
 bool DjGloveSignal::SignalsPunch(const char value)
 {
     // Signals incoming punch values if first bit equals 1 (e.g. 1xxx xxxx)
-    return value && 0x80;
+    return value >> 7 == 1;
 }
 
 bool DjGloveSignal::SignalsSensors(const char value)
@@ -31,7 +31,6 @@ vector<MidiSignal>& DjGloveSignal::MidiSignals()
 
 PunchSignal::PunchSignal()
 {
-    midi_signals_.reserve(1);
 }
 
 PunchSignal::~PunchSignal()
@@ -40,15 +39,26 @@ PunchSignal::~PunchSignal()
 
 int PunchSignal::NumValues() const
 {
-    // TODO: Adjust accordingly
-    return 3;
+    return 1;
 }
 
-// TODO: Implement
 void PunchSignal::FromNext(vector<char>& values)
 {
-    midi_signals_.push_back(MidiSignal());
-    values.erase(values.begin(), values.begin() + 3);
+    assert(values.size() >= 1);
+
+    punched_ = DjGloveSignal::SignalsPunch(values[0]);
+    
+    MidiSignal midi_signal;
+
+    midi_signal.Channel(0);
+    midi_signal.Status(punched_ ? Midi::Status::NoteOn
+                                : Midi::Status::NoteOff);
+    midi_signal.Key(127);
+    midi_signal.Velocity(63);
+    
+    midi_signals_.push_back(midi_signal);
+    
+    values.erase(values.begin(), values.begin() + 1);
 }
 
 
