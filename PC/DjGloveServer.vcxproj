@@ -50,6 +50,11 @@
       <AdditionalLibraryDirectories>../;../ThirdParty</AdditionalLibraryDirectories>
       <AdditionalDependencies>ws2_32.lib;dj-glove.lib;teVirtualMIDI32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>del $(OutDir)\DjGloveServer.lib
+del $(OutDir)\DjGloveServer.exp
+del $(OutDir)\DjGloveServer.pdb</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="LibDjGlove.h" />
