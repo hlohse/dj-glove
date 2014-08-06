@@ -61,15 +61,21 @@
     <ClInclude Include="..\ThirdParty\teVirtualMIDI.h" />
     <ClInclude Include="Bluetooth.h" />
     <ClInclude Include="BluetoothDevice.h" />
+    <ClInclude Include="DataProtocol.h" />
+    <ClInclude Include="DjGlove.h" />
     <ClInclude Include="Formatter.h" />
     <ClInclude Include="Export.h" />
     <ClInclude Include="LibDjGlove.h" />
+    <ClInclude Include="Midi.h" />
     <ClInclude Include="MidiPort.h" />
     <ClInclude Include="MidiSignal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bluetooth.cpp" />
     <ClCompile Include="BluetoothDevice.cpp" />
+    <ClCompile Include="DataProtocol.cpp" />
+    <ClCompile Include="DjGlove.cpp" />
+    <ClCompile Include="Midi.cpp" />
     <ClCompile Include="MidiPort.cpp" />
     <ClCompile Include="MidiSignal.cpp" />
   </ItemGroup>

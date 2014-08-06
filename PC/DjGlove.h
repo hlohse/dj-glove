@@ -2,10 +2,10 @@
 #define DJ_GLOVE_PC_DJ_GLOVE_H_
 
 #include "Export.h"
+#include "MidiSignal.h"
 #include <deque>
 
 class DataProtocol;
-class MidiSignal;
 
 class EXPORT DjGlove {
     friend class DataProtocol;
