@@ -9,6 +9,7 @@ Make sure the following software is installed:
 
     Visual Studio Express 2013
     Arduino IDE
+    Boost C++ Libraries
 
 To make use of virtual MIDI ports, use the following 3rd party software:
 
@@ -29,6 +30,7 @@ Make sure the following packages are installed:
     arduino
     libasound2-dev
     libbluetooth-dev
+    libboost-program-options-dev
 
 
 X.X. All Platforms
