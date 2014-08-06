@@ -1,18 +1,17 @@
 /*      MidiSignal
  *
- *  Provides functionality to control MIDI signals on a single channel. Controls
- *  range from key and velocity to program presets etc.
- *  The resulting signal bytes can be retrieved via Signal.
+ *  Provides functionality to describe MIDI signals. Controls range from key
+ *  and velocity to program presets etc.
+ *  The resulting signal bytes can be retrieved via Signal and SignalLength.
  *
- *  Example, send middle C on channel 1 via Serial:
+ *  Example, create middle C on channel 1
  *
- *      MidiSignal channel(1);
+ *      MidiSignal midi_signal;
  *
- *      channel.Status(Midi::NoteOn);
- *      channel.Key(60); // Middle C
- *      channel.Velocity(64);
- *
- *      Serial.write(channel.Signal());
+ *      midi_signal.Channel(1);
+ *      midi_signal.Status(Midi::NoteOn);
+ *      midi_signal.Key(60); // Middle C
+ *      midi_signal.Velocity(63);
  */
 
 #ifndef DJ_GLOVE_PC_MIDI_SIGNAL_H_
