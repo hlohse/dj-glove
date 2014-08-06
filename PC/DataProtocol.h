@@ -19,9 +19,11 @@
 #ifndef DJ_GLOVE_PC_DATA_PROTOCOL_H_
 #define DJ_GLOVE_PC_DATA_PROTOCOL_H_
 
+#include "Export.h"
+
 class DjGlove;
 
-class DataProtocol {
+class EXPORT DataProtocol {
 public:
     static const int max_index = 10;
 

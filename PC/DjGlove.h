@@ -1,12 +1,13 @@
 #ifndef DJ_GLOVE_PC_DJ_GLOVE_H_
 #define DJ_GLOVE_PC_DJ_GLOVE_H_
 
+#include "Export.h"
 #include <deque>
 
 class DataProtocol;
 class MidiSignal;
 
-class DjGlove {
+class EXPORT DjGlove {
     friend class DataProtocol;
 
 public:
