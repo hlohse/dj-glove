@@ -4,7 +4,8 @@
 #include <cassert>
 
 DjGlove::DjGlove()
-:   punched_(false),
+:   data_protocol_(DataProtocol(*this)),
+    punched_(false),
     button_push_0_(false),
     button_push_1_(false),
     button_push_2_(false),
@@ -35,23 +36,8 @@ DjGlove::~DjGlove()
 
 void DjGlove::Process(const char data)
 {
-    ApplyData(data);
+    data_protocol_.ApplyNext(data);
     GenerateMidiSignals();
-}
-
-void DjGlove::ApplyData(const char data)
-{
-    if (DataProtocol::IsPunch(data)) {
-        DataProtocol::ApplyPunch(*this, data);
-    }
-    else {
-        DataProtocol::ApplyData(*this, data, data_byte_index_);
-        data_byte_index_++;
-
-        if (data_byte_index_ > DataProtocol::max_index) {
-            data_byte_index_ = 0;
-        }
-    }
 }
 
 void DjGlove::GenerateMidiSignals()
