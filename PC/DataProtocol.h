@@ -35,6 +35,8 @@ private:
     DjGlove& dj_glove_;
     int      data_index_;
 
+    char Prepare(const char data) const;
+
     bool IsPunch(const char data) const;
 
     void ApplyData(const char data);

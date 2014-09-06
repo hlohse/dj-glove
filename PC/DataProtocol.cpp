@@ -15,18 +15,34 @@ DataProtocol::~DataProtocol()
 
 void DataProtocol::ApplyNext(const char data)
 {
-    if (IsPunch(data)) {
-        ApplyPunch(data);
+    const char prepared_data = Prepare(data);
+
+    if (IsPunch(prepared_data)) {
+        ApplyPunch(prepared_data);
     }
     else {
-        ApplyData(data);
+        ApplyData(prepared_data);
         ForwardDataIndex();
     }
+}
+
+char DataProtocol::Prepare(const char data) const
+{
+/*  All values have to be decremented by 1. This is because zero/null bytes can
+ *  not be send via Bluetooth and are therefore increment by 1.
+ */
+    return data - 1;
 }
 
 bool DataProtocol::IsPunch(const char data) const
 {
     return data >> 7 == 1;  // First bit is 1
+}
+
+void DataProtocol::ApplyPunch(const char data)
+{
+    assert(IsPunch(data));
+    dj_glove_.punched_ = (data && 0x01) == 1; // Punched if last bit is set
 }
 
 void DataProtocol::ApplyData(const char data)
@@ -63,12 +79,6 @@ void DataProtocol::ApplyData(const char data)
             break;
         default: assert(false); break;
     }
-}
-
-void DataProtocol::ApplyPunch(const char data)
-{
-    assert(IsPunch(data));
-    dj_glove_.punched_ = (data && 0x01) == 1; // Punched if last bit is set
 }
 
 void DataProtocol::ApplyBit(bool& output, const char data, const int bit)
