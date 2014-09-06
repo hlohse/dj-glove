@@ -1,6 +1,6 @@
 CC      = g++
 CCFLAGS = -std=c++11 -O0 -g -MMD -Wall -Wextra -march=native -funroll-loops
-LDFLAGS = -lbluetooth -lasound -lboost_program_options
+LDFLAGS = -lbluetooth -lasound
 
 SOURCES = $(wildcard *.cpp)
 OBJECTS = $(SOURCES:%.cpp=build/%.o)

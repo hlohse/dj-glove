@@ -5,32 +5,32 @@
 using namespace std;
 
 const string DjGloveServerArguments::default_arduino_bluetooth_mac = "98:d3:31:b3:0a:25";
-const string DjGloveServerArguments::default_virtual_midi_port_name = "Virtual Midi Port";
+const string DjGloveServerArguments::default_virtual_midi_port_name = "Virtual MIDI Port";
 const int    DjGloveServerArguments::default_bluetooth_timeout = 10;
 
-DjGloveServerArguments::DjGloveServerArguments(int argc, char* argv[])
+DjGloveServerArguments::DjGloveServerArguments()
 :   arduino_bluetooth_mac_(default_arduino_bluetooth_mac),
     virtual_midi_port_name_(default_virtual_midi_port_name),
     bluetooth_timeout_(default_bluetooth_timeout)
 {
-    try {
-        Apply(argc, argv);
-    }
-    catch (...) {
-        throw;
-    }
+}
+
+DjGloveServerArguments::~DjGloveServerArguments()
+{
 }
 
 void DjGloveServerArguments::Apply(int argc, char* argv[])
 {
-    if (argc != 4) {
-        throw runtime_error(Formatter()
-            << argc - 1 << " arguments passed, expected 3!");
+    if (argc > 1) {
+        if (argc != 4) {
+            throw runtime_error(Formatter()
+                << argc - 1 << " arguments passed, expected 3!");
+        }
+    
+        arduino_bluetooth_mac_  = argv[1];
+        virtual_midi_port_name_ = argv[2];
+        bluetooth_timeout_      = atoi(argv[3]);
     }
-
-    arduino_bluetooth_mac_  = argv[1];
-    virtual_midi_port_name_ = argv[2];
-    bluetooth_timeout_      = atoi(argv[3]);
 }
 
 string DjGloveServerArguments::Usage() const
@@ -45,13 +45,9 @@ string DjGloveServerArguments::Usage() const
           << "    midi_port   Virtual MIDI Port name (default: "
               << default_virtual_midi_port_name << ")" << endl
           << "    timeout     Bluetooth connection timeout [s] (default: "
-              << default_bluetooth_timeout << ")" << endl;
+              << default_bluetooth_timeout << ")";
 
     return usage.str();
-}
-
-DjGloveServerArguments::~DjGloveServerArguments()
-{
 }
 
 string DjGloveServerArguments::ArduinoBluetoothMac() const

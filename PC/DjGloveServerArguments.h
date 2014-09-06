@@ -6,8 +6,10 @@
 
 class EXPORT DjGloveServerArguments {
 public:
-    DjGloveServerArguments(int argc, char* argv[]);
+    DjGloveServerArguments();
     ~DjGloveServerArguments();
+    
+    void Apply(int argc, char* argv[]);
 
     std::string ArduinoBluetoothMac() const;
     std::string VirtualMidiPortName() const;
@@ -23,8 +25,6 @@ private:
     std::string arduino_bluetooth_mac_;
     std::string virtual_midi_port_name_;
     int         bluetooth_timeout_;
-    
-    void Apply(int argc, char* argv[]);
 };
 
 #endif // DJ_GLOVE_PC_DJ_GLOVE_SERVER_ARGUMENTS_H_
