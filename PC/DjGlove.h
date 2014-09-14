@@ -6,6 +6,7 @@
 #include <deque>
 
 class MidiSignal;
+class DataProtocol;
 
 class EXPORT DjGlove {
     friend class DataProtocol;

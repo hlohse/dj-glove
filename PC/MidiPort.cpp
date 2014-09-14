@@ -42,7 +42,7 @@ void MidiPort::Open(const string& name)
     name_ = string(snd_rawmidi_name(handle));
 #elif _WIN32
 	wstring_convert<codecvt_utf8<wchar_t>, wchar_t> converter;
-	const wstring name_utf8 = converter.from_bytes(name_);
+	const wstring name_utf8 = converter.from_bytes(name);
 	const LPCWSTR port_name = name_utf8.c_str();
 
 	port_ = virtualMIDICreatePortEx2(port_name,
