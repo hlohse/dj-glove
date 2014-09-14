@@ -29,7 +29,6 @@ Make sure the following packages are installed:
     arduino
     libasound2-dev
     libbluetooth-dev
-    libboost-program-options-dev
 
 
 X.X. All Platforms

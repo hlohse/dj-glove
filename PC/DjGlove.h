@@ -2,9 +2,10 @@
 #define DJ_GLOVE_PC_DJ_GLOVE_H_
 
 #include "Export.h"
-#include "MidiSignal.h"
+#include "DataProtocol.h"
 #include <deque>
 
+class MidiSignal;
 class DataProtocol;
 
 class EXPORT DjGlove {
@@ -20,7 +21,9 @@ public:
     MidiSignal NextMidiSignal();
 
 private:
+    DataProtocol data_protocol_;
     std::deque<MidiSignal> midi_signals_;
+
     bool punched_;
     bool button_push_0_;
     bool button_push_1_;
@@ -44,7 +47,6 @@ private:
     int  program_;
     int  data_byte_index_;
 
-    void ApplyData(const char data);
     void GenerateMidiSignals();
 };
 

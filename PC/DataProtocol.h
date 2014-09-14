@@ -25,16 +25,27 @@ class DjGlove;
 
 class EXPORT DataProtocol {
 public:
-    static const int max_index = 10;
-
-    static bool IsPunch(const char data);
-
-    static void ApplyData(DjGlove& dj_glove, const char data, const int index);
-    static void ApplyPunch(DjGlove& dj_glove, const char data);
+    DataProtocol(DjGlove& dj_glove);
+    ~DataProtocol();
+    
+    void ApplyNext(const char data);
 
 private:
-    static void ApplyBit(bool& output, const char data, const int bit);
-    static void ApplyLowBits(int& output, const char data, const int bits);
+    static const int max_data_index = 10;
+    DjGlove& dj_glove_;
+    int      data_index_;
+
+    char Prepare(const char data) const;
+
+    bool IsPunch(const char data) const;
+
+    void ApplyData(const char data);
+    void ApplyPunch(const char data);
+
+    void ApplyBit(bool& output, const char data, const int bit);
+    void ApplyLowBits(int& output, const char data, const int bits);
+    
+    void ForwardDataIndex();
 };
 
 #endif // DJ_GLOVE_PC_DATA_PROTOCOL_H_
