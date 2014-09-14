@@ -3,10 +3,8 @@
 
 #include "Export.h"
 #include "DataProtocol.h"
+#include "MidiSignal.h"
 #include <deque>
-
-class MidiSignal;
-class DataProtocol;
 
 class EXPORT DjGlove {
     friend class DataProtocol;

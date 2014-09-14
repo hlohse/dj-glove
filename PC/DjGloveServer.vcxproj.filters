@@ -18,9 +18,15 @@
     <ClInclude Include="LibDjGlove.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DjGloveServerArguments.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DjGloveServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DjGloveServerArguments.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -57,10 +57,12 @@ del $(OutDir)\DjGloveServer.pdb</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DjGloveServerArguments.h" />
     <ClInclude Include="LibDjGlove.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DjGloveServer.cpp" />
+    <ClCompile Include="DjGloveServerArguments.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
