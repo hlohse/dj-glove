@@ -1,6 +1,7 @@
 #include "Bluetooth.h"
 #include "Formatter.h"
 #include <stdexcept>
+#include <iostream>
 #include <sys/stat.h>
 #include <fcntl.h>
 using namespace std;
@@ -56,12 +57,8 @@ void Bluetooth::TearDown()
 }
 
 Bluetooth::Bluetooth(const int read_socket_buffer_bytes)
-:   buffer_(""),
-#ifdef __linux__
-	socket_(socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM)),
-#elif _WIN32
-	socket_(socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM)),
-#endif
+:   device_(nullptr),
+	buffer_(""),
     read_socket_buffer_bytes_(read_socket_buffer_bytes),
 	read_socket_buffer_(NULL)
 {
@@ -92,7 +89,13 @@ void Bluetooth::Connect(std::shared_ptr<BluetoothDevice> device,
                         const int timeout_s)
 {
     struct timeval timeout;
-    fd_set sockets;
+	fd_set sockets;
+
+#ifdef __linux__
+	socket_ = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+#elif _WIN32
+	socket_ = socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM);
+#endif
 
     if (!device->IsValid()) {
         throw runtime_error(Formatter() << "Invalid " << device_->ToString());
@@ -113,7 +116,7 @@ void Bluetooth::Connect(std::shared_ptr<BluetoothDevice> device,
 
 void Bluetooth::ConnectSocket(struct timeval timeout, fd_set sockets)
 {
-    BluetoothDevice::SocketAddress address = device_->GetSocketAddress();
+	BluetoothDevice::SocketAddress address = device_->GetSocketAddress();
 
     SetSocketNonBlocking();
     connect(socket_, (sockaddr*) &address, sizeof(address));
