@@ -2,9 +2,28 @@
 #include <SoftwareSerial.h>
 
 struct Pins {
+  static const byte poti_0  = A0;
   static const byte push_0  =  3;
   static const byte led_clk = A3;
   static const byte led_sda = A2;
+};
+
+class Poti {
+public:
+  Poti(const byte pin)
+  :   m_pin(pin)
+  {
+    pinMode(m_pin, INPUT);
+  }
+  
+  int read() const
+  {
+    // Adjust 0..1023 to 0..127
+    return analogRead(m_pin) / 8;
+  }
+
+private:
+  byte m_pin;
 };
 
 class PushButton {
@@ -151,6 +170,7 @@ const Led::digit_t Led::Digit[Led::num_digits] = {
   { LOW,  LOW, HIGH,  LOW,  LOW,  LOW,  LOW, LOW}  // E, index 12 TODO
 };
 
+Poti poti_0(Pins::poti_0);
 PushButton push_0(Pins::push_0);
 Led led(Pins::led_clk, Pins::led_sda);
 
