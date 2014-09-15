@@ -18,8 +18,8 @@ public:
     const digit_t& digit_left  = Digit[digitIndex(left())];
     const digit_t& digit_right = Digit[digitIndex(right())];
     
-    write(digit_left,  0, 4);
     write(digit_right, 0, 4);
+    write(digit_left,  0, 4);
     write(digit_left,  4, 4);
     write(digit_right, 4, 4);
   }
@@ -98,19 +98,19 @@ private:
 };
   
 const Led::digit_t Led::Digit[Led::num_digits] = {
-  {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW}, // 0, index 0
-  {HIGH, HIGH,  LOW,  LOW,  LOW,  LOW,  LOW, LOW}, // 1
+  {HIGH, HIGH, HIGH,  LOW, HIGH, HIGH, HIGH, LOW}, // 0, index 0
+  {HIGH,  LOW,  LOW,  LOW,  LOW,  LOW, HIGH, LOW}, // 1
   {HIGH, HIGH,  LOW, HIGH, HIGH, HIGH,  LOW, LOW}, // 2
   {HIGH, HIGH,  LOW, HIGH,  LOW, HIGH, HIGH, LOW}, // 3
   {HIGH,  LOW, HIGH, HIGH,  LOW,  LOW, HIGH, LOW}, // 4
-  { LOW, HIGH, HIGH, HIGH,  LOW, HIGH,  LOW, LOW}, // 5
+  { LOW, HIGH, HIGH, HIGH,  LOW, HIGH, HIGH, LOW}, // 5
   { LOW, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW}, // 6
   {HIGH, HIGH,  LOW,  LOW,  LOW,  LOW, HIGH, LOW}, // 7
   {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW}, // 8
   {HIGH, HIGH, HIGH, HIGH,  LOW, HIGH, HIGH, LOW}, // 9, index 9
-  {HIGH, HIGH, HIGH, HIGH, HIGH,  LOW,  LOW, LOW}, // C, index 10
-  { LOW, HIGH, HIGH,  LOW, HIGH, HIGH,  LOW, LOW}, // P, index 11
-  { LOW,  LOW, HIGH,  LOW,  LOW,  LOW,  LOW, LOW}  // E, index 12 TODO
+  { LOW, HIGH, HIGH,  LOW, HIGH, HIGH,  LOW, LOW}, // C, index 10
+  {HIGH, HIGH, HIGH, HIGH, HIGH,  LOW,  LOW, LOW}, // P, index 11
+  { LOW, HIGH, HIGH, HIGH, HIGH, HIGH,  LOW, LOW}  // E, index 12 TODO
 };
 
 #endif // DJ_GLOVE_ARDUINO_DJ_GLOVE_LED_H_
