@@ -99,9 +99,9 @@ private:
   {
     byte result = 0;
     result |= m_glove->channel & 0xF;        // 0000 1111
-    result |= buttonBit(m_glove->push_0, 4); // 000X 0000
-    result |= buttonBit(m_glove->push_1, 5); // 00X0 0000
-    result |= buttonBit(m_glove->push_2, 6); // 0X00 0000
+    result |= buttonBit(m_glove->push_2, 4); // 000X 0000
+    result |= buttonBit(m_glove->push_3, 5); // 00X0 0000
+    result |= buttonBit(m_glove->push_4, 6); // 0X00 0000
     return result & 0x7F; // 0111 1111
   }
   
@@ -109,9 +109,9 @@ private:
   {
     byte result = 0;
     result |= m_glove->program & 0xF;        // 0000 1111
-    result |= buttonBit(m_glove->push_3, 4); // 000X 0000
-    result |= buttonBit(m_glove->push_4, 5); // 00X0 0000
     result |= buttonBit(m_glove->flip,   6); // 0X00 0000
+    result |= buttonBit(m_glove->push_0, 5); // 00X0 0000
+    result |= buttonBit(m_glove->push_1, 4); // 000X 0000
     return result & 0x7F; // 0111 1111
   }
 };
