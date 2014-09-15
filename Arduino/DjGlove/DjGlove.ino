@@ -23,7 +23,7 @@ class Flex {
 class Poti {
 public:
   Poti(const byte pin)
-  :   m_pin(pin)
+  : m_pin(pin)
   {
     pinMode(m_pin, INPUT);
   }
@@ -44,8 +44,8 @@ private:
 class PushButton {
 public:
   PushButton(const byte pin)
-  :   m_pin(pin),
-      m_num_debounces(0)
+  : m_pin(pin),
+    m_num_debounces(0)
   {
     pinMode(m_pin, INPUT);
   }
@@ -79,10 +79,10 @@ private:
 class Led {
 public:
   Led(const byte pin_clk, const byte pin_sda)
-  :   m_pin_clk(pin_clk),
-      m_pin_sda(pin_sda),
-      m_left(0),
-      m_right(0)
+  : m_pin_clk(pin_clk),
+    m_pin_sda(pin_sda),
+    m_left(0),
+    m_right(0)
   {
     pinMode(m_pin_clk, OUTPUT);
     pinMode(m_pin_sda, OUTPUT);
@@ -197,12 +197,100 @@ struct DjGlove {
   Poti       poti_0;
   PushButton push_0;
   Led        led;
+  byte       channel;
+  byte       program;
   
   DjGlove()
-  :   poti_0(Pins::poti_0),
-      push_0(Pins::push_0),
-      led(Pins::led_clk, Pins::led_sda)
+  : poti_0(Pins::poti_0),
+    push_0(Pins::push_0),
+    led(Pins::led_clk, Pins::led_sda),
+    channel(0),
+    program(0)
   {
+  }
+};
+
+/* =========================
+ *  DjGloveData
+ * =========================*/
+
+/*      Data Bytes Layout
+ *
+ * Index | Bits         Signals
+ * ----------------------------------------------------------------------
+ *     0 | 0000 tttt    t: Touch buttons 0..3
+ *     1 | 0ppp pppp    p: Poti 0
+ *     2 | 0ppp pppp    p: Poti 1
+ *     3 | 0ppp pppp    p: Poti 2
+ *     4 | 0fff ffff    f: Flex
+ *     5 | 0ddd dddd    d: Distance
+ *     6 | 0ooo oooo    o: Orientation X
+ *     7 | 0ooo oooo    o: Orientation Y
+ *     8 | 0ooo oooo    o: Orientation Z
+ *     9 | 0bbb cccc    b: Push buttons 0..2, c: Channel
+ *    10 | 0fbb pppp    f: Flip button, b: Push buttons 3..4, p: Program
+ *   INT | 1000 000p    p: Punch
+ *
+ * Note: Increment each value by 1 for Bluetooth transmission (no null bytes allowed)
+ */
+
+class DjGloveData {
+public:
+  byte bytes[11];
+  
+  DjGloveData(DjGlove& glove)
+  : bytes({0})
+  {
+    readTouchButtons(glove);
+    readPotis(glove);
+    readFlex(glove);
+    readDistance(glove);
+    readOrientation(glove);
+    readPushButtons(glove);
+    readChannel(glove);
+    readFlipButton(glove);
+    readProgram(glove);
+  }
+
+private:
+  void readTouchButtons(DjGlove& glove)
+  {
+  }
+  
+  void readPotis(DjGlove& glove)
+  {
+    bytes[1] = glove.poti_0.read();
+  }
+  
+  void readFlex(DjGlove& glove)
+  {
+  }
+  
+  void readDistance(DjGlove& glove)
+  {
+  }
+  
+  void readOrientation(DjGlove& glove)
+  {
+  }
+  
+  void readPushButtons(DjGlove& glove)
+  {
+    bytes[9] |= (glove.push_0.isPushed() ? 1 : 0) << 6;
+  }
+  
+  void readChannel(DjGlove& glove)
+  {
+    bytes[9] |= glove.channel & 0xF; // 0000 1111
+  }
+  
+  void readFlipButton(DjGlove& glove)
+  {
+  }
+  
+  void readProgram(DjGlove& glove)
+  {
+    bytes[10] |= glove.program & 0xF; // 0000 1111
   }
 };
 
@@ -218,6 +306,6 @@ void setup()
 }
 
 void loop()
-{
-  
+{  
 }
+
