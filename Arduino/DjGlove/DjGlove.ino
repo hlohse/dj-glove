@@ -10,34 +10,35 @@ class Led {
 public:
   Led(const byte pin_clk, const byte pin_sda)
   :   m_pin_clk(pin_clk),
-      m_pin_sda(pin_sda)
+      m_pin_sda(pin_sda),
+      m_left(0),
+      m_right(0)
   {
     pinMode(m_pin_clk, OUTPUT);
     pinMode(m_pin_sda, OUTPUT);
-    setLeft(0);
-    setRight(0);
-  }
-  
-  ~Led()
-  {
   }
   
   void display() const
   {
-    write(m_left_led,  0, 4);
-    write(m_right_led, 0, 4);
-    write(m_left_led,  4, 4);
-    write(m_right_led, 4, 4);
+    const digit_t& digit_left  = Digit[digitIndex(left())];
+    const digit_t& digit_right = Digit[digitIndex(right())];
+    
+    write(digit_left,  0, 4);
+    write(digit_right, 0, 4);
+    write(digit_left,  4, 4);
+    write(digit_right, 4, 4);
   }
   
+  // setLeft(0); ... setLeft(9); setLeft('C'); setLeft('P');
   void setLeft(const unsigned char value)
   {
-    set(m_left, m_left_led, value);
+    set(m_left, value);
   }
   
+  // setRight(0); ... setRight(9); setRight('C'); setRight('P');
   void setRight(const unsigned char value)
   {
-    set(m_right, m_right_led, value);
+    set(m_right, value);
   }
   
   unsigned char left() const
@@ -58,8 +59,6 @@ private:
   
   byte          m_pin_clk;
   byte          m_pin_sda;
-  digit_t       m_left_led;
-  digit_t       m_right_led;
   unsigned char m_left;
   unsigned char m_right;
   
@@ -77,7 +76,7 @@ private:
       digitalWrite(m_pin_clk, LOW);
   }
   
-  int digitIndex(const unsigned char value)
+  int digitIndex(const unsigned char value) const
   {
     if (value <= 9) {
       return value;
@@ -90,18 +89,16 @@ private:
     }
   }
   
-  void set(unsigned char& side, digit_t& led, const unsigned char value)
+  void set(unsigned char& side, const unsigned char value)
   {
     const unsigned char digit_index = digitIndex(value);
     
-    if (digit_index != 9) { // E
+    if (digit_index <= 11) {
       side = value;
     }
     else {
       side = 'E';
     }
-    
-    memcpy(&led, &Digit[digit_index], sizeof(led));
   }
 };
   
