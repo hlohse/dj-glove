@@ -9,6 +9,7 @@
 #include "Data.h"
  
 DjGlove   glove; // Only instantiation!
+Data      data(glove);
 Bluetooth bluetooth(Pins::bt_rx, Pins::bt_tx);
 
 void setup()  
@@ -16,6 +17,8 @@ void setup()
 }
 
 void loop()
-{  
+{
+  const byte next_data_byte = data.nextByte() + 1; // Avoid null byte
+  bluetooth.write(next_data_byte);
 }
 
