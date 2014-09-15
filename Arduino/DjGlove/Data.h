@@ -34,18 +34,18 @@ public:
     byte result;
     
     switch (m_index) {
-      case  0: result = touch();
-      case  1: result = poti(0);
-      case  2: result = poti(1);
-      case  3: result = poti(2);
-      case  4: result = flex();
-      case  5: result = distance();
-      case  6: result = orientation(0);
-      case  7: result = orientation(1);
-      case  8: result = orientation(2);
-      case  9: result = pushFirstChannel();
-      case 10: result = flipPushSecondProgram();
-      default: result = 0;
+      case  0: result = touch();                 break;
+      case  1: result = poti(m_glove->poti_0);   break;
+      case  2: result = poti(m_glove->poti_1);   break;
+      case  3: result = poti(m_glove->poti_2);   break;
+      case  4: result = flex();                  break;
+      case  5: result = distance();              break;
+      case  6: result = orientation(0);          break;
+      case  7: result = orientation(1);          break;
+      case  8: result = orientation(2);          break;
+      case  9: result = pushFirstChannel();      break;
+      case 10: result = flipPushSecondProgram(); break;
+      default: result = 0;                       break;
     }
     
     m_index++;
@@ -60,22 +60,29 @@ private:
   DjGlove* m_glove;
   int      m_index;
   
-  byte touch()
+  byte buttonBit(Button& button, const int index)
   {
-    return 0;
+    return (button.isPushed() ? 1 : 0) << index;
   }
   
-  byte poti(const int index)
+  byte touch()
   {
-    switch (index) {
-      case 0:  return m_glove->poti_0.read() & 0x7F; // 0111 1111
-      default: return 0;
-    }
+    byte result = 0;
+    result |= buttonBit(m_glove->touch_0, 0); // 0000 000X
+    result |= buttonBit(m_glove->touch_1, 1); // 0000 00X0
+    result |= buttonBit(m_glove->touch_2, 2); // 0000 0X00
+    result |= buttonBit(m_glove->touch_3, 3); // 0000 X000
+    return result & 0xF; // 0000 1111
+  }
+  
+  byte poti(const Poti& poti)
+  {
+    return poti.read() & 0x7F; // 0111 1111
   }
   
   byte flex()
   {
-    return 0;
+    return m_glove->flex.read() & 0x7F; // 0111 1111
   }
   
   byte distance()
@@ -91,16 +98,21 @@ private:
   byte pushFirstChannel()
   {
     byte result = 0;
-    result |= (m_glove->push_0.isPushed() ? 1 : 0) << 6; // 0X00 0000
-    result |= m_glove->channel & 0xF;                    // 0000 1111
-    return result;
+    result |= m_glove->channel & 0xF;        // 0000 1111
+    result |= buttonBit(m_glove->push_0, 4); // 000X 0000
+    result |= buttonBit(m_glove->push_1, 5); // 00X0 0000
+    result |= buttonBit(m_glove->push_2, 6); // 0X00 0000
+    return result & 0x7F; // 0111 1111
   }
   
   byte flipPushSecondProgram()
   {
     byte result = 0;
-    result |= m_glove->program & 0xF; // 0000 1111
-    return result;
+    result |= m_glove->program & 0xF;        // 0000 1111
+    result |= buttonBit(m_glove->push_3, 4); // 000X 0000
+    result |= buttonBit(m_glove->push_4, 5); // 00X0 0000
+    // TODO: Flip button
+    return result & 0x7F; // 0111 1111
   }
 };
 

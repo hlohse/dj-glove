@@ -2,35 +2,43 @@
 #define DJ_GLOVE_ARDUINO_DJ_GLOVE_DJ_GLOVE_H_
 
 #include "Pins.h"
-#include "Push.h"
+#include "Button.h"
 #include "Poti.h"
 #include "Flex.h"
 #include "Led.h"
 
 // Note: Instantiate only once
 struct DjGlove {
-  Poti poti_0;
-  Poti poti_1;
-  Poti poti_2;
-  Push push_0;
-  Push push_1;
-  Push push_2;
-  Push push_3;
-  Push push_4;
-  Flex flex;
-  Led  led;
-  byte channel;
-  byte program;
+  Button push_0;
+  Button push_1;
+  Button push_2;
+  Button push_3;
+  Button push_4;
+  Button touch_0;
+  Button touch_1;
+  Button touch_2;
+  Button touch_3;
+  Poti   poti_0;
+  Poti   poti_1;
+  Poti   poti_2;
+  Flex   flex;
+  Led    led;
+  byte   channel;
+  byte   program;
   
   DjGlove()
-  : poti_0(Pins::poti_0),
-    poti_1(Pins::poti_1),
-    poti_2(Pins::poti_2),
-    push_0(Pins::push_0),
+  : push_0(Pins::push_0),
     push_1(Pins::push_1),
     push_2(Pins::push_2),
     push_3(Pins::push_3),
     push_4(Pins::push_4),
+    touch_0(Pins::touch_0),
+    touch_1(Pins::touch_1),
+    touch_2(Pins::touch_2),
+    touch_3(Pins::touch_3),
+    poti_0(Pins::poti_0),
+    poti_1(Pins::poti_1),
+    poti_2(Pins::poti_2),
     flex(Pins::flex),
     led(Pins::led_clk, Pins::led_sda),
     channel(0),

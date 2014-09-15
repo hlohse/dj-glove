@@ -1,9 +1,9 @@
-#ifndef DJ_GLOVE_ARDUINO_DJ_GLOVE_PUSH_H_
-#define DJ_GLOVE_ARDUINO_DJ_GLOVE_PUSH_H_
+#ifndef DJ_GLOVE_ARDUINO_DJ_GLOVE_BUTTON_H_
+#define DJ_GLOVE_ARDUINO_DJ_GLOVE_BUTTON_H_
 
-class Push {
+class Button {
 public:
-  Push(const byte pin)
+  Button(const byte pin)
   : m_pin(pin),
     m_num_debounces(0)
   {
@@ -33,5 +33,5 @@ private:
   int  m_num_debounces;
 };
 
-#endif // DJ_GLOVE_ARDUINO_DJ_GLOVE_PUSH_H_
+#endif // DJ_GLOVE_ARDUINO_DJ_GLOVE_BUTTON_H_
 

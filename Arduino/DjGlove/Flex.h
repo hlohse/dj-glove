@@ -9,6 +9,7 @@ public:
     pinMode(m_pin, INPUT);
   }
   
+  // TODO: mean?
   int read() const
   {
     // Adjust 0..1023 to 0..127
