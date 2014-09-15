@@ -111,7 +111,7 @@ private:
     result |= m_glove->program & 0xF;        // 0000 1111
     result |= buttonBit(m_glove->push_3, 4); // 000X 0000
     result |= buttonBit(m_glove->push_4, 5); // 00X0 0000
-    // TODO: Flip button
+    result |= buttonBit(m_glove->flip,   6); // 0X00 0000
     return result & 0x7F; // 0111 1111
   }
 };

@@ -18,6 +18,7 @@ struct DjGlove {
   Button touch_1;
   Button touch_2;
   Button touch_3;
+  Button flip;
   Poti   poti_0;
   Poti   poti_1;
   Poti   poti_2;
@@ -36,6 +37,7 @@ struct DjGlove {
     touch_1(Pins::touch_1),
     touch_2(Pins::touch_2),
     touch_3(Pins::touch_3),
+    flip(Pins::flip),
     poti_0(Pins::poti_0),
     poti_1(Pins::poti_1),
     poti_2(Pins::poti_2),

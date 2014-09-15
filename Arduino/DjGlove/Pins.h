@@ -16,6 +16,7 @@ struct Pins {
   static const byte touch_1 =  3; // TODO
   static const byte touch_2 =  3; // TODO
   static const byte touch_3 =  3; // TODO
+  static const byte flip    =  3; // TODO
   static const byte flex    = A7;
   static const byte led_clk = A3;
   static const byte led_sda = A2;
