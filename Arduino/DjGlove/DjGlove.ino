@@ -1,5 +1,6 @@
 #include <Bluetooth.h>
 #include <SoftwareSerial.h>
+#include <Wire.h>
 #include "Pins.h"
 #include "DjGlove.h"
 #include "Data.h"
@@ -10,22 +11,27 @@ Data      data(glove);
 
 void setup()  
 {
+  Wire.begin();
   analogReference(EXTERNAL);
   Serial.begin(115200);
+  glove.ultra_sound.initialize();
 }
 
 void loop()
 {
-  /*
+  Serial.println(glove.ultra_sound.read());
+  delay(500);
+  
+/*
   for (unsigned char i = 0; i < 10; ++i) {
     glove.led.setLeft(0);
     glove.led.setRight(i);
     glove.led.display();
     delay(1000);
   }
-  */
+*/
   
-  
+/*
   glove.led.setLeft('P');
   glove.led.setRight('E');
   glove.led.display();
@@ -35,7 +41,7 @@ void loop()
   glove.led.setRight('P');
   glove.led.display();
   delay(1000);
-  
+*/
   
 /*
   for (int i = 0; i < 11; ++i) {

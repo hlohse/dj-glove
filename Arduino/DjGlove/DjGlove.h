@@ -5,27 +5,29 @@
 #include "Button.h"
 #include "Poti.h"
 #include "Flex.h"
+#include "UltraSound.h"
 #include "Led.h"
 
 // Note: Instantiate only once
 struct DjGlove {
-  Button push_0;
-  Button push_1;
-  Button push_2;
-  Button push_3;
-  Button push_4;
-  Button touch_0;
-  Button touch_1;
-  Button touch_2;
-  Button touch_3;
-  Button flip;
-  Poti   poti_0;
-  Poti   poti_1;
-  Poti   poti_2;
-  Flex   flex;
-  Led    led;
-  byte   channel;
-  byte   program;
+  Button     push_0;
+  Button     push_1;
+  Button     push_2;
+  Button     push_3;
+  Button     push_4;
+  Button     touch_0;
+  Button     touch_1;
+  Button     touch_2;
+  Button     touch_3;
+  Button     flip;
+  Poti       poti_0;
+  Poti       poti_1;
+  Poti       poti_2;
+  Flex       flex;
+  UltraSound ultra_sound;
+  Led        led;
+  byte       channel;
+  byte       program;
   
   DjGlove()
   : push_0(Pins::push_0),
@@ -42,6 +44,7 @@ struct DjGlove {
     poti_1(Pins::poti_1),
     poti_2(Pins::poti_2),
     flex(Pins::flex),
+    ultra_sound(Pins::ultra_sound),
     led(Pins::led_clk, Pins::led_sda),
     channel(0),
     program(0)
