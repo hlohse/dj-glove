@@ -6,16 +6,21 @@
 
 class Bluetooth : public SoftwareSerial {
 public:
-  static const int pin_rx = 2;
-  static const int pin_tx = 3;
-  static const int baud = 9600;
+  static const int default_pin_rx = 2;
+  static const int default_pin_tx = 3;
+  static const int default_baud   = 9600;
 
   Bluetooth()
-  : Bluetooth(pin_rx, pin_tx)
+  : Bluetooth(default_pin_rx, default_pin_tx)
   {
   }
 
   Bluetooth(const byte rx, const byte tx)
+  : Bluetooth(rx, tx, default_baud)
+  {
+  }
+
+  Bluetooth(const byte rx, const byte tx, const int baud)
   : SoftwareSerial(rx, tx)
   {
     begin(baud);
