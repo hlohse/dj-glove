@@ -1,22 +1,24 @@
 #include <Bluetooth.h>
 #include <SoftwareSerial.h>
 
+Bluetooth bluetooth;
+
 void setup()
 {
-    Bluetooth.begin(9600); // Change according to baud changes
+    // bluetooth.begin(9600); // Change according to baud changes
     Serial.begin(9600);
     
-    Bluetooth.print("AT");   // Expect OK answer during first loop
+    bluetooth.print("AT");   // Expect OK answer during first loop
     delay(1000);
 }
 
 void loop()
 {
-    while (Bluetooth.available()){
-        Serial.print((char) Bluetooth.read());
+    while (bluetooth.available()){
+        Serial.print((char) bluetooth.read());
     }
 
     while (Serial.available()){
-        Bluetooth.print((char) Serial.read());
+        bluetooth.print((char) Serial.read());
     }
 }

@@ -1,26 +1,26 @@
-/*
- *  This file provides a SoftwareSerial for Bluetooth communication by using
- *  platform's pin and baud configuration.
- *
- *  Example usage (loopback):
- *  
- *      BluetoothSetup();
- *      
- *      if (Bluetooth.available()) {
- *           Bluetooth.print(Bluetooth.read());
- *      }
- */
-
 #ifndef DJ_GLOVE_ARDUINO_LIBRARIES_BLUETOOTH_H_
 #define DJ_GLOVE_ARDUINO_LIBRARIES_BLUETOOTH_H_
 
-class SoftwareSerial;
+#include <Arduino.h>
+#include <SoftwareSerial.h>
 
-// Use as regular SoftwareSerial for communication via Bluetooth
-extern SoftwareSerial Bluetooth;
+class Bluetooth : public SoftwareSerial {
+public:
+  static const int pin_rx = 2;
+  static const int pin_tx = 3;
+  static const int baud = 9600;
 
-// Call once, e.g. in setup function
-void BluetoothSetup();
+  Bluetooth()
+  : Bluetooth(pin_rx, pin_tx)
+  {
+  }
+
+  Bluetooth(const byte rx, const byte tx)
+  : SoftwareSerial(rx, tx)
+  {
+    begin(baud);
+  }
+};
 
 #endif // DJ_GLOVE_ARDUINO_LIBRARIES_BLUETOOTH_H_
 

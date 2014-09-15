@@ -4,7 +4,8 @@
 #define USE_SOFTWARE_SERIAL 1 // Comment out to use hardware Serial pins 0, 1
 
 #ifdef USE_SOFTWARE_SERIAL
-#define _SERIAL_ Bluetooth
+Bluetooth bluetooth;
+#define _SERIAL_ bluetooth
 #else
 #define _SERIAL_ Serial
 #endif
@@ -17,7 +18,6 @@ const char         start_signal = '!';
 void setup()  
 {
 #ifdef USE_SOFTWARE_SERIAL
-    BluetoothSetup();
 #else
     Serial.begin(115200);
 #endif

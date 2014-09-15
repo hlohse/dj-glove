@@ -1,7 +1,9 @@
-#include <SoftwareSerial.h>
 #include <Bluetooth.h>
+#include <SoftwareSerial.h>
 
 struct Pins {
+  static const byte bt_rx   =  2; // Connected to TXD
+  static const byte bt_tx   =  3; // Connected to RXD
   static const byte poti_0  = A0;
   static const byte push_0  =  3;
   static const byte led_clk = A3;
@@ -208,11 +210,11 @@ struct DjGlove {
  *  main
  * =========================*/
  
-DjGlove glove; // Only instantiation!
+DjGlove   glove; // Only instantiation!
+Bluetooth bluetooth(Pins::bt_rx, Pins::bt_tx);
 
 void setup()  
 {
-  BluetoothSetup();
 }
 
 void loop()
