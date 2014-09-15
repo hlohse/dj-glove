@@ -1,5 +1,5 @@
-#include <Bluetooth.h>
 #include <SoftwareSerial.h>
+#include <Bluetooth.h>
 
 struct Pins {
   static const byte poti_0  = A0;
@@ -8,10 +8,16 @@ struct Pins {
   static const byte led_sda = A2;
 };
 
+/* =========================
+ *  Flex
+ * =========================*/
 class Flex {
 // TODO
 };
 
+/* =========================
+ *  Poti
+ * =========================*/
 class Poti {
 public:
   Poti(const byte pin)
@@ -30,6 +36,9 @@ private:
   byte m_pin;
 };
 
+/* =========================
+ *  PushButton
+ * =========================*/
 class PushButton {
 public:
   PushButton(const byte pin)
@@ -62,6 +71,9 @@ private:
   int  m_num_debounces;
 };
 
+/* =========================
+ *  Led
+ * =========================*/
 class Led {
 public:
   Led(const byte pin_clk, const byte pin_sda)
@@ -174,9 +186,29 @@ const Led::digit_t Led::Digit[Led::num_digits] = {
   { LOW,  LOW, HIGH,  LOW,  LOW,  LOW,  LOW, LOW}  // E, index 12 TODO
 };
 
-Poti poti_0(Pins::poti_0);
-PushButton push_0(Pins::push_0);
-Led led(Pins::led_clk, Pins::led_sda);
+/* =========================
+ *  DjGlove
+ * =========================*/
+ 
+// Note: Instantiate only once
+struct DjGlove {
+  Poti       poti_0;
+  PushButton push_0;
+  Led        led;
+  
+  DjGlove()
+  :   poti_0(Pins::poti_0),
+      push_0(Pins::push_0),
+      led(Pins::led_clk, Pins::led_sda)
+  {
+  }
+};
+
+/* =========================
+ *  main
+ * =========================*/
+ 
+DjGlove glove; // Only instantiation!
 
 void setup()  
 {
