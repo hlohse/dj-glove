@@ -8,6 +8,10 @@ struct Pins {
   static const byte led_sda = A2;
 };
 
+class Flex {
+// TODO
+};
+
 class Poti {
 public:
   Poti(const byte pin)
