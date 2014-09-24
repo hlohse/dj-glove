@@ -11,8 +11,9 @@ public:
   
   Gyro(const byte address)
   : m_address(address),
-    m_readout({0,0,0})
+    m_readout()
   {
+    memset(&m_readout, 0, sizeof(m_readout));
     initialize();
   }
   

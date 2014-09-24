@@ -26,8 +26,9 @@ public:
   Data(DjGlove& glove)
   : m_glove(&glove),
     m_index(0),
-    m_last_gyro_readout({0,0,0})
+    m_last_gyro_readout()
   {
+    memset(&m_last_gyro_readout, 0, sizeof(m_last_gyro_readout));
   }
   
   byte nextByte()

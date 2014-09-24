@@ -1,6 +1,8 @@
 #ifndef DJ_GLOVE_ARDUINO_DJ_GLOVE_PINS_H_
 #define DJ_GLOVE_ARDUINO_DJ_GLOVE_PINS_H_
 
+#include <Arduino.h>
+
 struct Pin {
   //static const byte bt_rx       =  2; // Connected to TXD
   //static const byte bt_tx       =  3; // Connected to RXD
