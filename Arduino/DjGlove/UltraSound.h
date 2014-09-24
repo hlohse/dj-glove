@@ -11,8 +11,8 @@ public:
     UNIT_MS = 0x52  // Distance in ping microseconds
   };
   
-  UltraSound(const byte device_id, const unit unit)
-  : m_device_id(device_id),
+  UltraSound(const byte address, const unit unit)
+  : m_address(address),
     m_unit(unit),
     m_value(0),
     m_init_time(0xFFFFFFFF)
@@ -44,15 +44,15 @@ private:
   
   static const byte num_read_bytes = 2;
   
-  byte          m_device_id;
+  byte          m_address;
   unit          m_unit;
   int           m_value;
   unsigned long m_init_time;
   
   void initializeSensor()
   {
-    Wire.beginTransmission(m_device_id);
-    Wire.write((byte) m_device_id);
+    Wire.beginTransmission(m_address);
+    Wire.write((byte) m_address);
     Wire.write((byte) m_unit);
     Wire.endTransmission();
     m_init_time = millis();
@@ -66,10 +66,10 @@ private:
   
   void requestBytes() const
   {
-    Wire.beginTransmission(m_device_id);
+    Wire.beginTransmission(m_address);
     Wire.write((byte) REGISTER_ECHO_1);
     Wire.endTransmission();
-    Wire.requestFrom(m_device_id, num_read_bytes);
+    Wire.requestFrom(m_address, num_read_bytes);
   }
   
   bool hasBytes() const
