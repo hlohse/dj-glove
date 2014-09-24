@@ -44,7 +44,7 @@ struct DjGlove {
     poti_1(Pins::poti_1),
     poti_2(Pins::poti_2),
     flex(Pins::flex),
-    ultra_sound(Pins::ultra_sound),
+    ultra_sound(Pins::ultra_sound, UltraSound::UNIT_MS),
     led(Pins::led_clk, Pins::led_sda),
     channel(0),
     program(0)

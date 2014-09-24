@@ -11,10 +11,8 @@ Data      data(glove);
 
 void setup()  
 {
-  Wire.begin();
   analogReference(EXTERNAL);
   Serial.begin(115200);
-  glove.ultra_sound.initialize();
 }
 
 void loop()

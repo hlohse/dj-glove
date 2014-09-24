@@ -11,38 +11,27 @@ public:
     UNIT_MS = 0x52  // Distance in ping microseconds
   };
   
-  UltraSound(const byte device_id, const unit unit = UNIT_MS)
+  UltraSound(const byte device_id, const unit unit)
   : m_device_id(device_id),
     m_unit(unit),
-    m_value(0)
+    m_value(0),
+    m_init_time(0xFFFFFFFF)
   {
-  }
-  
-  void initialize()
-  {
-    setUnit(m_unit);
-    startRead();
-  }
-  
-  void setUnit(const unit unit)
-  {
-    m_unit = unit;
-    Wire.beginTransmission(m_device_id);
-    setRegister(REGISTER_COMMAND);
-    Wire.write(m_unit);
-    Wire.endTransmission();
+    Wire.begin();
+    initializeSensor();
   }
   
   // Return new value, if available. Previous value otherwise.
   int read()
   {
-    Wire.requestFrom(m_device_id, num_read_bytes);
-    
-    if (Wire.available() >= num_read_bytes) {
-      const byte high = Wire.read();
-      const byte low  = Wire.read();
-      m_value = (((int) high) << 8) | low;
-      startRead();
+    if (isSensorInitialized()) {
+      requestBytes();
+      
+      if (hasBytes()) {
+        updateValue();
+      }
+      
+      initializeSensor();
     }
     
     return m_value;
@@ -56,20 +45,44 @@ private:
   
   static const byte num_read_bytes = 2;
   
-  byte m_device_id;
-  unit m_unit;
-  int  m_value;
+  byte          m_device_id;
+  unit          m_unit;
+  int           m_value;
+  unsigned long m_init_time;
   
-  void setRegister(const registers reg) const
-  {
-    Wire.write(byte(reg));
-  }
-  
-  void startRead() const
+  void initializeSensor()
   {
     Wire.beginTransmission(m_device_id);
-    setRegister(REGISTER_ECHO_1);
+    Wire.write((byte) m_device_id);
+    Wire.write((byte) m_unit);
     Wire.endTransmission();
+    m_init_time = millis();
+  }
+  
+  bool isSensorInitialized() const
+  {
+    const unsigned long passed_ms = millis() - m_init_time;
+    return passed_ms >= 70; // Datasheet suggests 65ms
+  }
+  
+  void requestBytes() const
+  {
+    Wire.beginTransmission(m_device_id);
+    Wire.write((byte) REGISTER_ECHO_1);
+    Wire.endTransmission();
+    Wire.requestFrom(m_device_id, num_read_bytes);
+  }
+  
+  bool hasBytes() const
+  {
+    return Wire.available() >= num_read_bytes;
+  }
+  
+  void updateValue()
+  {
+    const byte high = Wire.read();
+    const byte low  = Wire.read();
+    m_value = (((int) high) << 8) | low;
   }
 };
 
