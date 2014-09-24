@@ -1,7 +1,6 @@
 #include <Bluetooth.h>
 #include <SoftwareSerial.h>
 #include <Wire.h>
-#include "Pins.h"
 #include "DjGlove.h"
 #include "Data.h"
  

@@ -1,7 +1,7 @@
 #ifndef DJ_GLOVE_ARDUINO_DJ_GLOVE_PINS_H_
 #define DJ_GLOVE_ARDUINO_DJ_GLOVE_PINS_H_
 
-struct Pins {
+struct Pin {
   //static const byte bt_rx       =  2; // Connected to TXD
   //static const byte bt_tx       =  3; // Connected to RXD
   static const byte poti_0      = A0;
@@ -18,9 +18,13 @@ struct Pins {
   static const byte touch_3     = 12;
   static const byte flip        =  6;
   static const byte flex        = A7;
-  static const byte ultra_sound = 112;
   static const byte led_clk     = A3;
   static const byte led_sda     = A2;
+};
+
+struct Address {
+  static const byte ultra_sound = 112;
+  static const byte gyro        = 0x69;
 };
 
 #endif // DJ_GLOVE_ARDUINO_DJ_GLOVE_PINS_H_
