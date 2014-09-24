@@ -11,13 +11,15 @@ public:
   static const int default_baud   = 9600;
 
   Bluetooth()
-  : Bluetooth(default_pin_rx, default_pin_tx)
+  : SoftwareSerial(default_pin_rx, default_pin_tx, default_baud)
   {
+	begin(default_baud);
   }
 
   Bluetooth(const byte rx, const byte tx)
-  : Bluetooth(rx, tx, default_baud)
+  : SoftwareSerial(rx, tx)
   {
+	begin(default_baud);
   }
 
   Bluetooth(const byte rx, const byte tx, const int baud)
