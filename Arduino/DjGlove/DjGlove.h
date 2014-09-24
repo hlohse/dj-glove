@@ -6,6 +6,7 @@
 #include "Poti.h"
 #include "Flex.h"
 #include "UltraSound.h"
+#include "Gyro.h"
 #include "Led.h"
 
 // Note: Instantiate only once
@@ -25,6 +26,7 @@ struct DjGlove {
   Poti       poti_2;
   Flex       flex;
   UltraSound ultra_sound;
+  Gyro       gyro;
   Led        led;
   byte       channel;
   byte       program;
@@ -45,6 +47,7 @@ struct DjGlove {
     poti_2(Pin::poti_2),
     flex(Pin::flex),
     ultra_sound(Address::ultra_sound, UltraSound::UNIT_MS),
+    gyro(Address::gyro),
     led(Pin::led_clk, Pin::led_sda),
     channel(0),
     program(0)
