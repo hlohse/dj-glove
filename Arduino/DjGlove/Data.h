@@ -87,7 +87,7 @@ private:
   
   byte distance()
   {
-    return 0;
+    return m_glove->ultra_sound.read() & 0x7F; // 0111 1111
   }
   
   byte orientation(const int index)
