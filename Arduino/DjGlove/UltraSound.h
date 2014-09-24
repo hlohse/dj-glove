@@ -17,7 +17,6 @@ public:
     m_value(0),
     m_init_time(0xFFFFFFFF)
   {
-    Wire.begin();
     initializeSensor();
   }
   

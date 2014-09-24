@@ -49,6 +49,7 @@ struct DjGlove {
     channel(0),
     program(0)
   {
+    Wire.begin();
   }
 };
 
