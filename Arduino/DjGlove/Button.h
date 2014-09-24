@@ -5,6 +5,7 @@ class Button {
 public:
   Button(const byte pin)
   : m_pin(pin),
+    m_is_pushed(false),
     m_num_debounces(0)
   {
     pinMode(m_pin, INPUT);
@@ -14,22 +15,26 @@ public:
   {
     const bool is_pushed = digitalRead(m_pin) == HIGH;
     
-    if (!is_pushed) {
-      m_num_debounces = 0;
-      return false;
-    }
-    
-    if (m_num_debounces < necessary_debounces) {
+    if (is_pushed != m_is_pushed) {
       m_num_debounces++;
     }
-      
-    return m_num_debounces == necessary_debounces;
+    else if (m_num_debounces > 0) {
+      m_num_debounces--;
+    }
+    
+    if (m_num_debounces >= necessary_debounces) {
+      m_num_debounces = 0;
+      m_is_pushed = is_pushed;
+    }
+    
+    return m_is_pushed;
   }
 
 private:
   static const int necessary_debounces = 5;
   
   byte m_pin;
+  bool m_is_pushed;
   int  m_num_debounces;
 };
 
