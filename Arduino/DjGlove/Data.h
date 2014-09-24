@@ -25,7 +25,8 @@ class Data {
 public:
   Data(DjGlove& glove)
   : m_glove(&glove),
-    m_index(0)
+    m_index(0),
+    m_last_gyro_readout({0,0,0})
   {
   }
   
@@ -57,8 +58,9 @@ public:
   }
 
 private:
-  DjGlove* m_glove;
-  int      m_index;
+  DjGlove*      m_glove;
+  int           m_index;
+  Gyro::Readout m_last_gyro_readout;
   
   byte buttonBit(Button& button, const int index)
   {
@@ -92,7 +94,25 @@ private:
   
   byte orientation(const int index)
   {
-    return 0;
+    int value = 0;
+    
+    switch (index) {
+      case 0:
+        m_last_gyro_readout = m_glove->gyro.read();
+        value = m_last_gyro_readout.x;
+        break; 
+      case 1:
+        value = m_last_gyro_readout.y;
+        break;
+      case 2:
+        value = m_last_gyro_readout.z;
+        break;
+    }
+    
+    const byte value_as_byte = value / 0xFF;
+    const byte value_7_bit   = value_as_byte / 2;
+    
+    return value_7_bit & 0x7F; // 0111 1111
   }
   
   byte pushFirstChannel()
