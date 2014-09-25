@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <iomanip>
 using namespace std;
 
 int main(int argc, char* argv[])
@@ -66,8 +67,9 @@ int main(int argc, char* argv[])
 
     while (true) {
         bluetooth.WaitUntilAvailable(1);
-        
-        glove.Process(*bluetooth.Read(1).c_str());
+        const unsigned char data = *bluetooth.Read(1).c_str();
+
+        glove.Process(data);
         cout << glove.DataString() << endl;
 
         if (glove.HasMidiSignal()) {
