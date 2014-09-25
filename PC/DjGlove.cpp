@@ -36,7 +36,7 @@ DjGlove::~DjGlove()
 {
 }
 
-void DjGlove::Process(const char data)
+void DjGlove::Process(const unsigned char data)
 {
     data_protocol_.ApplyNext(data);
     GenerateMidiSignals();

@@ -28,22 +28,22 @@ public:
     DataProtocol(DjGlove& dj_glove);
     ~DataProtocol();
     
-    void ApplyNext(const char data);
+    void ApplyNext(const unsigned char data);
 
 private:
     static const int max_data_index = 10;
     DjGlove& dj_glove_;
     int      data_index_;
 
-    char Prepare(const char data) const;
+    unsigned char Prepare(const unsigned char data) const;
 
-    bool IsPunch(const char data) const;
+    bool IsPunch(const unsigned char data) const;
 
-    void ApplyData(const char data);
-    void ApplyPunch(const char data);
+    void ApplyData(const unsigned char data);
+    void ApplyPunch(const unsigned char data);
 
-    void ApplyBit(bool& output, const char data, const int bit);
-    void ApplyLowBits(int& output, const char data, const int bits);
+    void ApplyBit(bool& output, const unsigned char data, const int bit);
+    void ApplyLowBits(int& output, const unsigned char data, const int bits);
     
     void ForwardDataIndex();
 };
