@@ -55,7 +55,7 @@ public:
       m_index = 0;
     }
     
-    return result;
+    return result + 1;
   }
 
 private:

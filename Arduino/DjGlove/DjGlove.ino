@@ -10,17 +10,16 @@ void setup()
 {
   analogReference(EXTERNAL);
   glove.initialize();
-  Serial.begin(9600);
-  Serial.println("GO!");
+  Serial.begin(115200);
 }
 
 void loop()
 {
   for (int i = 0; i < 11; ++i) {
-    Serial.println(data.nextByte(), BIN);
+    Serial.write(data.nextByte());
   }
   
-  Serial.println("=====");
-  delay(300);
+  //Serial.println("=====");
+  delay(400);
 }
 
