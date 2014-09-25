@@ -12,7 +12,10 @@ public:
   int read() const
   {
     // Adjust 0..1023 to 0..127
-    return analogRead(m_pin) / 8;
+    const int value = analogRead(m_pin) / 8;
+    
+    // Invert value range so that poti totally left = 0, right = 127
+    return 127 - value;
   }
 
 private:
