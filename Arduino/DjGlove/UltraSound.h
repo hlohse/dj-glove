@@ -22,7 +22,7 @@ public:
   void initialize()
   {
     Wire.beginTransmission(m_address);
-    Wire.write((byte) m_address);
+    Wire.write(register_command);
     Wire.write((byte) m_unit);
     Wire.endTransmission();
     m_init_time = millis();
@@ -45,12 +45,9 @@ public:
   }
 
 private:
-  enum registers {
-    REGISTER_COMMAND = 0x00,
-    REGISTER_ECHO_1  = 0x02
-  };
-  
-  static const byte num_read_bytes = 2;
+  static const byte register_command = 0x00;
+  static const byte register_echo_1  = 0x02;
+  static const byte num_read_bytes   = 2;
   
   byte          m_address;
   unit          m_unit;
@@ -66,7 +63,7 @@ private:
   void requestBytes() const
   {
     Wire.beginTransmission(m_address);
-    Wire.write((byte) REGISTER_ECHO_1);
+    Wire.write(register_echo_1);
     Wire.endTransmission();
     Wire.requestFrom(m_address, num_read_bytes);
   }
