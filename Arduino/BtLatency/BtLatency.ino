@@ -1,10 +1,11 @@
-#include <Bluetooth.h>
+#include <Arduino.h>
 #include <SoftwareSerial.h>
 
-#define USE_SOFTWARE_SERIAL 1 // Comment out to use hardware Serial pins 0, 1
+// Comment out to use hardware Serial pins RX0, TX1
+#define USE_SOFTWARE_SERIAL 1
 
 #ifdef USE_SOFTWARE_SERIAL
-Bluetooth bluetooth;
+SoftwareSerial bluetooth(2, 3);
 #define _SERIAL_ bluetooth
 #else
 #define _SERIAL_ Serial
@@ -17,8 +18,7 @@ const char         start_signal = '!';
 
 void setup()  
 {
-#ifdef USE_SOFTWARE_SERIAL
-#else
+#ifndef USE_SOFTWARE_SERIAL
     Serial.begin(115200);
 #endif
 }

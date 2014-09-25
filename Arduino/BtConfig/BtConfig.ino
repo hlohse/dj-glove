@@ -1,11 +1,10 @@
-#include <Bluetooth.h>
 #include <SoftwareSerial.h>
 
-Bluetooth bluetooth;
+SoftwareSerial bluetooth(2, 3);
 
 void setup()
 {
-    // bluetooth.begin(9600); // Change according to baud changes
+    bluetooth.begin(115200); // Change according to baud changes
     Serial.begin(9600);
     
     bluetooth.print("AT");   // Expect OK answer during first loop

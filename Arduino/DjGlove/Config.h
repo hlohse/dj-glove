@@ -4,8 +4,6 @@
 #include <Arduino.h>
 
 struct Pin {
-  //static const byte bt_rx       =  2; // Connected to TXD
-  //static const byte bt_tx       =  3; // Connected to RXD
   static const byte poti_0      = A0;
   static const byte poti_1      = A1;
   static const byte poti_2      = A6;

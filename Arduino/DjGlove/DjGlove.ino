@@ -1,4 +1,3 @@
-#include <Bluetooth.h>
 #include <SoftwareSerial.h>
 #include <Wire.h>
 #include "DjGlove.h"
@@ -6,7 +5,6 @@
  
 DjGlove   glove; // Only instantiation!
 Data      data(glove);
-//Bluetooth bluetooth(Pins::bt_rx, Pins::bt_tx);
 
 void setup()  
 {
