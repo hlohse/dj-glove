@@ -62,10 +62,13 @@ int main(int argc, char* argv[])
    
     cout << "Server up and running!" << endl;
 
+    cout << glove.DataHeader() << endl;
+
     while (true) {
         bluetooth.WaitUntilAvailable(1);
         
         glove.Process(*bluetooth.Read(1).c_str());
+        cout << glove.DataString() << endl;
 
         if (glove.HasMidiSignal()) {
             MidiSignal signal = glove.NextMidiSignal();

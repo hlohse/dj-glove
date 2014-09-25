@@ -1,7 +1,9 @@
 #include "DjGlove.h"
 #include "DataProtocol.h"
 #include "MidiSignal.h"
+#include <sstream>
 #include <cassert>
+using namespace std;
 
 DjGlove::DjGlove()
 :   data_protocol_(DataProtocol(*this)),
@@ -66,5 +68,59 @@ MidiSignal DjGlove::NextMidiSignal()
     midi_signals_.pop_front();
     
     return next_midi_signal;
+}
+
+string DjGlove::DataHeader() const
+{
+    ostringstream header;
+    
+    header << "H   Punch occured (Y/N)" << endl;
+    header << "p   Push button pressed (Y/N)" << endl;
+    header << "t   Touch button touched (Y/N)" << endl;
+    header << "f   Flip button flipped (Y/N)" << endl;
+    header << "O   Poti state (0..127)" << endl;
+    header << "D   Distance (0..127)" << endl;
+    header << "XYZ Orientations (0..127)" << endl;
+    header << "F   Flex (0..127)" << endl;
+    header << "C   Channel (0..9)" << endl;
+    header << "P   Program (0..9)" << endl;
+    
+    header << "H ppppp tttt f O   O   O    D   X   Y   Z   F   C P" << endl;
+
+    return header.str();
+}
+
+string DjGlove::DataString() const
+{
+    ostringstream data;
+
+    data << BoolToText(punched_) << " "
+         << BoolToText(button_push_0_)
+            << BoolToText(button_push_1_)
+            << BoolToText(button_push_2_)
+            << BoolToText(button_push_3_)
+            << BoolToText(button_push_4_) << " "
+        << BoolToText(button_touch_0_)
+            << BoolToText(button_touch_1_)
+            << BoolToText(button_touch_2_)
+            << BoolToText(button_touch_3_) << " "
+        << BoolToText(button_flip_) << " "
+        << poti_0_ << " "
+        << poti_1_ << " "
+        << poti_2_ << " "
+        << distance_ << " "
+        << orientation_x_ << " "
+        << orientation_y_ << " "
+        << orientation_z_ << " "
+        << flex_ << " "
+        << channel_ << " "
+        << program_;
+
+    return data.str();
+}
+
+char DjGlove::BoolToText(const bool value) const
+{
+    return value ? 'Y' : 'N';
 }
 

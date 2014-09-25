@@ -5,6 +5,7 @@
 #include "DataProtocol.h"
 #include "MidiSignal.h"
 #include <deque>
+#include <string>
 
 class EXPORT DjGlove {
     friend class DataProtocol;
@@ -17,6 +18,9 @@ public:
 
     bool HasMidiSignal() const;
     MidiSignal NextMidiSignal();
+
+    std::string DataHeader() const;
+    std::string DataString() const;
 
 private:
     DataProtocol data_protocol_;
@@ -46,6 +50,8 @@ private:
     int  data_byte_index_;
 
     void GenerateMidiSignals();
+
+    char BoolToText(const bool value) const;
 };
 
 #endif // DJ_GLOVE_PC_DJ_GLOVE_H_
