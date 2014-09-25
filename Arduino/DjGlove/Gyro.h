@@ -14,7 +14,14 @@ public:
     m_readout()
   {
     memset(&m_readout, 0, sizeof(m_readout));
-    initialize();
+  }
+  
+  void initialize()
+  {
+    Wire.beginTransmission(m_address);
+    Wire.write(register_ctrl_0);
+    Wire.write(settings);
+    Wire.endTransmission();
   }
   
   Readout read()
@@ -39,14 +46,6 @@ private:
   
   byte    m_address;
   Readout m_readout;
-  
-  void initialize()
-  {
-    Wire.beginTransmission(m_address);
-    Wire.write(register_ctrl_0);
-    Wire.write(settings);
-    Wire.endTransmission();
-  }
   
   bool hasAvailable() const 
   {

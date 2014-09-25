@@ -52,7 +52,14 @@ struct DjGlove {
     channel(0),
     program(0)
   {
+  }
+  
+  // Call once first!
+  void initialize()
+  {
     Wire.begin();
+    ultra_sound.initialize();
+    gyro.initialize();
   }
 };
 

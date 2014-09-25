@@ -17,7 +17,15 @@ public:
     m_value(0),
     m_init_time(0xFFFFFFFF)
   {
-    initializeSensor();
+  }
+  
+  void initialize()
+  {
+    Wire.beginTransmission(m_address);
+    Wire.write((byte) m_address);
+    Wire.write((byte) m_unit);
+    Wire.endTransmission();
+    m_init_time = millis();
   }
   
   // Return new value, if available. Previous value otherwise.
@@ -30,7 +38,7 @@ public:
         updateValue();
       }
       
-      initializeSensor();
+      initialize();
     }
     
     return m_value;
@@ -48,15 +56,6 @@ private:
   unit          m_unit;
   int           m_value;
   unsigned long m_init_time;
-  
-  void initializeSensor()
-  {
-    Wire.beginTransmission(m_address);
-    Wire.write((byte) m_address);
-    Wire.write((byte) m_unit);
-    Wire.endTransmission();
-    m_init_time = millis();
-  }
   
   bool isSensorInitialized() const
   {

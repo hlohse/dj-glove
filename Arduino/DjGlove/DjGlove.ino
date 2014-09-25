@@ -9,7 +9,9 @@ Data      data(glove);
 void setup()  
 {
   analogReference(EXTERNAL);
-  Serial.begin(115200);
+  glove.initialize();
+  Serial.begin(9600);
+  Serial.println("GO!");
 }
 
 void loop()
