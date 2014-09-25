@@ -19,7 +19,7 @@ public:
   void initialize()
   {
     Wire.beginTransmission(m_address);
-    Wire.write(register_ctrl_0);
+    Wire.write(register_ctrl_1);
     Wire.write(settings);
     Wire.endTransmission();
   }
@@ -38,11 +38,11 @@ public:
 private:
   static const byte settings         = B00011111; // x, y, z; normal mode; 100Hz @ 25 cut-off
   static const byte status_available = B00001000; // x, y, z available
-  static const byte register_ctrl_0  = 0x20;
+  static const byte register_ctrl_1  = 0x20;
   static const byte register_status  = 0x27;
   static const byte register_x_low   = 0x28;
-  static const byte register_y_low   = 0x30;
-  static const byte register_z_low   = 0x32;
+  static const byte register_y_low   = 0x2A;
+  static const byte register_z_low   = 0x2C;
   
   byte    m_address;
   Readout m_readout;
