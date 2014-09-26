@@ -35,19 +35,24 @@ public:
   {
     byte result;
     
-    switch (m_index) {
-      case  0: result = touch();                 break;
-      case  1: result = poti(m_glove->poti_0);   break;
-      case  2: result = poti(m_glove->poti_1);   break;
-      case  3: result = poti(m_glove->poti_2);   break;
-      case  4: result = flex();                  break;
-      case  5: result = distance();              break;
-      case  6: result = orientation(0);          break;
-      case  7: result = orientation(1);          break;
-      case  8: result = orientation(2);          break;
-      case  9: result = pushFirstChannel();      break;
-      case 10: result = flipPushSecondProgram(); break;
-      default: result = 0;                       break;
+    if (m_glove->hit.occured()) {
+      result = hitIntensity();
+    }
+    else {
+      switch (m_index) {
+        case  0: result = touch();                 break;
+        case  1: result = poti(m_glove->poti_0);   break;
+        case  2: result = poti(m_glove->poti_1);   break;
+        case  3: result = poti(m_glove->poti_2);   break;
+        case  4: result = flex();                  break;
+        case  5: result = distance();              break;
+        case  6: result = orientation(0);          break;
+        case  7: result = orientation(1);          break;
+        case  8: result = orientation(2);          break;
+        case  9: result = pushFirstChannel();      break;
+        case 10: result = flipPushSecondProgram(); break;
+        default: result = 0;                       break;
+      }
     }
     
     m_index++;
@@ -62,6 +67,12 @@ private:
   DjGlove*      m_glove;
   int           m_index;
   Gyro::Readout m_last_gyro_readout;
+  
+  byte hitIntensity()
+  {
+    const byte intensity = m_glove->hit.intensity() & 0x7E; // 0111 1110
+    return intensity | 0x80; // 1000 0000
+  }
   
   byte buttonBit(Button& button, const int index)
   {

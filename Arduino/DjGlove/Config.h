@@ -20,11 +20,13 @@ struct Pin {
   static const byte flex        = A7;
   static const byte led_clk     = A3;
   static const byte led_sda     = A2;
+  static const byte acc_int     =  2;
 };
 
 struct Address {
   static const byte ultra_sound = 112;
   static const byte gyro        = 0x69;
+  static const byte acc         = 0x1C;
 };
 
 #endif // DJ_GLOVE_ARDUINO_DJ_GLOVE_CONFIG_H_
