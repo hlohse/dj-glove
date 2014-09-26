@@ -1,5 +1,5 @@
-#ifndef DJ_GLOVE_ARDUINO_DJ_GLOVE_PINS_H_
-#define DJ_GLOVE_ARDUINO_DJ_GLOVE_PINS_H_
+#ifndef DJ_GLOVE_ARDUINO_DJ_GLOVE_CONFIG_H_
+#define DJ_GLOVE_ARDUINO_DJ_GLOVE_CONFIG_H_
 
 #include <Arduino.h>
 
@@ -27,5 +27,5 @@ struct Address {
   static const byte gyro        = 0x69;
 };
 
-#endif // DJ_GLOVE_ARDUINO_DJ_GLOVE_PINS_H_
+#endif // DJ_GLOVE_ARDUINO_DJ_GLOVE_CONFIG_H_
 

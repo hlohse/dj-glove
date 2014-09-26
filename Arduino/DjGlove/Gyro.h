@@ -27,9 +27,14 @@ public:
   Readout read()
   {
     if (hasAvailable()) {
-      readValue(m_readout.x, register_x_low);
-      readValue(m_readout.y, register_y_low);
-      readValue(m_readout.z, register_z_low);
+      Readout readout;
+      
+      if (readValue(readout.x, register_x_low)
+      &&  readValue(readout.y, register_y_low)
+      &&  readValue(readout.z, register_z_low))
+      {
+        m_readout = readout;
+      }
     }
     
     return m_readout;
@@ -49,23 +54,43 @@ private:
   
   bool hasAvailable() const 
   {
-    return readRegisterByte(register_status) & status_available;
+    setRegister(register_status);
+    
+    if (hasRegisterByte()) {
+      return Wire.read() & status_available;
+    }
+    
+    return false;
   }
   
-  void readValue(int& destination, const byte register_low)
+  bool readValue(int& destination, const byte register_low) const
   {
-    destination  = readRegisterByte(register_low);
-    destination |= readRegisterByte(register_low + 1) << 8;
+    setRegister(register_low);
+    if (!hasRegisterByte()) {
+      return false;
+    }
+    
+    destination = Wire.read();
+    
+    setRegister(register_low + 1);
+    if (!hasRegisterByte()) {
+      return false;
+    }
+    
+    destination |= Wire.read() << 8;
+    return true;
   }
   
-  byte readRegisterByte(const byte reg) const
+  void setRegister(const byte reg) const
   {
     Wire.beginTransmission(m_address);
     Wire.write(reg);
     Wire.endTransmission();
-    Wire.requestFrom(m_address, (byte) 1);
-    while (!Wire.available());
-    return Wire.read();
+  }
+  
+  bool hasRegisterByte() const
+  {
+    return Wire.requestFrom(m_address, (byte) 1) >= 1;
   }
 };
 

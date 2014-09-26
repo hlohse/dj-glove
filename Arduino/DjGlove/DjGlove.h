@@ -9,8 +9,9 @@
 #include "Gyro.h"
 #include "Led.h"
 
-// Note: Instantiate only once
-struct DjGlove {
+// Note: Singleton. Access pointer to instance via DjGlove::instance()
+class DjGlove {
+public:
   Button     push_0;
   Button     push_1;
   Button     push_2;
@@ -31,6 +32,27 @@ struct DjGlove {
   byte       channel;
   byte       program;
   
+  static DjGlove* instance()
+  {
+    static DjGlove instance;
+    return &instance;
+  }
+  
+  // Call once first!
+  void initialize()
+  {
+    analogReference(EXTERNAL);
+    Wire.begin();
+    
+    ultra_sound.initialize();
+    gyro.initialize();
+    
+    presentLed();
+    push_0.assignOnPress(&DjGlove::nextProgram);
+    push_1.assignOnPress(&DjGlove::nextChannel);
+  }
+
+private:
   DjGlove()
   : push_0(Pin::push_0),
     push_1(Pin::push_1),
@@ -54,12 +76,39 @@ struct DjGlove {
   {
   }
   
-  // Call once first!
-  void initialize()
+  void presentLed()
   {
-    Wire.begin();
-    ultra_sound.initialize();
-    gyro.initialize();
+    led.setLeft('P');
+    led.setRight('C');
+    led.display();
+    
+    delay(1000);
+    
+    led.setLeft(program);
+    led.setRight(channel);
+    led.display();
+  }
+  
+  static void nextChannel()
+  {
+    next(DjGlove::instance()->channel, &Led::setLeft);
+  }
+  
+  static void nextProgram()
+  {
+    next(DjGlove::instance()->program, &Led::setRight);
+  }
+  
+  static void next(byte& value, void (Led::*setter)(const unsigned char))
+  {
+    value++;
+    
+    if (value >= 10) {
+      value = 0;
+    }
+    
+    (DjGlove::instance()->led.*setter)(value);
+    DjGlove::instance()->led.display();
   }
 };
 

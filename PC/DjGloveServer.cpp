@@ -6,6 +6,8 @@
 #include <iomanip>
 using namespace std;
 
+const string sync_signal = "!";
+
 int main(int argc, char* argv[])
 {
     DjGloveServerArguments arguments;
@@ -63,14 +65,16 @@ int main(int argc, char* argv[])
    
     cout << "Server up and running!" << endl;
 
-    cout << glove.DataHeader() << endl;
+    //cout << glove.DataHeader() << endl;
+
+	bluetooth.Write(sync_signal);
 
     while (true) {
         bluetooth.WaitUntilAvailable(1);
         const unsigned char data = *bluetooth.Read(1).c_str();
 
         glove.Process(data);
-        cout << glove.DataString() << endl;
+        //cout << glove.DataString() << endl;
 
         if (glove.HasMidiSignal()) {
             MidiSignal signal = glove.NextMidiSignal();

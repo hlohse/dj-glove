@@ -2,15 +2,28 @@
 #include <Wire.h>
 #include "DjGlove.h"
 #include "Data.h"
- 
-DjGlove   glove; // Only instantiation!
-Data      data(glove);
+
+const char sync_signal = '!';
+
+DjGlove* glove = DjGlove::instance();
+Data data(glove);
+
+void sync()
+{
+  while (true) {
+    while (!Serial.available());
+    
+    if (Serial.read() == sync_signal) {
+      return;
+    }
+  }
+}
 
 void setup()  
 {
-  analogReference(EXTERNAL);
-  glove.initialize();
+  glove->initialize();
   Serial.begin(115200);
+  sync();
 }
 
 void loop()
@@ -18,8 +31,5 @@ void loop()
   for (int i = 0; i < 11; ++i) {
     Serial.write(data.nextByte());
   }
-  
-  //Serial.println("=====");
-  delay(400);
 }
 

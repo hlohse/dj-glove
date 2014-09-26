@@ -23,8 +23,8 @@
 
 class Data {
 public:
-  Data(DjGlove& glove)
-  : m_glove(&glove),
+  Data(DjGlove* glove)
+  : m_glove(glove),
     m_index(0),
     m_last_gyro_readout()
   {
@@ -65,7 +65,7 @@ private:
   
   byte buttonBit(Button& button, const int index)
   {
-    return (button.isPushed() ? 1 : 0) << index;
+    return (button.isPressed() ? 1 : 0) << index;
   }
   
   byte touch()

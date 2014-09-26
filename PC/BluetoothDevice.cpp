@@ -62,6 +62,7 @@ int BluetoothDevice::StringToAddress(IN const string& address_string,
 		return -1;
 	}
 
+	address = 0;
 	for (int i = 0; i < 6; ++i) {
 		// Extract data from the first 8 lower bits.
 		temp_address = (BTH_ADDR) (address_data[i] & 0xFF);

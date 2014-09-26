@@ -65,12 +65,11 @@ private:
     Wire.beginTransmission(m_address);
     Wire.write(register_echo_1);
     Wire.endTransmission();
-    Wire.requestFrom(m_address, num_read_bytes);
   }
   
   bool hasBytes() const
   {
-    return Wire.available() >= num_read_bytes;
+    return Wire.requestFrom(m_address, num_read_bytes) >= num_read_bytes;
   }
   
   void updateValue()
