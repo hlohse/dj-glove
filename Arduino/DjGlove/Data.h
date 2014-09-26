@@ -23,8 +23,8 @@
 
 class Data {
 public:
-  Data(DjGlove& glove)
-  : m_glove(&glove),
+  Data(DjGlove* glove)
+  : m_glove(glove),
     m_index(0),
     m_last_gyro_readout()
   {

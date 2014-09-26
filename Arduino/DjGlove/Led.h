@@ -3,6 +3,8 @@
 
 class Led {
 public:
+  static const unsigned char mapIntToChar[10];
+  
   Led(const byte pin_clk, const byte pin_sda)
   : m_pin_clk(pin_clk),
     m_pin_sda(pin_sda),
@@ -96,6 +98,8 @@ private:
     }
   }
 };
+ 
+const unsigned char Led::mapIntToChar[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
   
 const Led::digit_t Led::Digit[Led::num_digits] = {
   {HIGH, HIGH, HIGH,  LOW, HIGH, HIGH, HIGH, LOW}, // 0, index 0
