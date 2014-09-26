@@ -110,7 +110,7 @@ const Led::digit_t Led::Digit[Led::num_digits] = {
   {HIGH, HIGH, HIGH, HIGH,  LOW, HIGH, HIGH, LOW}, // 9, index 9
   { LOW, HIGH, HIGH,  LOW, HIGH, HIGH,  LOW, LOW}, // C, index 10
   {HIGH, HIGH, HIGH, HIGH, HIGH,  LOW,  LOW, LOW}, // P, index 11
-  { LOW, HIGH, HIGH, HIGH, HIGH, HIGH,  LOW, LOW}  // E, index 12 TODO
+  { LOW, HIGH, HIGH, HIGH, HIGH, HIGH,  LOW, LOW}  // E, index 12
 };
 
 #endif // DJ_GLOVE_ARDUINO_DJ_GLOVE_LED_H_

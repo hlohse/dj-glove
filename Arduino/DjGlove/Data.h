@@ -65,7 +65,7 @@ private:
   
   byte buttonBit(Button& button, const int index)
   {
-    return (button.isPushed() ? 1 : 0) << index;
+    return (button.isPressed() ? 1 : 0) << index;
   }
   
   byte touch()
