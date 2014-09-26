@@ -17,8 +17,8 @@ void DataProtocol::ApplyNext(const unsigned char data)
 {
     const unsigned char prepared_data = Prepare(data);
 
-    if (IsPunch(prepared_data)) {
-        ApplyPunch(prepared_data);
+    if (IsHit(prepared_data)) {
+        ApplyHit(prepared_data);
     }
     else {
         ApplyData(prepared_data);
@@ -34,15 +34,15 @@ unsigned char DataProtocol::Prepare(const unsigned char data) const
     return data - 1;
 }
 
-bool DataProtocol::IsPunch(const unsigned char data) const
+bool DataProtocol::IsHit(const unsigned char data) const
 {
     return data >> 7 == 1;  // First bit is 1
 }
 
-void DataProtocol::ApplyPunch(const unsigned char data)
+void DataProtocol::ApplyHit(const unsigned char data)
 {
-    assert(IsPunch(data));
-    dj_glove_.punched_ = (data && 0x01) == 1; // Punched if last bit is set
+    assert(IsHit(data));
+	dj_glove_.hit_intensity_ = data & 0x7E; // 0111 1110
 }
 
 void DataProtocol::ApplyData(const unsigned char data)

@@ -26,7 +26,7 @@ private:
     DataProtocol data_protocol_;
     std::deque<MidiSignal> midi_signals_;
 
-    bool punched_;
+    int  hit_intensity_;
     bool button_push_0_;
     bool button_push_1_;
     bool button_push_2_;

@@ -37,10 +37,10 @@ private:
 
     unsigned char Prepare(const unsigned char data) const;
 
-    bool IsPunch(const unsigned char data) const;
+    bool IsHit(const unsigned char data) const;
 
     void ApplyData(const unsigned char data);
-    void ApplyPunch(const unsigned char data);
+    void ApplyHit(const unsigned char data);
 
     void ApplyBit(bool& output, const unsigned char data, const int bit);
     void ApplyLowBits(int& output, const unsigned char data, const int bits);

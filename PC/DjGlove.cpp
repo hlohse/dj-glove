@@ -7,7 +7,7 @@ using namespace std;
 
 DjGlove::DjGlove()
 :   data_protocol_(DataProtocol(*this)),
-    punched_(false),
+    hit_intensity_(0),
     button_push_0_(false),
     button_push_1_(false),
     button_push_2_(false),
@@ -73,7 +73,7 @@ string DjGlove::DataHeader() const
 {
     ostringstream header;
     
-    header << "H   Punch occured (Y/N)" << endl;
+    header << "HHH Hit intensity (0..126)" << endl;
     header << "p   Push button pressed (Y/N)" << endl;
     header << "t   Touch button touched (Y/N)" << endl;
     header << "f   Flip button flipped (Y/N)" << endl;
@@ -84,7 +84,7 @@ string DjGlove::DataHeader() const
     header << "C   Channel (0..9)" << endl;
     header << "P   Program (0..9)" << endl;
     
-    header << "H ppppp tttt f O   O   O    D   X   Y   Z   F   C P" << endl;
+    header << "HHH ppppp tttt f O   O   O    D   X   Y   Z   F   C P" << endl;
 
     return header.str();
 }
@@ -93,7 +93,7 @@ string DjGlove::DataString() const
 {
     ostringstream data;
 
-    data << BoolToText(punched_) << " "
+	data << hit_intensity_ << " "
          << BoolToText(button_push_0_)
             << BoolToText(button_push_1_)
             << BoolToText(button_push_2_)
