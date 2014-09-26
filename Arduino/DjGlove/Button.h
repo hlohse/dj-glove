@@ -3,6 +3,9 @@
 
 class Button {
 public:
+  // onPress/onRelease function signature: void someName() { ... }
+  typedef void (*handler_t)();
+  
   Button(const byte pin)
   : m_pin(pin),
     m_is_pressed(false),
@@ -27,12 +30,12 @@ public:
     return m_is_pressed;
   }
   
-  void assignOnPress(void (*handler)())
+  void assignOnPress(handler_t handler)
   {
     m_press_handler = handler;
   }
   
-  void assignOnRelease(void (*handler)())
+  void assignOnRelease(handler_t handler)
   {
     m_release_handler = handler;
   }
@@ -40,11 +43,11 @@ public:
 private:
   static const int necessary_debounces = 5;
   
-  byte m_pin;
-  bool m_is_pressed;
-  int  m_num_debounces;
-  void (*m_press_handler)();
-  void (*m_release_handler)();
+  byte      m_pin;
+  bool      m_is_pressed;
+  int       m_num_debounces;
+  handler_t m_press_handler;
+  handler_t m_release_handler;
   
   void debounce(const bool is_pressed)
   {
@@ -69,7 +72,7 @@ private:
   
   void notifyHandler()
   {
-    void (*handler)() = m_is_pressed ? m_press_handler : m_release_handler;
+    handler_t handler = m_is_pressed ? m_press_handler : m_release_handler;
     
     if (handler != NULL) {
       handler();
