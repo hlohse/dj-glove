@@ -4,7 +4,7 @@
 #include "Data.h"
 
 DjGlove* glove = DjGlove::instance();
-Data data(glove);
+Data data;
 
 void setup()  
 {
