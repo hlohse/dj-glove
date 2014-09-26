@@ -28,8 +28,6 @@ void setup()
 
 void loop()
 {
-  for (int i = 0; i < 11; ++i) {
-    Serial.write(data.nextByte());
-  }
+  Serial.write(data.nextByte());
 }
 
