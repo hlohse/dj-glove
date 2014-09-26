@@ -47,10 +47,9 @@ void DjGlove::GenerateMidiSignals()
     MidiSignal midi_signal;
 
     midi_signal.Channel(channel_);
-    midi_signal.Status(button_push_0_ ? Midi::Status::NoteOn
-                                      : Midi::Status::NoteOff);
+    midi_signal.Status(Midi::Status::NoteOn);
     midi_signal.Key(poti_0_);
-    midi_signal.Velocity(63);
+    midi_signal.Velocity(poti_1_);
 
     midi_signals_.push_back(midi_signal);
 }
