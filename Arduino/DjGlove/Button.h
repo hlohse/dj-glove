@@ -41,7 +41,7 @@ public:
   }
 
 private:
-  static const int necessary_debounces = 5;
+  static const int necessary_debounces = 1;
   
   byte      m_pin;
   bool      m_is_pressed;
