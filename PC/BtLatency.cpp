@@ -36,8 +36,8 @@ typedef struct {
 
 void SyncStart(Bluetooth& bluetooth)
 {
-    string start_signal(start_signal, sizeof(start_signal));
-    bluetooth.Write(start_signal);
+    string start(&start_signal);
+    bluetooth.Write(start);
 }
 
 void DetermineTimes(Bluetooth& bluetooth,
@@ -82,6 +82,8 @@ void DetermineTimes(Bluetooth& bluetooth,
 
 void DetermineTimesMs(const vector<TimeTuple>& times, vector<double>& times_ms)
 {
+    times_ms.clear(); 
+
     for (auto it = times.cbegin(); it != times.cend(); ++it)
 	{
 		double total_time_ms;

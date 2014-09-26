@@ -8,29 +8,33 @@
 #include "UltraSound.h"
 #include "Gyro.h"
 #include "Led.h"
+#include "Acceleration.h"
+#include "Hit.h"
 
 // Note: Singleton. Access pointer to instance via DjGlove::instance()
 class DjGlove {
 public:
-  Button     push_0;
-  Button     push_1;
-  Button     push_2;
-  Button     push_3;
-  Button     push_4;
-  Button     touch_0;
-  Button     touch_1;
-  Button     touch_2;
-  Button     touch_3;
-  Button     flip;
-  Poti       poti_0;
-  Poti       poti_1;
-  Poti       poti_2;
-  Flex       flex;
-  UltraSound ultra_sound;
-  Gyro       gyro;
-  Led        led;
-  byte       channel;
-  byte       program;
+  Button       push_0;
+  Button       push_1;
+  Button       push_2;
+  Button       push_3;
+  Button       push_4;
+  Button       touch_0;
+  Button       touch_1;
+  Button       touch_2;
+  Button       touch_3;
+  Button       flip;
+  Poti         poti_0;
+  Poti         poti_1;
+  Poti         poti_2;
+  Flex         flex;
+  UltraSound   ultra_sound;
+  Gyro         gyro;
+  Led          led;
+  Acceleration acc;
+  Hit          hit;
+  byte         channel;
+  byte         program;
   
   static DjGlove* instance()
   {
@@ -71,21 +75,23 @@ private:
     ultra_sound(Address::ultra_sound, UltraSound::UNIT_MS),
     gyro(Address::gyro),
     led(Pin::led_clk, Pin::led_sda),
-    channel(0),
-    program(0)
+    acc(Address::acc, Pin::acc_int),
+    hit(acc),
+    channel(1),
+    program(1)
   {
   }
   
   void presentLed()
   {
-    led.setLeft('P');
-    led.setRight('C');
+    led.setLeft('C');
+    led.setRight('P');
     led.display();
     
     delay(1000);
     
-    led.setLeft(program);
-    led.setRight(channel);
+    led.setLeft(channel);
+    led.setRight(program);
     led.display();
   }
   
@@ -101,13 +107,16 @@ private:
   
   static void next(byte& value, void (Led::*setter)(const unsigned char))
   {
-    value++;
+    byte display_value;
     
-    if (value >= 10) {
-      value = 0;
+    value++;
+    if (value >= 11) {
+      value = 1;
     }
     
-    (DjGlove::instance()->led.*setter)(value);
+    display_value = value == 10 ? 0 : value;
+    
+    (DjGlove::instance()->led.*setter)(display_value);
     DjGlove::instance()->led.display();
   }
 };
