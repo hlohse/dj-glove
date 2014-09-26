@@ -23,8 +23,9 @@
 
 class Data {
 public:
-  Data()
-  : m_index(0),
+  Data(DjGlove* glove)
+  : m_glove(glove),
+    m_index(0),
     m_last_gyro_readout()
   {
     memset(&m_last_gyro_readout, 0, sizeof(m_last_gyro_readout));
@@ -32,14 +33,13 @@ public:
   
   byte nextByte()
   {
-    DjGlove* glove = DjGlove::instance();
     byte result;
     
     switch (m_index) {
       case  0: result = touch();                 break;
-      case  1: result = poti(glove->poti_0);     break;
-      case  2: result = poti(glove->poti_1);     break;
-      case  3: result = poti(glove->poti_2);     break;
+      case  1: result = poti(m_glove->poti_0);   break;
+      case  2: result = poti(m_glove->poti_1);   break;
+      case  3: result = poti(m_glove->poti_2);   break;
       case  4: result = flex();                  break;
       case  5: result = distance();              break;
       case  6: result = orientation(0);          break;
@@ -59,6 +59,7 @@ public:
   }
 
 private:
+  DjGlove*      m_glove;
   int           m_index;
   Gyro::Readout m_last_gyro_readout;
   
@@ -69,14 +70,11 @@ private:
   
   byte touch()
   {
-    DjGlove* glove = DjGlove::instance();
     byte result = 0;
-    
-    result |= buttonBit(glove->touch_0, 0); // 0000 000X
-    result |= buttonBit(glove->touch_1, 1); // 0000 00X0
-    result |= buttonBit(glove->touch_2, 2); // 0000 0X00
-    result |= buttonBit(glove->touch_3, 3); // 0000 X000
-    
+    result |= buttonBit(m_glove->touch_0, 0); // 0000 000X
+    result |= buttonBit(m_glove->touch_1, 1); // 0000 00X0
+    result |= buttonBit(m_glove->touch_2, 2); // 0000 0X00
+    result |= buttonBit(m_glove->touch_3, 3); // 0000 X000
     return result & 0xF; // 0000 1111
   }
   
@@ -87,12 +85,12 @@ private:
   
   byte flex()
   {
-    return DjGlove::instance()->flex.read() & 0x7F; // 0111 1111
+    return m_glove->flex.read() & 0x7F; // 0111 1111
   }
   
   byte distance()
   {
-    return DjGlove::instance()->ultra_sound.read() & 0x7F; // 0111 1111
+    return m_glove->ultra_sound.read() & 0x7F; // 0111 1111
   }
   
   byte orientation(const int index)
@@ -101,7 +99,7 @@ private:
     
     switch (index) {
       case 0:
-        m_last_gyro_readout = DjGlove::instance()->gyro.read();
+        m_last_gyro_readout = m_glove->gyro.read();
         value = m_last_gyro_readout.x;
         break; 
       case 1:
@@ -120,27 +118,21 @@ private:
   
   byte pushFirstChannel()
   {
-    DjGlove* glove = DjGlove::instance();
     byte result = 0;
-    
-    result |= glove->channel & 0xF;        // 0000 1111
-    result |= buttonBit(glove->push_2, 4); // 000X 0000
-    result |= buttonBit(glove->push_3, 5); // 00X0 0000
-    result |= buttonBit(glove->push_4, 6); // 0X00 0000
-    
+    result |= m_glove->channel & 0xF;        // 0000 1111
+    result |= buttonBit(m_glove->push_2, 4); // 000X 0000
+    result |= buttonBit(m_glove->push_3, 5); // 00X0 0000
+    result |= buttonBit(m_glove->push_4, 6); // 0X00 0000
     return result & 0x7F; // 0111 1111
   }
   
   byte flipPushSecondProgram()
   {
-    DjGlove* glove = DjGlove::instance();
     byte result = 0;
-    
-    result |= glove->program & 0xF;        // 0000 1111
-    result |= buttonBit(glove->flip,   6); // 0X00 0000
-    result |= buttonBit(glove->push_0, 5); // 00X0 0000
-    result |= buttonBit(glove->push_1, 4); // 000X 0000
-    
+    result |= m_glove->program & 0xF;        // 0000 1111
+    result |= buttonBit(m_glove->flip,   6); // 0X00 0000
+    result |= buttonBit(m_glove->push_0, 5); // 00X0 0000
+    result |= buttonBit(m_glove->push_1, 4); // 000X 0000
     return result & 0x7F; // 0111 1111
   }
 };
