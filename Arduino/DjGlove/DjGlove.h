@@ -41,6 +41,7 @@ public:
   // Call once first!
   void initialize()
   {
+    analogReference(EXTERNAL);
     Wire.begin();
     
     ultra_sound.initialize();

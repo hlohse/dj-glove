@@ -8,7 +8,6 @@ Data data;
 
 void setup()  
 {
-  analogReference(EXTERNAL);
   glove->initialize();
   Serial.begin(115200);
 }
