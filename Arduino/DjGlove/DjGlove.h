@@ -82,7 +82,7 @@ private:
     led.setRight('C');
     led.display();
     
-    delay(1500);
+    delay(1000);
     
     led.setLeft(program);
     led.setRight(channel);
