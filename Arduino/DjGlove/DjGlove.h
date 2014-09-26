@@ -47,8 +47,8 @@ public:
     ultra_sound.initialize();
     gyro.initialize();
     
-    push_0.assignOnPress(&DjGlove::nextChannel);
-    push_1.assignOnPress(&DjGlove::nextProgram);
+    push_0.assignOnPress(&DjGlove::nextProgram);
+    push_1.assignOnPress(&DjGlove::nextChannel);
     
     led.display();
   }
@@ -95,7 +95,7 @@ private:
       value = 0;
     }
     
-    (DjGlove::instance()->led.*setter)(Led::mapIntToChar[value]);
+    (DjGlove::instance()->led.*setter)(value);
     DjGlove::instance()->led.display();
   }
 };

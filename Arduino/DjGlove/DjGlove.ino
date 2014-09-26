@@ -18,6 +18,6 @@ void loop()
     Serial.write(data.nextByte());
   }
   
-  delay(400);
+  //delay(400);
 }
 
