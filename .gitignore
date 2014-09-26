@@ -5,6 +5,8 @@ data/*
 *.hex
 *.run
 build-*
+*.ini
+dj-glove.sln.lnk
 
 # Sources:
 # - GitHub C++.gitingore
