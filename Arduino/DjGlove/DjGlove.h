@@ -34,8 +34,8 @@ public:
   
   static DjGlove* instance()
   {
-    static DjGlove glove;
-    return &glove;
+    static DjGlove instance;
+    return &instance;
   }
   
   // Call once first!
@@ -48,6 +48,8 @@ public:
     
     push_0.assignOnPress(&DjGlove::nextChannel);
     push_1.assignOnPress(&DjGlove::nextProgram);
+    
+    led.display();
   }
 
 private:
