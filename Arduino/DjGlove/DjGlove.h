@@ -47,10 +47,9 @@ public:
     ultra_sound.initialize();
     gyro.initialize();
     
+    presentLed();
     push_0.assignOnPress(&DjGlove::nextProgram);
     push_1.assignOnPress(&DjGlove::nextChannel);
-    
-    led.display();
   }
 
 private:
@@ -75,6 +74,19 @@ private:
     channel(0),
     program(0)
   {
+  }
+  
+  void presentLed()
+  {
+    led.setLeft('P');
+    led.setRight('C');
+    led.display();
+    
+    delay(1500);
+    
+    led.setLeft(program);
+    led.setRight(channel);
+    led.display();
   }
   
   static void nextChannel()
