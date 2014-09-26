@@ -10,6 +10,7 @@
 #include <cfloat>
 #include <cmath>
 using namespace std;
+using namespace BtLatency;
 
 #ifdef __linux__
 #include <unistd.h>
@@ -35,22 +36,23 @@ typedef struct {
 
 void SyncStart(Bluetooth& bluetooth)
 {
-    string start_signal(&BtLatency::start_signal,
-                        sizeof(BtLatency::start_signal));
-    
+    string start_signal(start_signal, sizeof(start_signal));
     bluetooth.Write(start_signal);
 }
 
-void DetermineTimes(Bluetooth& bluetooth, vector<TimeTuple>& times)
+void DetermineTimes(Bluetooth& bluetooth,
+                    vector<TimeTuple>& times,
+                    const int message_size)
 {
     Time start, stop;
-    const string expected_message(BtLatency::message);
+    const string expected_message(message_size, message_char);
     string message;
 
-    times.reserve(BtLatency::num_messages);
+    times.clear();
+    times.reserve(tries_per_message);
     SyncStart(bluetooth);
 
-    for (unsigned int i = 0; i < BtLatency::num_messages; ++i)
+    for (int i = 0; i < tries_per_message; ++i)
 	{
 #ifdef __linux__
         gettimeofday(&start, NULL);
@@ -59,7 +61,7 @@ void DetermineTimes(Bluetooth& bluetooth, vector<TimeTuple>& times)
 #endif
 
         try {
-		    message = bluetooth.ReadNextAvailable(expected_message.length());
+		    message = bluetooth.ReadNextAvailable(message_size);
         } catch (...) { throw; }
 
 #ifdef __linux__
@@ -137,10 +139,15 @@ Result GetResult(vector<double>& times_ms)
     return result;
 }
 
-void ShowResult(const Result& result, const vector<double>& times_ms)
+void ShowResult(const Result& result,
+                const vector<double>& times_ms,
+                const int delay_ms,
+                const int message_size)
 {
     cout << setprecision(2) << fixed;
     
+    cout << "delay " << delay_ms << ", message size " << message_size << endl;
+
     for (auto it = times_ms.cbegin(); it != times_ms.cend(); ++it) {
         cout << it - times_ms.begin() << " " << *it << " ms" << endl;
     }
@@ -174,7 +181,8 @@ int exit(const string& message, const runtime_error& error)
 
 int main()
 {
-    Bluetooth bluetooth(string(BtLatency::message).length());
+    const int buffer_size = message_sizes[num_message_sizes - 1];
+    Bluetooth bluetooth(buffer_size);
     vector<TimeTuple> times;
     vector<double> times_ms;
 
@@ -192,19 +200,23 @@ int main()
         return exit("Failed to connect Bluetooth", e);
     }
 
-    try {
-        DetermineTimes(bluetooth, times);
-    }
-    catch (runtime_error e) {
-        return exit("Failed to receive all data", e);
-    }
+    for (int d = 0; d < num_delays_ms; ++d) {
+        for (int m = 0; m < num_message_sizes; ++m) {
+            const int delay_ms     = delays_ms[d];
+            const int message_size = message_sizes[m];
+            Result result;
 
-    if (times.size() == BtLatency::num_messages) {
-        Result result;
+            try {
+                DetermineTimes(bluetooth, times, message_size);
+            }
+            catch (runtime_error e) {
+                return exit("Failed to receive all data", e);
+            }
 
-        DetermineTimesMs(times, times_ms);
-        result = GetResult(times_ms);
-        ShowResult(result, times_ms);
+            DetermineTimesMs(times, times_ms);
+            result = GetResult(times_ms);
+            ShowResult(result, times_ms, delay_ms, message_size);
+        }
     }
 
     cout << "Press any key to terminate." << endl;

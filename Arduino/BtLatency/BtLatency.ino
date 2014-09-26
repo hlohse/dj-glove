@@ -2,35 +2,82 @@
 #include <SoftwareSerial.h>
 
 // Comment out to use hardware Serial pins RX0, TX1
-#define USE_SOFTWARE_SERIAL 1
+//#define USE_SOFTWARE_SERIAL 1
 
 #ifdef USE_SOFTWARE_SERIAL
 SoftwareSerial bluetooth(2, 3);
-#define _SERIAL_ bluetooth
+#define SERIAL bluetooth
 #else
-#define _SERIAL_ Serial
+#define SERIAL Serial
 #endif
 
 // NOTE: USE THIS VALUES IN PC PROJECT, TOO!
-const unsigned int num_messages = 100;
-const char*        message      = "PING";
-const char         start_signal = '!';
+const int  num_delays_ms     = 7;                                              
+const int  num_message_sizes = 6;        
+const int  delays_ms[num_delays_ms]         = {0, 1, 2, 4, 8, 16, 32};         
+const int  message_sizes[num_message_sizes] = {1, 2, 4, 8, 16, 32};
+const int  tries_per_message = 100;
+const char message_char      = 'M';
+const char start_signal      = '!';
 
 void setup()  
 {
-#ifndef USE_SOFTWARE_SERIAL
-    Serial.begin(115200);
+#ifdef USE_SOFTWARE_SERIAL
+  bluetooth.begin(9600);
+#else
+  Serial.begin(115200);
 #endif
+}
+
+void setMessage(char* message, const int characters)
+{
+  memset(message, message_char, characters);
+  message[characters] = '\0';
+}
+
+void syncStart()
+{
+  while (true) {
+    while (!SERIAL.available());
+    if (SERIAL.read() == start_signal) {
+      return;
+    }
+  }
+}
+
+void sendMessage(char* message)
+{
+  for (int i = 0; i < tries_per_message; ++i) {
+    SERIAL.write(message);
+  }
+}
+
+void sendMessageDelayed(char* message, const int delay_ms)
+{
+  for (int i = 0; i < tries_per_message; ++i) {
+    SERIAL.write(message);
+    delay(delay_ms);
+  }
 }
 
 void loop()
 {
-    if (_SERIAL_.available()) {
-        if (_SERIAL_.read() == start_signal) {
-            for (unsigned int i = 0; i < num_messages; ++i) {
-                _SERIAL_.print(message);
-            }
-        }
+  for (int d = 0; d < num_delays_ms; ++d) {
+    for (int m = 0; m < num_message_sizes; ++m) {
+      const int delay_ms     = delays_ms[d];
+      const int message_size = message_sizes[m];
+      char message[message_size + 1];
+      setMessage(message, message_size);
+      
+      syncStart();
+      
+      if (delay_ms > 0) {
+        sendMessageDelayed(message, delay_ms);
+      }
+      else {
+        sendMessage(message);
+      }
     }
+  }
 }
 
