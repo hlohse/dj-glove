@@ -71,21 +71,21 @@ private:
     ultra_sound(Address::ultra_sound, UltraSound::UNIT_MS),
     gyro(Address::gyro),
     led(Pin::led_clk, Pin::led_sda),
-    channel(0),
-    program(0)
+    channel(1),
+    program(1)
   {
   }
   
   void presentLed()
   {
-    led.setLeft('P');
-    led.setRight('C');
+    led.setLeft('C');
+    led.setRight('P');
     led.display();
     
     delay(1000);
     
-    led.setLeft(program);
-    led.setRight(channel);
+    led.setLeft(channel);
+    led.setRight(program);
     led.display();
   }
   
@@ -101,13 +101,16 @@ private:
   
   static void next(byte& value, void (Led::*setter)(const unsigned char))
   {
-    value++;
+    byte display_value;
     
-    if (value >= 10) {
-      value = 0;
+    value++;
+    if (value >= 11) {
+      value = 1;
     }
     
-    (DjGlove::instance()->led.*setter)(value);
+    display_value = value == 10 ? 0 : value;
+    
+    (DjGlove::instance()->led.*setter)(display_value);
     DjGlove::instance()->led.display();
   }
 };
