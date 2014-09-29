@@ -50,6 +50,7 @@ public:
     
     ultra_sound.initialize();
     gyro.initialize();
+    acc.initialize();
     
     presentLed();
     push_0.assignOnPress(&DjGlove::nextProgram);
