@@ -1,0 +1,44 @@
+set terminal svg size 1280,720
+set xlabel "Data Size [B]"
+set xrange [1:32]
+set yrange [0:50]
+set log x 2
+set xtics 2 
+set key box
+
+set output "latency.mean.svg"
+set title "Bluetooth Arduino to PC Mean Latency"
+set ylabel "Mean Latency [ms]"
+
+plot "latency.data" u (2**$0):3 every (103)::(0*6*103+102)::(1*6*103) w l t "delay  0 ms", \
+                 "" u (2**$0):3 every (103)::(1*6*103+102)::(2*6*103) w l t "delay  1 ms", \
+                 "" u (2**$0):3 every (103)::(2*6*103+102)::(3*6*103) w l t "delay  2 ms", \
+                 "" u (2**$0):3 every (103)::(3*6*103+102)::(4*6*103) w l t "delay  4 ms", \
+                 "" u (2**$0):3 every (103)::(4*6*103+102)::(5*6*103) w l t "delay  8 ms", \
+                 "" u (2**$0):3 every (103)::(5*6*103+102)::(6*6*103) w l t "delay 16 ms", \
+                 "" u (2**$0):3 every (103)::(6*6*103+102)::(7*6*103) w l t "delay 32 ms"
+
+set output "latency.min.svg"
+set title "Bluetooth Arduino to PC Min Latency"
+set ylabel "Min Latency [ms]"
+
+plot "latency.data" u (2**$0):1 every (103)::(0*6*103+102)::(1*6*103) w l t "delay  0 ms", \
+                 "" u (2**$0):1 every (103)::(1*6*103+102)::(2*6*103) w l t "delay  1 ms", \
+                 "" u (2**$0):1 every (103)::(2*6*103+102)::(3*6*103) w l t "delay  2 ms", \
+                 "" u (2**$0):1 every (103)::(3*6*103+102)::(4*6*103) w l t "delay  4 ms", \
+                 "" u (2**$0):1 every (103)::(4*6*103+102)::(5*6*103) w l t "delay  8 ms", \
+                 "" u (2**$0):1 every (103)::(5*6*103+102)::(6*6*103) w l t "delay 16 ms", \
+                 "" u (2**$0):1 every (103)::(6*6*103+102)::(7*6*103) w l t "delay 32 ms"
+
+set output "latency.max.svg"
+set title "Bluetooth Arduino to PC Max Latency"
+set ylabel "Max Latency [ms]"
+
+plot "latency.data" u (2**$0):2 every (103)::(0*6*103+102)::(1*6*103) w l t "delay  0 ms", \
+                 "" u (2**$0):2 every (103)::(1*6*103+102)::(2*6*103) w l t "delay  1 ms", \
+                 "" u (2**$0):2 every (103)::(2*6*103+102)::(3*6*103) w l t "delay  2 ms", \
+                 "" u (2**$0):2 every (103)::(3*6*103+102)::(4*6*103) w l t "delay  4 ms", \
+                 "" u (2**$0):2 every (103)::(4*6*103+102)::(5*6*103) w l t "delay  8 ms", \
+                 "" u (2**$0):2 every (103)::(5*6*103+102)::(6*6*103) w l t "delay 16 ms", \
+                 "" u (2**$0):2 every (103)::(6*6*103+102)::(7*6*103) w l t "delay 32 ms"
+
