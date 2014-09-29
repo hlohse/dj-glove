@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 
     while (true) {
         bluetooth.WaitUntilAvailable(1);
-        const unsigned char data = *bluetooth.Read(1).c_str();
+		const unsigned char data = bluetooth.Read(1)[0];
 
         glove.Process(data);
         cout << glove.DataString() << endl;
