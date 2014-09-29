@@ -6,7 +6,7 @@
 #include <iomanip>
 using namespace std;
 
-const string sync_signal = "!";
+const unsigned char sync_signal = '!';
 
 int main(int argc, char* argv[])
 {
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 
     while (true) {
         bluetooth.WaitUntilAvailable(1);
-		const unsigned char data = bluetooth.Read(1)[0];
+		const unsigned char data = bluetooth.Read();
 
         glove.Process(data);
         cout << glove.DataString() << endl;

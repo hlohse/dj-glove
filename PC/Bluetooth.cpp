@@ -254,16 +254,6 @@ void Bluetooth::ReadSocket()
     }
 }
 
-char Bluetooth::PeekFirst() const
-{
-    if (Available() > 0) {
-        return buffer_[0];
-    }
-    else {
-        return 0;
-    }
-}
-
 string Bluetooth::ReadNextAvailable(const int length)
 {
     try {
@@ -271,6 +261,11 @@ string Bluetooth::ReadNextAvailable(const int length)
     } catch (...) { throw; }
 
     return Read(length);
+}
+
+unsigned char Bluetooth::ReadNextAvailable()
+{
+	return ReadNextAvailable(1)[0];
 }
 
 string Bluetooth::Read(const int length)
@@ -285,6 +280,11 @@ string Bluetooth::Read(const int length)
     buffer_.erase(0, length);
     
     return input;
+}
+
+unsigned char Bluetooth::Read()
+{
+	return Read(1)[0];
 }
 
 int Bluetooth::Write(const string& output)
@@ -308,4 +308,10 @@ int Bluetooth::Write(const string& output)
 
     return bytes_written;
 }
+
+int Bluetooth::Write(const unsigned char output)
+{
+	return Write(string(output, 1));
+}
+
 

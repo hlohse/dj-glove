@@ -35,14 +35,17 @@ public:
     // Throws exception in case of failure
     void WaitUntilAvailable(const int length);
     
-    char PeekFirst() const;
     // Throw expcetion in case of failure
     std::string ReadNextAvailable(const int length);
+	unsigned char ReadNextAvailable();
+
     // Throw expcetion in case of failure
     std::string Read(const int length);
+	unsigned char Read();
 
     // Throw expcetion in case of failure
     int Write(const std::string& output);
+	int Write(const unsigned char output);
 
 private:
     std::shared_ptr<BluetoothDevice> device_;
