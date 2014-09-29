@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
         glove.Process(data);
         cout << glove.DataString() << endl;
 
-        if (glove.HasMidiSignal()) {
+        while (glove.HasMidiSignal()) {
             MidiSignal signal = glove.NextMidiSignal();
             
             try {
