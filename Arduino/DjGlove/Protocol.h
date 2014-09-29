@@ -1,4 +1,4 @@
-/*      Data Bytes Layout
+/*      Protocol Data Bytes Layout
  *
  * Index | Bits         Signals
  * ----------------------------------------------------------------------
@@ -16,14 +16,14 @@
  *   INT | 1ppp pppp    p: Punch intensity
  */
 
-#ifndef DJ_GLOVE_ARDUINO_DJ_GLOVE_DATA_H_
-#define DJ_GLOVE_ARDUINO_DJ_GLOVE_DATA_H_
+#ifndef DJ_GLOVE_ARDUINO_DJ_GLOVE_PROTOCOL_H_
+#define DJ_GLOVE_ARDUINO_DJ_GLOVE_PROTOCOL_H_
  
 #include "DjGlove.h"
 
-class Data {
+class Protocol {
 public:
-  Data(DjGlove* glove)
+  Protocol(DjGlove* glove)
   : m_glove(glove),
     m_index(0),
     m_last_gyro_readout()
@@ -148,5 +148,5 @@ private:
   }
 };
 
-#endif // DJ_GLOVE_ARDUINO_DJ_GLOVE_DATA_H_
+#endif // DJ_GLOVE_ARDUINO_DJ_GLOVE_PROTOCOL_H_
 

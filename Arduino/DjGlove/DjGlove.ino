@@ -1,12 +1,12 @@
 #include <SoftwareSerial.h>
 #include <Wire.h>
 #include "DjGlove.h"
-#include "Data.h"
+#include "Protocol.h"
 
 const char sync_signal = '!';
 
 DjGlove* glove = DjGlove::instance();
-Data data(glove);
+Protocol protocol(glove);
 
 void sync()
 {
@@ -28,6 +28,6 @@ void setup()
 
 void loop()
 {
-  Serial.write(data.nextByte());
+  Serial.write(protocol.nextByte());
 }
 
