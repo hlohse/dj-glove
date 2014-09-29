@@ -70,10 +70,7 @@ int main(int argc, char* argv[])
 	bluetooth.Write(sync_signal);
 
     while (true) {
-        bluetooth.WaitUntilAvailable(1);
-		const unsigned char data = bluetooth.Read();
-
-        glove.Process(data);
+        glove.Process(bluetooth.ReadNextAvailable());
         cout << glove.DataString() << endl;
 
         while (glove.HasMidiSignal()) {
