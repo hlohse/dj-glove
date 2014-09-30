@@ -25,7 +25,7 @@ class Protocol {
 public:
   Protocol(DjGlove* glove)
   : m_glove(glove),
-    m_index(0),
+    m_index(-1),
     m_last_gyro_readout()
   {
     memset(&m_last_gyro_readout, 0, sizeof(m_last_gyro_readout));
@@ -39,28 +39,10 @@ public:
       result = hitIntensity();
     }
     else {
-      switch (m_index) {
-        case  0: result = touch();                 break;
-        case  1: result = poti(m_glove->poti_0);   break;
-        case  2: result = poti(m_glove->poti_1);   break;
-        case  3: result = poti(m_glove->poti_2);   break;
-        case  4: result = flex();                  break;
-        case  5: result = distance();              break;
-        case  6: result = orientation(0);          break;
-        case  7: result = orientation(1);          break;
-        case  8: result = orientation(2);          break;
-        case  9: result = pushFirstChannel();      break;
-        case 10: result = flipPushSecondProgram(); break;
-        default: result = 0;                       break;
-      }
-    
-      m_index++;
-      if (m_index > 10) {
-        m_index = 0;
-      }
+      result = nextSensorReadout();
     }
     
-    return result + 1;
+    return result + 1; // No null byte allowed for Bt transmission
   }
 
 private:
@@ -72,6 +54,30 @@ private:
   {
     const byte intensity = m_glove->hit.intensity() & 0x7E; // 0111 1110
     return intensity | 0x80; // 1000 0000
+  }
+  
+  byte nextSensorReadout()
+  {
+    m_index++;
+    
+    if (m_index > 10) {
+      m_index = 0;
+    }
+    
+    switch (m_index) {
+      case  0: return touch();
+      case  1: return poti(m_glove->poti_0);
+      case  2: return poti(m_glove->poti_1);
+      case  3: return poti(m_glove->poti_2);
+      case  4: return flex();
+      case  5: return distance();
+      case  6: return orientation(0);
+      case  7: return orientation(1);
+      case  8: return orientation(2);
+      case  9: return pushFirstChannel();
+      case 10: return flipPushSecondProgram();
+      default: return 0;
+    }
   }
   
   byte buttonBit(Button& button, const int index)
