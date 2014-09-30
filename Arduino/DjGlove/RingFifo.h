@@ -22,8 +22,9 @@ public:
     }
   }
   
-  // [0] returns oldest inserted element (not front of buffer),
-  // [elements - 1] returns most recently inserted element (if full)
+  // [0] returns oldest inserted element (not front of buffer);
+  // If full:     [elements - 1] returns most recently inserted element
+  // If not full: [count() - 1]  returns most recently inserted element
   T operator[](const int index) const
   {
     const int index_oldest = isFull() ? (m_index + 1) % elements : 0;
