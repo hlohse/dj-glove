@@ -20,6 +20,10 @@ public:
   {
     int sum = 0;
     
+    if (m_buffer.isEmpty()) {
+      return 0;
+    }
+    
     for (int i = 0; i < m_buffer.count(); ++i) {
       sum += m_buffer[i];
     }
