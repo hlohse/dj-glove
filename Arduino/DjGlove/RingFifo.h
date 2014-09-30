@@ -11,18 +11,19 @@ public:
   {
   }
   
-  // Overwrites oldest value if full
+  // Overwrites oldest element with new one if full
   void insert(const T& element)
   {
     m_elements[m_index] = element;
     m_index++;
     if (m_index >= elements) {
       m_index = 0;
-      m_is_full = false;
+      m_is_full = true;
     }
   }
   
-  // [0] starts at oldest inserted value (not front of buffer)
+  // [0] returns oldest inserted element (not front of buffer),
+  // [elements - 1] returns most recently inserted element (if full)
   T operator[](const int index) const
   {
     const int index_oldest = isFull() ? (m_index + 1) % elements : 0;
