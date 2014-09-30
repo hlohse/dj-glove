@@ -31,7 +31,8 @@ public:
   
   int intensity() const
   {
-    int intensity = m_buffer[3] - m_buffer[1] + m_buffer[2] - m_buffer[0];
+    int intensity = m_buffer.getOrdered(3) - m_buffer.getOrdered(1)
+                  + m_buffer.getOrdered(2) - m_buffer.getOrdered(0);
                   
     intensity = (intensity-500)/50;
     

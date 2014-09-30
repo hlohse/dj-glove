@@ -25,7 +25,7 @@ public:
     }
     
     for (int i = 0; i < m_buffer.count(); ++i) {
-      sum += m_buffer[i];
+      sum += m_buffer.getDirectly(i);
     }
     
     return sum / m_buffer.size();

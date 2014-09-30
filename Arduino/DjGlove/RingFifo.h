@@ -22,13 +22,17 @@ public:
     }
   }
   
-  // [0] returns oldest inserted element (not front of buffer);
-  // If full:     [elements - 1] returns most recently inserted element
-  // If not full: [count() - 1]  returns most recently inserted element
-  T operator[](const int index) const
+  // 0 for oldest inserted, elements-1/count()-1 for most recently inserted etc.
+  T getOrdered(const int index) const
   {
     const int index_oldest = isFull() ? (m_index + 1) % elements : 0;
     return m_elements[index_oldest + index];
+  }
+  
+  // 0 for first in buffer, 1 for second etc.
+  T getDirectly(const int index) const
+  {
+    return m_elements[index];
   }
   
   int count() const
