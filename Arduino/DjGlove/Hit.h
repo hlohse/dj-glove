@@ -2,15 +2,14 @@
 #define DJ_GLOVE_ARDUINO_DJ_GLOVE_HIT_H_
 
 #include "Acceleration.h"
+#include "RingFifo.h"
 
 class Hit {
 public:
   Hit(Acceleration& acc)
   : m_acc(&acc),
-    m_index(0),
     m_last_occurence_time(0)
   {
-    memset(m_buffer, 0, num_values);
   }
   
   bool occured()
@@ -18,14 +17,10 @@ public:
     const unsigned long dead_time = millis() - m_last_occurence_time;
     
     if (dead_time >= necessary_dead_time && m_acc->hasAvailable()) {
-      m_index++;
-      if (m_index >= num_values) {
-        m_index = 0;
-      }
+      const int acc_y = m_acc->read().y;
+      m_buffer.insert(acc_y);
       
-      m_buffer[m_index] = m_acc->read().y;
-      
-      if (m_buffer[m_index] >= threshold) {
+      if (acc_y >= threshold && m_buffer.isFull()) {
         m_last_occurence_time = millis();
         return true;
       }
@@ -36,8 +31,7 @@ public:
   
   int intensity() const
   {
-    int intensity = m_buffer[m_index]       - m_buffer[(m_index+2)%4]
-                  + m_buffer[(m_index+3)%4] - m_buffer[(m_index+1)%4];
+    int intensity = m_buffer[3] - m_buffer[1] + m_buffer[2] - m_buffer[0];
                   
     intensity = (intensity-500)/50;
     
@@ -52,14 +46,12 @@ public:
   }
 
 private:
-  static const int num_values = 4;
-  static const int threshold  = 3000;
   static const unsigned long necessary_dead_time = 30;
+  static const int threshold = 3000;
 
-  Acceleration* m_acc;
-  int           m_buffer[num_values];
-  int           m_index;
-  unsigned long m_last_occurence_time;
+  Acceleration*    m_acc;
+  RingFifo<int, 4> m_buffer;
+  unsigned long    m_last_occurence_time;
 };
 
 #endif // DJ_GLOVE_ARDUINO_DJ_GLOVE_HIT_H_
