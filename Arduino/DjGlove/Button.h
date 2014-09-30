@@ -59,7 +59,7 @@ private:
     }
   }
   
-  bool isDebounced()
+  bool isDebounced() const
   {
     return m_num_debounces >= necessary_debounces;
   }
@@ -70,7 +70,7 @@ private:
       m_is_pressed = is_pressed;
   }
   
-  void notifyHandler()
+  void notifyHandler() const
   {
     handler_t handler = m_is_pressed ? m_press_handler : m_release_handler;
     

@@ -34,7 +34,7 @@ public:
     return false;
   }
   
-  int intensity()
+  int intensity() const
   {
     int intensity = m_buffer[m_index]       - m_buffer[(m_index+2)%4]
                   + m_buffer[(m_index+3)%4] - m_buffer[(m_index+1)%4];

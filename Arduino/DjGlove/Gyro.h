@@ -16,7 +16,7 @@ public:
     memset(&m_readout, 0, sizeof(m_readout));
   }
   
-  void initialize()
+  void initialize() const
   {
     Wire.beginTransmission(m_address);
     Wire.write(register_ctrl_1);

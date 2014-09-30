@@ -15,7 +15,7 @@ public:
   {
   }
   
-  void initialize()
+  void initialize() const
   {
     pinMode(m_pin_int, INPUT);
     digitalWrite(m_pin_int, HIGH);
@@ -40,12 +40,12 @@ public:
   }
     
   
-  bool hasAvailable()
+  bool hasAvailable() const
   {
     return digitalRead(m_pin_int) == LOW;
   }
   
-  Readout read()
+  Readout read() const
   {
     Readout readout;
     
@@ -74,7 +74,7 @@ private:
   byte m_address;
   byte m_pin_int;
   
-  void readAxis(int& axis)
+  void readAxis(int& axis) const
   {
     axis = Wire.read();
     axis <<= 8; 
@@ -82,7 +82,7 @@ private:
     axis >>= 2;
   }
   
-  void writeRegister(byte registerAddress, byte newValue)
+  void writeRegister(byte registerAddress, byte newValue) const
   {
      Wire.beginTransmission(m_address);
      Wire.write(registerAddress);
@@ -90,7 +90,7 @@ private:
      Wire.endTransmission();
   }
   
-  byte readRegister(byte registerAddress)
+  byte readRegister(byte registerAddress) const
   {
     Wire.beginTransmission(m_address);
     Wire.write(registerAddress);
