@@ -25,7 +25,7 @@ public:
   // [0] starts at oldest inserted value (not front of buffer)
   T operator[](const int index) const
   {
-    const int index_oldest = m_index == elements - 1 ? 0 : m_index + 1;
+    const int index_oldest = isFull() ? (m_index + 1) % elements : 0;
     return m_elements[index_oldest + index];
   }
   
