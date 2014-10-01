@@ -32,8 +32,8 @@ public:
 
 private:
     static const int max_data_index = 10;
-    DjGlove& dj_glove_;
-    int      data_index_;
+    DjGlove& m_dj_glove;
+    int      m_index;
 
     unsigned char Prepare(const unsigned char data) const;
 

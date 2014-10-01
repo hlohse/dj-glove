@@ -24,7 +24,7 @@ public:
 	// Call on termination; throw exception on failure
 	static void TearDown();
 
-    Bluetooth(const int read_socket_buffer_bytes);
+    Bluetooth(const int m_read_socket_bufferbytes);
     ~Bluetooth();
 
     // Throws exception in case of failure
@@ -48,11 +48,11 @@ public:
 	int Write(const unsigned char output);
 
 private:
-    std::shared_ptr<BluetoothDevice> device_;
-    std::string buffer_;
-	socket_t    socket_;
-    int         read_socket_buffer_bytes_;
-	char*       read_socket_buffer_;
+    std::shared_ptr<BluetoothDevice> m_device;
+    std::string m_buffer;
+	socket_t    m_socket;
+    int         m_read_socket_buffer_bytes;
+	char*       m_read_socket_buffer;
 
     // Throws exception in case of failure
     void ConnectSocket(struct timeval timeout, fd_set sockets);

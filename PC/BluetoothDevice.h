@@ -56,14 +56,14 @@ public:
 private:
 	static const BluetoothDevice ArduinoDevice;
 
-    std::string name_;
-    std::string address_;
-    int channel_;
-	bool is_valid_;
-	SocketAddress socket_address_;
+    std::string m_name;
+    std::string m_address;
+    int m_channel;
+	bool m_is_valid;
+	SocketAddress m_socket_address;
 
 #ifdef _WIN32
-	int StringToAddress(IN const std::string& address_string,
+	int StringToAddress(IN const std::string& m_addressstring,
 						OUT BTH_ADDR& address);
 #endif
 };

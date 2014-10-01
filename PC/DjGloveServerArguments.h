@@ -22,9 +22,9 @@ private:
     static const std::string default_virtual_midi_port_name;
     static const int         default_bluetooth_timeout;
 
-    std::string arduino_bluetooth_mac_;
-    std::string virtual_midi_port_name_;
-    int         bluetooth_timeout_;
+    std::string m_arduino_bluetooth_mac;
+    std::string m_virtual_midi_port_name;
+    int         m_bluetooth_timeout;
 };
 
 #endif // DJ_GLOVE_PC_DJ_GLOVE_SERVER_ARGUMENTS_H_

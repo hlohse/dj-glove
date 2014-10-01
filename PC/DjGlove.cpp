@@ -6,28 +6,27 @@ using namespace std;
 
 DjGlove::DjGlove()
 :   data_protocol_(Protocol(*this)),
-    hit_intensity_(0),
-    button_push_0_(false),
-    button_push_1_(false),
-    button_push_2_(false),
-    button_push_3_(false),
-    button_push_4_(false),
-    button_touch_0_(false),
-    button_touch_1_(false),
-    button_touch_2_(false),
-    button_touch_3_(false),
-    button_flip_(false),
-    poti_0_(0),
-    poti_1_(0),
-    poti_2_(0),
-    distance_(0),
-    orientation_x_(0),
-    orientation_y_(0),
-    orientation_z_(0),
-    flex_(0),
-    channel_(0),
-    program_(0),
-    data_byte_index_(0)
+    m_hit_intensity(0),
+    m_button_push_0(false),
+    m_button_push_1(false),
+    m_button_push_2(false),
+    m_button_push_3(false),
+    m_button_push_4(false),
+    m_button_touch_0(false),
+    m_button_touch_1(false),
+    m_button_touch_2(false),
+    m_button_touch_3(false),
+    m_button_flip(false),
+    m_poti_0(0),
+    m_poti_1(0),
+    m_poti_2(0),
+    m_distance(0),
+    m_orientation_x(0),
+    m_orientation_y(0),
+    m_orientation_z(0),
+    m_flex(0),
+    m_channel(0),
+    m_program(0)
 {
 }
 
@@ -45,10 +44,10 @@ void DjGlove::GenerateMidiSignals()
 {
     MidiSignal midi_signal;
 
-    midi_signal.Channel(channel_);
+    midi_signal.Channel(m_channel);
     midi_signal.Status(Midi::Status::NoteOn);
-    midi_signal.Key(poti_0_);
-    midi_signal.Velocity(poti_1_);
+    midi_signal.Key(m_poti_0);
+    midi_signal.Velocity(m_poti_1);
 
     midi_signals_.push_back(midi_signal);
 }
@@ -92,27 +91,27 @@ string DjGlove::DataString() const
 {
     ostringstream data;
 
-	data << hit_intensity_ << " "
-         << BoolToText(button_push_0_)
-            << BoolToText(button_push_1_)
-            << BoolToText(button_push_2_)
-            << BoolToText(button_push_3_)
-            << BoolToText(button_push_4_) << " "
-        << BoolToText(button_touch_0_)
-            << BoolToText(button_touch_1_)
-            << BoolToText(button_touch_2_)
-            << BoolToText(button_touch_3_) << " "
-        << BoolToText(button_flip_) << " "
-        << poti_0_ << " "
-        << poti_1_ << " "
-        << poti_2_ << " "
-        << distance_ << " "
-        << orientation_x_ << " "
-        << orientation_y_ << " "
-        << orientation_z_ << " "
-        << flex_ << " "
-        << channel_ << " "
-        << program_;
+	data << m_hit_intensity << " "
+         << BoolToText(m_button_push_0)
+            << BoolToText(m_button_push_1)
+            << BoolToText(m_button_push_2)
+            << BoolToText(m_button_push_3)
+            << BoolToText(m_button_push_4) << " "
+        << BoolToText(m_button_touch_0)
+            << BoolToText(m_button_touch_1)
+            << BoolToText(m_button_touch_2)
+            << BoolToText(m_button_touch_3) << " "
+        << BoolToText(m_button_flip) << " "
+        << m_poti_0 << " "
+        << m_poti_1 << " "
+        << m_poti_2 << " "
+        << m_distance << " "
+        << m_orientation_x << " "
+        << m_orientation_y << " "
+        << m_orientation_z << " "
+        << m_flex << " "
+        << m_channel << " "
+        << m_program;
 
     return data.str();
 }

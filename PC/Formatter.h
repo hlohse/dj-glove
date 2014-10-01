@@ -13,15 +13,15 @@ public:
 	template <typename Type>
 	Formatter & operator << (const Type & value)
 	{
-		stream_ << value;
+		m_stream << value;
 		return *this;
 	}
 
-	std::string str() const        { return stream_.str(); }
-	operator std::string() const   { return stream_.str(); }
+	std::string str() const        { return m_stream.str(); }
+	operator std::string() const   { return m_stream.str(); }
 
 private:
-	std::stringstream stream_;
+	std::stringstream m_stream;
 };
 
 #endif // DJ_GLOVE_PC_FORMATTER_H_

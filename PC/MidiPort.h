@@ -31,8 +31,8 @@ public:
     std::string Name() const;
 
 private:
-	std::string name_;
-	port_t      port_;
+	std::string m_name;
+	port_t      m_port;
 
 #ifdef _WIN32
 	static const int buffer_size = 0x1FFFE;
