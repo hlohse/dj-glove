@@ -2,13 +2,13 @@
 #define DJ_GLOVE_PC_DJ_GLOVE_H_
 
 #include "Export.h"
-#include "DataProtocol.h"
+#include "Protocol.h"
 #include "MidiSignal.h"
 #include <deque>
 #include <string>
 
 class EXPORT DjGlove {
-    friend class DataProtocol;
+    friend class Protocol;
 
 public:
     DjGlove();
@@ -23,7 +23,7 @@ public:
     std::string DataString() const;
 
 private:
-    DataProtocol data_protocol_;
+    Protocol data_protocol_;
     std::deque<MidiSignal> midi_signals_;
 
     int  hit_intensity_;

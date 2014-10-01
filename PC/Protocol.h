@@ -16,17 +16,17 @@
  *   INT | 1000 000p    p: Punch
  */
 
-#ifndef DJ_GLOVE_PC_DATA_PROTOCOL_H_
-#define DJ_GLOVE_PC_DATA_PROTOCOL_H_
+#ifndef DJ_GLOVE_PC_PROTOCOL_H_
+#define DJ_GLOVE_PC_PROTOCOL_H_
 
 #include "Export.h"
 
 class DjGlove;
 
-class EXPORT DataProtocol {
+class EXPORT Protocol {
 public:
-    DataProtocol(DjGlove& dj_glove);
-    ~DataProtocol();
+    Protocol(DjGlove& dj_glove);
+    ~Protocol();
     
     void ApplyNext(const unsigned char data);
 
@@ -48,5 +48,5 @@ private:
     void ForwardDataIndex();
 };
 
-#endif // DJ_GLOVE_PC_DATA_PROTOCOL_H_
+#endif // DJ_GLOVE_PC_PROTOCOL_H_
 

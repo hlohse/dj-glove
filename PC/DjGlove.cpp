@@ -1,12 +1,11 @@
 #include "DjGlove.h"
-#include "DataProtocol.h"
 #include "MidiSignal.h"
 #include <sstream>
 #include <cassert>
 using namespace std;
 
 DjGlove::DjGlove()
-:   data_protocol_(DataProtocol(*this)),
+:   data_protocol_(Protocol(*this)),
     hit_intensity_(0),
     button_push_0_(false),
     button_push_1_(false),

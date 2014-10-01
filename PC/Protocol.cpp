@@ -1,19 +1,19 @@
-#include "DataProtocol.h"
+#include "Protocol.h"
 #include "DjGlove.h"
 #include <cmath>
 #include <cassert>
     
-DataProtocol::DataProtocol(DjGlove& dj_glove)
+Protocol::Protocol(DjGlove& dj_glove)
 :   dj_glove_(dj_glove),
     data_index_(0)
 {
 }
 
-DataProtocol::~DataProtocol()
+Protocol::~Protocol()
 {
 }
 
-void DataProtocol::ApplyNext(const unsigned char data)
+void Protocol::ApplyNext(const unsigned char data)
 {
     const unsigned char prepared_data = Prepare(data);
 
@@ -26,7 +26,7 @@ void DataProtocol::ApplyNext(const unsigned char data)
     }
 }
 
-unsigned char DataProtocol::Prepare(const unsigned char data) const
+unsigned char Protocol::Prepare(const unsigned char data) const
 {
 /*  All values have to be decremented by 1. This is because zero/null bytes can
  *  not be send via Bluetooth and are therefore increment by 1.
@@ -34,18 +34,18 @@ unsigned char DataProtocol::Prepare(const unsigned char data) const
     return data - 1;
 }
 
-bool DataProtocol::IsHit(const unsigned char data) const
+bool Protocol::IsHit(const unsigned char data) const
 {
     return data >> 7 == 1;  // First bit is 1
 }
 
-void DataProtocol::ApplyHit(const unsigned char data)
+void Protocol::ApplyHit(const unsigned char data)
 {
     assert(IsHit(data));
 	dj_glove_.hit_intensity_ = data & 0x7E; // 0111 1110
 }
 
-void DataProtocol::ApplyData(const unsigned char data)
+void Protocol::ApplyData(const unsigned char data)
 {
     assert(data_index_ >= 0);
     assert(data_index_ <= max_data_index);
@@ -81,7 +81,7 @@ void DataProtocol::ApplyData(const unsigned char data)
     }
 }
 
-void DataProtocol::ApplyBit(bool& output, const unsigned char data, const int bit)
+void Protocol::ApplyBit(bool& output, const unsigned char data, const int bit)
 {
     assert(bit >= 0);
     assert(bit <= 7);
@@ -92,7 +92,7 @@ void DataProtocol::ApplyBit(bool& output, const unsigned char data, const int bi
     output = (data & mask) != 0;
 }
 
-void DataProtocol::ApplyLowBits(int& output, const unsigned char data, const int bits)
+void Protocol::ApplyLowBits(int& output, const unsigned char data, const int bits)
 {
     assert(bits >= 1);
     assert(bits <= 7);
@@ -106,7 +106,7 @@ void DataProtocol::ApplyLowBits(int& output, const unsigned char data, const int
     assert(output <= (int) mask);
 }
 
-void DataProtocol::ForwardDataIndex()
+void Protocol::ForwardDataIndex()
 {
     data_index_++;
 
