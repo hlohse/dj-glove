@@ -3,17 +3,17 @@
  * Index | Bits         Signals
  * ----------------------------------------------------------------------
  *     0 | 0000 tttt    t: Touch buttons 0..3
- *     1 | 0ppp pppp    p: Poti 0
- *     2 | 0ppp pppp    p: Poti 1
- *     3 | 0ppp pppp    p: Poti 2
- *     4 | 0fff ffff    f: Flex
- *     5 | 0ddd dddd    d: Distance
- *     6 | 0ooo oooo    o: Orientation X
- *     7 | 0ooo oooo    o: Orientation Y
- *     8 | 0ooo oooo    o: Orientation Z
- *     9 | 0bbb cccc    b: Push buttons 0..2, c: Channel
- *    10 | 0fbb pppp    f: Flip button, b: Push buttons 3..4, p: Program
- *   INT | 1ppp pppp    p: Punch intensity
+ *     1 | 0ppp pppp    p: Poti 0 [7]
+ *     2 | 0ppp pppp    p: Poti 1 [7]
+ *     3 | 0ppp pppp    p: Poti 2 [7]
+ *     4 | 0fff ffff    f: Flex [7]
+ *     5 | 0ddd dddd    d: Distance [7]
+ *     6 | 0ooo oooo    o: Orientation X [7]
+ *     7 | 0ooo oooo    o: Orientation Y [7]
+ *     8 | 0ooo oooo    o: Orientation Z [7]
+ *     9 | 0bbb cccc    b: Push buttons 0..2, c: Channel [4]
+ *    10 | 0fbb pppp    f: Flip button, b: Push buttons 3..4, p: Program [4]
+ *   INT | 1ppp pppp    p: Punch intensity [7]
  */
 
 #ifndef DJ_GLOVE_ARDUINO_DJ_GLOVE_PROTOCOL_H_

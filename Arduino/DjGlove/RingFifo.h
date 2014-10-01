@@ -21,8 +21,7 @@ public:
     }
   }
   
-  // 0 for oldest inserted,
-  // elements-1 (full) or count()-1 (not full) for most recently inserted etc.
+  // 0 for oldest inserted, count()-1 for most recently inserted etc.
   T getOrdered(const int index) const
   {
     const int index_oldest = isFull() ? (m_index + 1) % elements : 0;
