@@ -9,9 +9,9 @@ const string DjGloveServerArguments::default_virtual_midi_port_name = "Virtual M
 const int    DjGloveServerArguments::default_bluetooth_timeout = 10;
 
 DjGloveServerArguments::DjGloveServerArguments()
-:   arduino_bluetooth_mac_(default_arduino_bluetooth_mac),
-    virtual_midi_port_name_(default_virtual_midi_port_name),
-    bluetooth_timeout_(default_bluetooth_timeout)
+:   m_arduino_bluetooth_mac(default_arduino_bluetooth_mac),
+    m_virtual_midi_port_name(default_virtual_midi_port_name),
+    m_bluetooth_timeout(default_bluetooth_timeout)
 {
 }
 
@@ -27,9 +27,9 @@ void DjGloveServerArguments::Apply(int argc, char* argv[])
                 << argc - 1 << " arguments passed, expected 3!");
         }
     
-        arduino_bluetooth_mac_  = argv[1];
-        virtual_midi_port_name_ = argv[2];
-        bluetooth_timeout_      = atoi(argv[3]);
+        m_arduino_bluetooth_mac  = argv[1];
+        m_virtual_midi_port_name = argv[2];
+        m_bluetooth_timeout      = atoi(argv[3]);
     }
 }
 
@@ -52,16 +52,16 @@ string DjGloveServerArguments::Usage() const
 
 string DjGloveServerArguments::ArduinoBluetoothMac() const
 {
-    return arduino_bluetooth_mac_;
+    return m_arduino_bluetooth_mac;
 }
 
 string DjGloveServerArguments::VirtualMidiPortName() const
 {
-    return virtual_midi_port_name_;
+    return m_virtual_midi_port_name;
 }
 
 int DjGloveServerArguments::BluetoothTimeout() const
 {
-    return bluetooth_timeout_;
+    return m_bluetooth_timeout;
 }
 

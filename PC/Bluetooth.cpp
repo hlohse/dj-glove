@@ -56,14 +56,14 @@ void Bluetooth::TearDown()
 #endif
 }
 
-Bluetooth::Bluetooth(const int read_socket_buffer_bytes)
-:   device_(nullptr),
-	buffer_(""),
-    read_socket_buffer_bytes_(read_socket_buffer_bytes),
-	read_socket_buffer_(NULL)
+Bluetooth::Bluetooth(const int m_read_socket_bufferbytes)
+:   m_device(nullptr),
+	m_buffer(""),
+    m_read_socket_buffer_bytes(m_read_socket_bufferbytes),
+	m_read_socket_buffer(NULL)
 {
-    if (read_socket_buffer_bytes_ > 0) {
-        read_socket_buffer_ = new char[read_socket_buffer_bytes_ + 1];
+    if (m_read_socket_buffer_bytes > 0) {
+        m_read_socket_buffer = new char[m_read_socket_buffer_bytes + 1];
     }
 }
 
@@ -71,17 +71,17 @@ Bluetooth::~Bluetooth()
 {
     ShutdownSocket();
 
-    if (read_socket_buffer_ != NULL) {
-        delete read_socket_buffer_;
+    if (m_read_socket_buffer != NULL) {
+        delete m_read_socket_buffer;
     }   
 }
 
 void Bluetooth::ShutdownSocket()
 {
 #ifdef __linux__
-    shutdown(socket_, SHUT_RDWR);
+    shutdown(m_socket, SHUT_RDWR);
 #elif _WIN32
-	shutdown(socket_, SD_BOTH);
+	shutdown(m_socket, SD_BOTH);
 #endif
 }
 
@@ -92,22 +92,22 @@ void Bluetooth::Connect(std::shared_ptr<BluetoothDevice> device,
 	fd_set sockets;
 
 #ifdef __linux__
-	socket_ = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+	m_socket = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
 #elif _WIN32
-	socket_ = socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM);
+	m_socket = socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM);
 #endif
 
     if (!device->IsValid()) {
-        throw runtime_error(Formatter() << "Invalid " << device_->ToString());
+        throw runtime_error(Formatter() << "Invalid " << m_device->ToString());
     }
 
-    device_ = device;
+    m_device = device;
 
     timeout.tv_sec  = timeout_s;
     timeout.tv_usec = 0;
 
     FD_ZERO(&sockets);
-    FD_SET(socket_, &sockets);
+    FD_SET(m_socket, &sockets);
 
     try {
         ConnectSocket(timeout, sockets);
@@ -116,12 +116,12 @@ void Bluetooth::Connect(std::shared_ptr<BluetoothDevice> device,
 
 void Bluetooth::ConnectSocket(struct timeval timeout, fd_set sockets)
 {
-	BluetoothDevice::SocketAddress address = device_->GetSocketAddress();
+	BluetoothDevice::SocketAddress address = m_device->GetSocketAddress();
 
     SetSocketNonBlocking();
-    connect(socket_, (sockaddr*) &address, sizeof(address));
+    connect(m_socket, (sockaddr*) &address, sizeof(address));
 	
-	switch (select(socket_ + 1, NULL, &sockets, NULL, &timeout)) {
+	switch (select(m_socket + 1, NULL, &sockets, NULL, &timeout)) {
 	case 1: {
 		int error = GetSocketError();
 
@@ -151,24 +151,24 @@ void Bluetooth::ConnectSocket(struct timeval timeout, fd_set sockets)
 void Bluetooth::SetSocketBlocking() const
 {
 #ifdef __linux__
-    int socket_flags = fcntl(socket_, F_GETFL, 0);
-    socket_flags ^= O_NONBLOCK;
-    fcntl(socket_, F_SETFL, socket_flags);
+    int m_socketflags = fcntl(m_socket, F_GETFL, 0);
+    m_socketflags ^= O_NONBLOCK;
+    fcntl(m_socket, F_SETFL, m_socketflags);
 #elif _WIN32
 	ULONG non_blocking = 0;
-	ioctlsocket(socket_, FIONBIO, &non_blocking);
+	ioctlsocket(m_socket, FIONBIO, &non_blocking);
 #endif
 }
 
 void Bluetooth::SetSocketNonBlocking() const
 {
 #ifdef __linux__
-    int socket_flags = fcntl(socket_, F_GETFL, 0);
-    socket_flags |= O_NONBLOCK;
-    fcntl(socket_, F_SETFL, socket_flags);
+    int m_socketflags = fcntl(m_socket, F_GETFL, 0);
+    m_socketflags |= O_NONBLOCK;
+    fcntl(m_socket, F_SETFL, m_socketflags);
 #elif _WIN32
 	ULONG non_blocking = 1;
-	ioctlsocket(socket_, FIONBIO, &non_blocking);
+	ioctlsocket(m_socket, FIONBIO, &non_blocking);
 #endif
 }
 
@@ -183,23 +183,23 @@ int Bluetooth::GetSocketError() const
 #endif
 	length = sizeof(error);
 
-    getsockopt(socket_, SOL_SOCKET, SO_ERROR, (char*) &error, &length);
+    getsockopt(m_socket, SOL_SOCKET, SO_ERROR, (char*) &error, &length);
     return error;
 }
 
 int Bluetooth::Available() const
 {
-    return buffer_.length();
+    return m_buffer.length();
 }
 
 void Bluetooth::WaitUntilAvailable(const int length)
 {
     fd_set sockets;
     FD_ZERO(&sockets);
-    FD_SET(socket_, &sockets);
+    FD_SET(m_socket, &sockets);
 
-    while ((int) buffer_.length() < length) {
-        if (select(socket_ + 1, NULL, &sockets, NULL, NULL) == 1) {
+    while ((int) m_buffer.length() < length) {
+        if (select(m_socket + 1, NULL, &sockets, NULL, NULL) == 1) {
             int error = GetSocketError();
 
             if (error != 0) {
@@ -224,22 +224,22 @@ void Bluetooth::ReadSocket()
 {
     int bytes_read;
 
-    if (read_socket_buffer_ == NULL) {
+    if (m_read_socket_buffer == NULL) {
         ShutdownSocket();
         throw runtime_error(Formatter()
             << "No read socket buffer available");
     }
 
-    memset(read_socket_buffer_, 0, read_socket_buffer_bytes_ + 1);
+    memset(m_read_socket_buffer, 0, m_read_socket_buffer_bytes + 1);
     
 #ifdef __linux__
-    bytes_read = read(socket_,
-                      read_socket_buffer_,
-                      read_socket_buffer_bytes_);
+    bytes_read = read(m_socket,
+                      m_read_socket_buffer,
+                      m_read_socket_buffer_bytes);
 #elif _WIN32
-	bytes_read = recv(socket_,
-					  read_socket_buffer_,
-					  read_socket_buffer_bytes_,
+	bytes_read = recv(m_socket,
+					  m_read_socket_buffer,
+					  m_read_socket_buffer_bytes,
 					  0);
 #endif
     
@@ -250,7 +250,7 @@ void Bluetooth::ReadSocket()
     }
 
     if (bytes_read > 0) {
-        buffer_ += read_socket_buffer_;
+        m_buffer += m_read_socket_buffer;
     }
 }
 
@@ -272,12 +272,12 @@ string Bluetooth::Read(const int length)
 {
     string input;
     
-    if (buffer_.length() == 0 || length <= 0) {
+    if (m_buffer.length() == 0 || length <= 0) {
         return "";
     }
 
-    input = string(buffer_, 0, length);
-    buffer_.erase(0, length);
+    input = string(m_buffer, 0, length);
+    m_buffer.erase(0, length);
     
     return input;
 }
@@ -290,11 +290,11 @@ unsigned char Bluetooth::Read()
 int Bluetooth::Write(const string& output)
 {
 #ifdef __linux__
-    int bytes_written = write(socket_,
+    int bytes_written = write(m_socket,
                               output.c_str(),
 							  output.length());
 #elif _WIN32
-	int bytes_written = send(socket_,
+	int bytes_written = send(m_socket,
 							 output.c_str(),
 							 output.length(),
 							 0);

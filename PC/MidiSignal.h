@@ -61,11 +61,11 @@ public:
     std::string ToString() const;
 
 private:
-    Midi::byte_t data_[3];
-    int current_data_length_;
+    Midi::byte_t m_data[3];
+    int m_data_length;
 
-    void Value(const int value, const int data_index);
-    int  Value(const int data_index) const;
+    void Value(const int value, const int m_dataindex);
+    int  Value(const int m_dataindex) const;
 };
 
 #endif // DJ_GLOVE_PC_MIDI_SIGNAL_H_

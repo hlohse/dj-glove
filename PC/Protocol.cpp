@@ -4,8 +4,8 @@
 #include <cassert>
     
 Protocol::Protocol(DjGlove& dj_glove)
-:   dj_glove_(dj_glove),
-    data_index_(0)
+:   m_dj_glove(dj_glove),
+    m_index(0)
 {
 }
 
@@ -42,40 +42,40 @@ bool Protocol::IsHit(const unsigned char data) const
 void Protocol::ApplyHit(const unsigned char data)
 {
     assert(IsHit(data));
-	dj_glove_.hit_intensity_ = data & 0x7E; // 0111 1110
+	m_dj_glove.m_hit_intensity = data & 0x7E; // 0111 1110
 }
 
 void Protocol::ApplyData(const unsigned char data)
 {
-    assert(data_index_ >= 0);
-    assert(data_index_ <= max_data_index);
+    assert(m_index >= 0);
+    assert(m_index <= max_data_index);
 
-    switch (data_index_) {
+    switch (m_index) {
         case  0:
-            ApplyBit(dj_glove_.button_touch_2_, data, 3);
-            ApplyBit(dj_glove_.button_touch_1_, data, 2);
-            ApplyBit(dj_glove_.button_touch_0_, data, 1);
-            ApplyBit(dj_glove_.button_touch_3_, data, 0);
+            ApplyBit(m_dj_glove.m_button_touch_2, data, 3);
+            ApplyBit(m_dj_glove.m_button_touch_1, data, 2);
+            ApplyBit(m_dj_glove.m_button_touch_0, data, 1);
+            ApplyBit(m_dj_glove.m_button_touch_3, data, 0);
             break;
-        case  1: ApplyLowBits(dj_glove_.poti_2_,        data, 7); break;
-        case  2: ApplyLowBits(dj_glove_.poti_1_,        data, 7); break;
-        case  3: ApplyLowBits(dj_glove_.poti_0_,        data, 7); break;
-        case  4: ApplyLowBits(dj_glove_.flex_,          data, 7); break;
-        case  5: ApplyLowBits(dj_glove_.distance_,      data, 7); break;
-        case  6: ApplyLowBits(dj_glove_.orientation_x_, data, 7); break;
-        case  7: ApplyLowBits(dj_glove_.orientation_y_, data, 7); break;
-        case  8: ApplyLowBits(dj_glove_.orientation_z_, data, 7); break;
+        case  1: ApplyLowBits(m_dj_glove.m_poti_2,        data, 7); break;
+        case  2: ApplyLowBits(m_dj_glove.m_poti_1,        data, 7); break;
+        case  3: ApplyLowBits(m_dj_glove.m_poti_0,        data, 7); break;
+        case  4: ApplyLowBits(m_dj_glove.m_flex,          data, 7); break;
+        case  5: ApplyLowBits(m_dj_glove.m_distance,      data, 7); break;
+        case  6: ApplyLowBits(m_dj_glove.m_orientation_x, data, 7); break;
+        case  7: ApplyLowBits(m_dj_glove.m_orientation_y, data, 7); break;
+        case  8: ApplyLowBits(m_dj_glove.m_orientation_z, data, 7); break;
         case  9:
-            ApplyBit(dj_glove_.button_push_4_, data, 6);
-            ApplyBit(dj_glove_.button_push_3_, data, 5);
-            ApplyBit(dj_glove_.button_push_2_, data, 4);
-            ApplyLowBits(dj_glove_.channel_,   data, 4); 
+            ApplyBit(m_dj_glove.m_button_push_4, data, 6);
+            ApplyBit(m_dj_glove.m_button_push_3, data, 5);
+            ApplyBit(m_dj_glove.m_button_push_2, data, 4);
+            ApplyLowBits(m_dj_glove.m_channel,   data, 4); 
             break;
         case 10:
-            ApplyBit(dj_glove_.button_flip_,   data, 6);
-            ApplyBit(dj_glove_.button_push_1_, data, 5);
-            ApplyBit(dj_glove_.button_push_0_, data, 4);
-            ApplyLowBits(dj_glove_.program_,   data, 4); 
+            ApplyBit(m_dj_glove.m_button_flip,   data, 6);
+            ApplyBit(m_dj_glove.m_button_push_1, data, 5);
+            ApplyBit(m_dj_glove.m_button_push_0, data, 4);
+            ApplyLowBits(m_dj_glove.program_,   data, 4); 
             break;
         default: assert(false); break;
     }
@@ -108,10 +108,10 @@ void Protocol::ApplyLowBits(int& output, const unsigned char data, const int bit
 
 void Protocol::ForwardDataIndex()
 {
-    data_index_++;
+    m_index++;
 
-    if (data_index_ > max_data_index) {
-        data_index_ = 0;
+    if (m_index > max_data_index) {
+        m_index = 0;
     }
 }
 

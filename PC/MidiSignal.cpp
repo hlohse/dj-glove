@@ -16,38 +16,38 @@ MidiSignal::~MidiSignal()
 
 char* MidiSignal::Signal()
 {
-    return (char*) data_;
+    return (char*) m_data;
 }
 
 int MidiSignal::SignalLength() const
 {
-    return current_data_length_;
+    return m_data_length;
 }
 
 void MidiSignal::Channel(const int channel) 
 {
-    data_[0] = Midi::CombineStatusChannel(Status(), (Midi::byte_t) channel);
+    m_data[0] = Midi::CombineStatusChannel(Status(), (Midi::byte_t) channel);
 }
 
 int MidiSignal::Channel() const
 {
 	Midi::Status status;
 	Midi::byte_t channel;
-    Midi::SplitStatusChannel(data_[0], status, channel);
+    Midi::SplitStatusChannel(m_data[0], status, channel);
     return (int) channel;
 }
 
 void MidiSignal::Status(const Midi::Status status)
 {
-    data_[0] = Midi::CombineStatusChannel(status, (Midi::byte_t) Channel());
+    m_data[0] = Midi::CombineStatusChannel(status, (Midi::byte_t) Channel());
 
     switch (status) {
         case Midi::Status::ProgramChange:
         case Midi::Status::ChannelPressure:
-            current_data_length_ = 2;
+            m_data_length = 2;
             break;
         default:
-            current_data_length_ = 3;
+            m_data_length = 3;
             break;
     }
 }
@@ -56,18 +56,18 @@ Midi::Status MidiSignal::Status() const
 {
 	Midi::Status status;
 	Midi::byte_t channel;
-    Midi::SplitStatusChannel(data_[0], status, channel);
+    Midi::SplitStatusChannel(m_data[0], status, channel);
     return status;
 }
 
-void MidiSignal::Value(const int value, const int data_index)
+void MidiSignal::Value(const int value, const int m_dataindex)
 {
-    data_[data_index] = Midi::Limit((Midi::byte_t) value, Midi::ValueType::Value);
+    m_data[m_dataindex] = Midi::Limit((Midi::byte_t) value, Midi::ValueType::Value);
 }
 
-int MidiSignal::Value(const int data_index) const
+int MidiSignal::Value(const int m_dataindex) const
 {
-    return (int) data_[data_index];
+    return (int) m_data[m_dataindex];
 }
 
 void MidiSignal::Key(const int key)                            { Value(key, 1); }
@@ -97,22 +97,22 @@ int  MidiSignal::ChannelPressure() const                       { return Value(1)
     
 void MidiSignal::PitchBend(const int pitch_bend)
 {
-    Midi::SplitPitchBend((Midi::word_t) pitch_bend, data_[1], data_[2]);
+    Midi::SplitPitchBend((Midi::word_t) pitch_bend, m_data[1], m_data[2]);
 }
 
 int MidiSignal::PitchBend() const
 {
-    return (int) Midi::CombinePitchBend(data_[1], data_[2]);
+    return (int) Midi::CombinePitchBend(m_data[1], m_data[2]);
 }
 
 string MidiSignal::ToString() const
 {
     ostringstream result;
 
-    result << "[ " << data_[0] << " " << data_[1];
+    result << "[ " << m_data[0] << " " << m_data[1];
 
     if (SignalLength() == 3) {
-        result << " " << data_[2];
+        result << " " << m_data[2];
     }
 
     result << "]";

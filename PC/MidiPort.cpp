@@ -9,8 +9,8 @@ using namespace std;
 #endif
 
 MidiPort::MidiPort()
-:	name_(""),
-	port_(nullptr)
+:	m_name(""),
+	m_port(nullptr)
 {
 }
 
@@ -28,7 +28,7 @@ void MidiPort::Open(const string& name)
     snd_rawmidi_t* handle = NULL;
 
     const int status = snd_rawmidi_open(&handle,
-                                        &port_,
+                                        &m_port,
                                         "virtual",
                                         mode);
 
@@ -39,13 +39,13 @@ void MidiPort::Open(const string& name)
             << ": " << snd_strerror(status) << "(" << status << ")"); 
     }
 
-    name_ = string(snd_rawmidi_name(handle));
+    m_name = string(snd_rawmidi_name(handle));
 #elif _WIN32
 	wstring_convert<codecvt_utf8<wchar_t>, wchar_t> converter;
-	const wstring name_utf8 = converter.from_bytes(name);
-	const LPCWSTR port_name = name_utf8.c_str();
+	const wstring m_nameutf8 = converter.from_bytes(name);
+	const LPCWSTR m_portname = m_nameutf8.c_str();
 
-	port_ = virtualMIDICreatePortEx2(port_name,
+	m_port = virtualMIDICreatePortEx2(m_portname,
                                      MidiPort::Callback,
                                      NULL,
                                      MidiPort::buffer_size,
@@ -57,7 +57,7 @@ void MidiPort::Open(const string& name)
             << ": " << GetLastError());
 	}
 	
-    name_ = name;
+    m_name = name;
 #endif
 }
 
@@ -65,23 +65,23 @@ void MidiPort::Close()
 {
 	if (IsOpen()) {
 #ifdef __linux__
-        snd_rawmidi_close(port_);
+        snd_rawmidi_close(m_port);
 #elif _WIN32
-		virtualMIDIClosePort(port_);
+		virtualMIDIClosePort(m_port);
 #endif
-		port_ = nullptr;
+		m_port = nullptr;
 	}
 }
 
 bool MidiPort::IsOpen() const
 {
-	return port_ != nullptr;
+	return m_port != nullptr;
 }
 
 void MidiPort::Play(MidiSignal& midi_signal)
 {
 #ifdef __linux__
-    const int status = snd_rawmidi_write(port_,
+    const int status = snd_rawmidi_write(m_port,
                                          midi_signal.Signal(),
                                          midi_signal.SignalLength());
 
@@ -92,7 +92,7 @@ void MidiPort::Play(MidiSignal& midi_signal)
             << snd_strerror(status) << "(" << status << ")");
     }
 #elif _WIN32
-	if (!virtualMIDISendData(port_,
+	if (!virtualMIDISendData(m_port,
                              (LPBYTE) midi_signal.Signal(),
                              midi_signal.SignalLength()))
     {
@@ -105,7 +105,7 @@ void MidiPort::Play(MidiSignal& midi_signal)
 
 string MidiPort::Name() const
 {
-    return name_;
+    return m_name;
 }
 
 #ifdef _WIN32

@@ -13,51 +13,51 @@ shared_ptr<BluetoothDevice> BluetoothDevice::Arduino()
 BluetoothDevice::BluetoothDevice(const string& name,
                                  const string& address,
                                  const int channel)
-:   name_(name),
-    address_(address),
-    channel_(channel),
-	is_valid_(false)
+:   m_name(name),
+    m_address(address),
+    m_channel(channel),
+	m_is_valid(false)
 {
-	is_valid_ |= (channel >= 1 && channel <= 12);
+	m_is_valid |= (channel >= 1 && channel <= 12);
 
 #ifdef __linux__
-	is_valid_ &= str2ba(address_.c_str(), &socket_address_.rc_bdaddr) == 0;
+	m_is_valid &= str2ba(m_address.c_str(), &m_socket_address.rc_bdaddr) == 0;
 
-    if (is_valid_) {
-        socket_address_.rc_family  = AF_BLUETOOTH;
-        socket_address_.rc_channel = (uint8_t) channel_;
+    if (m_is_valid) {
+        m_socket_address.rc_family  = AF_BLUETOOTH;
+        m_socket_address.rc_channel = (uint8_t) m_channel;
     }
 #elif _WIN32
-	is_valid_ &= StringToAddress(address_, socket_address_.btAddr) == 0;
+	m_is_valid &= StringToAddress(m_address, m_socket_address.btAddr) == 0;
 
-	if (is_valid_) {
-		socket_address_.addressFamily  = AF_BTH;
-		socket_address_.serviceClassId = GUID_NULL;
-		socket_address_.port		   = channel_;
+	if (m_is_valid) {
+		m_socket_address.addressFamily  = AF_BTH;
+		m_socket_address.serviceClassId = GUID_NULL;
+		m_socket_address.port		   = m_channel;
 	}
 #endif
 }
 
 #ifdef _WIN32
 // http://social.msdn.microsoft.com/Forums/en-US/9d47f33c-c848-4728-ae36-f251623daf17/bluetooth-101-wsastringtoaddress
-int BluetoothDevice::StringToAddress(IN const string& address_string,
+int BluetoothDevice::StringToAddress(IN const string& m_addressstring,
 									 OUT BTH_ADDR& address)
 {
 	BTH_ADDR temp_address;
-	ULONG address_data[6];
+	ULONG m_addressdata[6];
 
-	if (address_string.empty()) {
+	if (m_addressstring.empty()) {
 		return -1;
 	}
 
-	if (sscanf_s(address_string.c_str(),
+	if (sscanf_s(m_addressstring.c_str(),
 		"%02x:%02x:%02x:%02x:%02x:%02x",
-		&address_data[0],
-		&address_data[1],
-		&address_data[2],
-		&address_data[3],
-		&address_data[4],
-		&address_data[5]) != 6)
+		&m_addressdata[0],
+		&m_addressdata[1],
+		&m_addressdata[2],
+		&m_addressdata[3],
+		&m_addressdata[4],
+		&m_addressdata[5]) != 6)
 	{
 		return -1;
 	}
@@ -65,7 +65,7 @@ int BluetoothDevice::StringToAddress(IN const string& address_string,
 	address = 0;
 	for (int i = 0; i < 6; ++i) {
 		// Extract data from the first 8 lower bits.
-		temp_address = (BTH_ADDR) (address_data[i] & 0xFF);
+		temp_address = (BTH_ADDR) (m_addressdata[i] & 0xFF);
 
 		// Push 8 bits to the left
 		address = (address << 8) + temp_address;
@@ -81,7 +81,7 @@ BluetoothDevice::~BluetoothDevice()
 
 bool BluetoothDevice::IsValid() const
 {
-	return is_valid_;
+	return m_is_valid;
 }
 
 string BluetoothDevice::ToString() const
@@ -89,15 +89,15 @@ string BluetoothDevice::ToString() const
 	ostringstream result;
 
 	result << "BluetoothDevice"
-		<< " \"" << name_ << "\""
-		<< " @ " << address_
-		<< " on channel " << channel_;
+		<< " \"" << m_name << "\""
+		<< " @ " << m_address
+		<< " on channel " << m_channel;
 
 	return result.str();
 }
 
 BluetoothDevice::SocketAddress BluetoothDevice::GetSocketAddress() const
 {
-    return socket_address_;
+    return m_socket_address;
 }
 
