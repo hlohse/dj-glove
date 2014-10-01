@@ -2,7 +2,7 @@
 #include "DjGlove.h"
 #include <cmath>
 #include <cassert>
-    
+
 Protocol::Protocol(DjGlove& dj_glove)
 :   m_dj_glove(dj_glove),
     m_index(0)

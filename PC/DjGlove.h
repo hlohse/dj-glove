@@ -23,8 +23,8 @@ public:
     std::string DataString() const;
 
 private:
-    Protocol data_protocol_;
-    std::deque<MidiSignal> midi_signals_;
+    Protocol m_data_protocol;
+    std::deque<MidiSignal> m_midi_signals;
 
     int  m_hit_intensity;
     bool m_button_push_0;

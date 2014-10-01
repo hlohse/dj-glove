@@ -5,7 +5,7 @@
 using namespace std;
 
 DjGlove::DjGlove()
-:   data_protocol_(Protocol(*this)),
+:   m_data_protocol(Protocol(*this)),
     m_hit_intensity(0),
     m_button_push_0(false),
     m_button_push_1(false),
@@ -36,7 +36,7 @@ DjGlove::~DjGlove()
 
 void DjGlove::Process(const unsigned char data)
 {
-    data_protocol_.ApplyNext(data);
+    m_data_protocol.ApplyNext(data);
     GenerateMidiSignals();
 }
 
@@ -49,20 +49,20 @@ void DjGlove::GenerateMidiSignals()
     midi_signal.Key(m_poti_0);
     midi_signal.Velocity(m_poti_1);
 
-    midi_signals_.push_back(midi_signal);
+    m_midi_signals.push_back(midi_signal);
 }
 
 bool DjGlove::HasMidiSignal() const
 {
-    return !midi_signals_.empty();
+    return !m_midi_signals.empty();
 }
 
 MidiSignal DjGlove::NextMidiSignal()
 {
     assert(HasMidiSignal());
 
-    MidiSignal next_midi_signal = midi_signals_.front();
-    midi_signals_.pop_front();
+    MidiSignal next_midi_signal = m_midi_signals.front();
+    m_midi_signals.pop_front();
     
     return next_midi_signal;
 }
