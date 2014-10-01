@@ -7,9 +7,9 @@
 #include "Flex.h"
 #include "UltraSound.h"
 #include "Gyro.h"
-#include "Led.h"
 #include "Acceleration.h"
 #include "Hit.h"
+#include "Led.h"
 
 // Note: Singleton. Access pointer to instance via DjGlove::instance()
 class DjGlove {
@@ -30,9 +30,9 @@ public:
   Flex         flex;
   UltraSound   ultra_sound;
   Gyro         gyro;
-  Led          led;
   Acceleration acc;
   Hit          hit;
+  Led          led;
   byte         channel;
   byte         program;
   
@@ -75,9 +75,9 @@ private:
     flex(Pin::flex),
     ultra_sound(Address::ultra_sound, UltraSound::UNIT_MS),
     gyro(Address::gyro),
-    led(Pin::led_clk, Pin::led_sda),
     acc(Address::acc, Pin::acc_int),
     hit(acc),
+    led(Pin::led_clk, Pin::led_sda),
     channel(1),
     program(1)
   {

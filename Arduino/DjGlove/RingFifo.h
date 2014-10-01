@@ -6,13 +6,12 @@ template <typename T, int elements>
 class RingFifo {
 public:
   RingFifo()
-  : m_index(0),
-    m_is_full(false)
   {
+    clear();
   }
   
   // Overwrites oldest element with new one if full
-  void insert(const T& element)
+  void insert(const T element)
   {
     m_elements[m_index] = element;
     m_index++;
@@ -22,7 +21,8 @@ public:
     }
   }
   
-  // 0 for oldest inserted, elements-1/count()-1 for most recently inserted etc.
+  // 0 for oldest inserted,
+  // elements-1 (full) or count()-1 (not full) for most recently inserted etc.
   T getOrdered(const int index) const
   {
     const int index_oldest = isFull() ? (m_index + 1) % elements : 0;
@@ -33,6 +33,13 @@ public:
   T getDirectly(const int index) const
   {
     return m_elements[index];
+  }
+  
+  void clear()
+  {
+    memset(m_elements, 0, elements * sizeof(T));
+    m_index = 0;
+    m_is_full = false;
   }
   
   int count() const
@@ -46,12 +53,6 @@ public:
   int size() const
   {
     return elements;
-  }
-  
-  void clear()
-  {
-    m_index = 0;
-    m_is_full = false;
   }
   
   bool isEmpty() const
