@@ -28,7 +28,7 @@ public:
       sum += m_buffer.getDirectly(i);
     }
     
-    return sum / m_buffer.size();
+    return sum / m_buffer.count();
   }
 
 private:
