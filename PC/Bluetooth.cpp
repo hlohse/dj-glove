@@ -314,4 +314,8 @@ int Bluetooth::Write(const unsigned char output)
 	return Write(string(output, 1));
 }
 
+void Bluetooth::Clear()
+{
+    Read(Available());
+}
 

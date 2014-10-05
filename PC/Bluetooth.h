@@ -47,6 +47,8 @@ public:
     int Write(const std::string& output);
 	int Write(const unsigned char output);
 
+    void Clear();
+
 private:
     std::shared_ptr<BluetoothDevice> m_device;
     std::string m_buffer;
