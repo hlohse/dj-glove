@@ -44,11 +44,11 @@ void DetermineTimes(Bluetooth& bluetooth,
                     const int message_size)
 {
     Time start, stop;
-    const string expected_message(message_size, message_char);
-    string message;
 
+    bluetooth.Clear();
     times.clear();
     times.reserve(tries_per_message);
+    
     SyncStart(bluetooth);
 
     for (int i = 0; i < tries_per_message; ++i)
@@ -59,21 +59,13 @@ void DetermineTimes(Bluetooth& bluetooth,
 		GetSystemTime(&start);
 #endif
 
-        try {
-		    message = bluetooth.ReadNextAvailable(message_size);
-        } catch (...) { throw; }
+        bluetooth.WaitUntilAvailable(i * message_size);
 
 #ifdef __linux__
 		gettimeofday(&stop, NULL);
 #elif _WIN32
 		GetSystemTime(&stop);
 #endif
-
-        if (message.compare(expected_message) != 0) {
-            throw runtime_error(Formatter()
-                 << "Received \"" << message << "\", expected \""
-                 << expected_message << "\"");
-        }
 
 		times.push_back(TimeTuple(start, stop));
     }
@@ -207,14 +199,9 @@ int main()
             const int message_size = message_sizes[m];
             Result result;
 
-            try {
-                DetermineTimes(bluetooth, times, message_size);
-            }
-            catch (runtime_error e) {
-                return exit("Failed to receive all data", e);
-            }
-
+            DetermineTimes(bluetooth, times, message_size);
             DetermineTimesMs(times, times_ms);
+            
             result = GetResult(times_ms);
             ShowResult(result, times_ms, delay_ms, message_size);
         }
