@@ -16,17 +16,16 @@ public:
   {
     if(m_acc->hasAvailable()){
       const unsigned long dead_time = millis() - m_last_occurence_time;
-    }
-    if (dead_time >= necessary_dead_time) {
-      const int acc_y = m_acc->read().y;
-      m_buffer.insert(acc_y);
-      
-      if (acc_y >= threshold && m_buffer.isFull()) {
-        m_last_occurence_time = millis();
-        return true;
+      if (dead_time >= necessary_dead_time) {
+        const int acc_y = m_acc->read().y;
+        m_buffer.insert(acc_y);
+        
+        if (acc_y >= threshold && m_buffer.isFull()) {
+          m_last_occurence_time = millis();
+          return true;
+        }
       }
-    }
-    
+    } 
     return false;
   }
   
