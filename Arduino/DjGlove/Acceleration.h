@@ -51,7 +51,7 @@ public:
     
     Wire.beginTransmission(m_address);
     Wire.write(register_out_x_msb);
-    Wire.endTransmission();
+    Wire.endTransmission(false);
     Wire.requestFrom(m_address, (byte) 6);
 
     readAxis(readout.x);
@@ -94,7 +94,7 @@ private:
   {
     Wire.beginTransmission(m_address);
     Wire.write(registerAddress);
-    Wire.endTransmission();
+    Wire.endTransmission(false);
     Wire.requestFrom(m_address, (byte)1);
     return Wire.read();
   }
