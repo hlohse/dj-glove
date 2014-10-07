@@ -80,6 +80,8 @@ void Protocol::ApplyData(const char data)
             break;
         default: assert(false); break;
     }
+
+	m_dj_glove.m_hit_intensity = 0;
 }
 
 void Protocol::ApplyBit(bool& output,

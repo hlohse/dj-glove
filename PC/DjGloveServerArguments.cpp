@@ -6,7 +6,7 @@ using namespace std;
 
 const string DjGloveServerArguments::default_arduino_bluetooth_mac = "98:d3:31:b3:0a:25";
 const string DjGloveServerArguments::default_virtual_midi_port_name = "Virtual MIDI Port";
-const int    DjGloveServerArguments::default_bluetooth_timeout = 10;
+const int    DjGloveServerArguments::default_bluetooth_timeout = 30;
 
 DjGloveServerArguments::DjGloveServerArguments()
 :   m_arduino_bluetooth_mac(default_arduino_bluetooth_mac),

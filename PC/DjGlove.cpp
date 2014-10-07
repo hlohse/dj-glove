@@ -41,14 +41,19 @@ void DjGlove::Process(const char data)
 
 void DjGlove::GenerateMidiSignals()
 {
-    MidiSignal midi_signal;
+	switch (m_program) {
+	case 1:
+		if (m_hit_intensity > 0){
+			MidiSignal hitSignal;
+			hitSignal.Status(Midi::Status::NoteOn);
+			hitSignal.Channel(m_channel);
+			hitSignal.Key(60);
+			hitSignal.Velocity(m_hit_intensity);
+			m_midi_signals.push_back(hitSignal);
+		}
 
-    midi_signal.Channel(m_channel);
-    midi_signal.Status(Midi::Status::NoteOn);
-    midi_signal.Key(m_poti_0);
-    midi_signal.Velocity(m_poti_1);
-
-    m_midi_signals.push_back(midi_signal);
+		break;
+	}
 }
 
 bool DjGlove::HasMidiSignal() const
