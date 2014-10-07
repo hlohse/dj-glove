@@ -8,11 +8,12 @@
  *     3 | 0ppp pppp    p: Poti 2 [7]
  *     4 | 0fff ffff    f: Flex [7]
  *     5 | 0ddd dddd    d: Distance [7]
- *     6 | 0ooo oooo    o: Orientation X [7]
- *     7 | 0ooo oooo    o: Orientation Y [7]
- *     8 | 0ooo oooo    o: Orientation Z [7]
- *     9 | 0bbb cccc    b: Push buttons 0..2, c: Channel [4]
- *    10 | 0fbb pppp    f: Flip button, b: Push buttons 3..4, p: Program [4]
+ *     6 | 0ooo oooo    o: Orientation X low  [7]
+ *     7 | 0ooo oooo    o: Orientation X high [7]
+ *     8 | 0ooo oooo    o: Orientation Y low  [7]
+ *     9 | 0ooo oooo    o: Orientation Y high [7]
+ *    10 | 0bbb cccc    b: Push buttons 0..2, c: Channel [4]
+ *    11 | 0fbb pppp    f: Flip button, b: Push buttons 3..4, p: Program [4]
  *   INT | 1ppp pppp    p: Punch intensity [7]
  */
 
@@ -83,8 +84,9 @@ private:
       case  6: return orientation(0);
       case  7: return orientation(1);
       case  8: return orientation(2);
-      case  9: return pushFirstChannel();
-      case 10: return flipPushSecondProgram();
+      case  9: return orientation(3);
+      case 10: return pushFirstChannel();
+      case 11: return flipPushSecondProgram();
       default: return 0;
     }
   }
@@ -119,27 +121,35 @@ private:
     return m_glove->ultra_sound.read() & 0x7F; // 0111 1111
   }
   
+  int bits(const int value, const byte offset, const byte num_bits)
+  {
+    const int shifted = value >> offset;
+    return shifted & (1 << (num_bits - 1));
+  }
+  
   byte orientation(const int index)
   {
-    int value = 0;
+    byte value = 0;
     
     switch (index) {
       case 0:
-        m_last_gyro_readout = m_glove->gyro.read();
-        value = m_last_gyro_readout.x;
+        m_last_gyro_readout    = m_glove->gyro.read();
+        m_last_gyro_readout.x /= 4; // Adjust to 14 bit
+        m_last_gyro_readout.y /= 4; // Adjust to 14 bit
+        value = bits(m_last_gyro_readout.x, 0, 7);
         break; 
       case 1:
-        value = m_last_gyro_readout.y;
+        value = bits(m_last_gyro_readout.x, 7, 7);
         break;
       case 2:
-        value = m_last_gyro_readout.z;
+        value = bits(m_last_gyro_readout.y, 0, 7);
+        break;
+      case 3:
+        value = bits(m_last_gyro_readout.y, 7, 7);
         break;
     }
     
-    const byte value_as_byte = value / 0xFF;
-    const byte value_7_bit   = value_as_byte / 2;
-    
-    return value_7_bit & 0x7F; // 0111 1111
+    return value & 0x7F; // 0111 1111
   }
   
   byte pushFirstChannel()

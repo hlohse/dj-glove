@@ -23,7 +23,6 @@ DjGlove::DjGlove()
     m_distance(0),
     m_orientation_x(0),
     m_orientation_y(0),
-    m_orientation_z(0),
     m_flex(0),
     m_channel(0),
     m_program(0)
@@ -77,12 +76,12 @@ string DjGlove::DataHeader() const
     header << "f   Flip button flipped (Y/N)" << endl;
     header << "O   Poti state (0..127)" << endl;
     header << "D   Distance (0..127)" << endl;
-    header << "XYZ Orientations (0..127)" << endl;
+    header << "XY  Orientations (0..16383)" << endl;
     header << "F   Flex (0..127)" << endl;
     header << "C   Channel (0..9)" << endl;
     header << "P   Program (0..9)" << endl;
     
-    header << "HHH ppppp tttt f O   O   O    D   X   Y   Z   F   C P" << endl;
+    header << "HHH ppppp tttt f O   O   O    D   X   Y   F   C P" << endl;
 
     return header.str();
 }
@@ -108,7 +107,6 @@ string DjGlove::DataString() const
         << m_distance << " "
         << m_orientation_x << " "
         << m_orientation_y << " "
-        << m_orientation_z << " "
         << m_flex << " "
         << m_channel << " "
         << m_program;

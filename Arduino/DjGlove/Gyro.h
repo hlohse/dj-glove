@@ -6,7 +6,6 @@ public:
   typedef struct Readout {
     int x;
     int y;
-    int z;
   } Readout;
   
   Gyro(const byte address)
@@ -29,10 +28,9 @@ public:
     if (hasAvailable()) {
       setRegister(register_readout);
       
-      if (hasBytes(6)) {
+      if (hasBytes(4)) {
         readValue(m_readout.x);
         readValue(m_readout.y);
-        readValue(m_readout.z);
       }
     }
     
@@ -40,8 +38,8 @@ public:
   }
 
 private:
-  static const byte  settings         = B10011111; // x, y, z; normal mode; 400Hz @ 25 cut-off
-  static const byte  status_available = B00001000; // x, y, z available
+  static const byte  settings         = B10001011; // x, y; normal mode; 400Hz @ 20 cut-off
+  static const byte  status_available = B00000011; // x, y available
   static const byte  register_ctrl_1  = 0x20;
   static const byte  register_status  = 0x27;
   static const byte  register_readout = B10101000; // Start at 0x28 (x low), auto increment

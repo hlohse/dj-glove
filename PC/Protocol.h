@@ -8,11 +8,12 @@
  *     3 | 0ppp pppp    p: Poti 2
  *     4 | 0fff ffff    f: Flex
  *     5 | 0ddd dddd    d: Distance
- *     6 | 0ooo oooo    o: Orientation X
- *     7 | 0ooo oooo    o: Orientation Y
- *     8 | 0ooo oooo    o: Orientation Z
- *     9 | 0bbb cccc    b: Push buttons 0..2, c: Channel
- *    10 | 0fbb pppp    f: Flip button, b: Push buttons 3..4, p: Program
+ *     6 | 0ooo oooo    o: Orientation X low
+ *     7 | 0ooo oooo    o: Orientation X high
+ *     8 | 0ooo oooo    o: Orientation Y low
+ *     9 | 0ooo oooo    o: Orientation Y high
+ *    10 | 0bbb cccc    b: Push buttons 0..2, c: Channel
+ *    11 | 0fbb pppp    f: Flip button, b: Push buttons 3..4, p: Program
  *   INT | 1000 000p    p: Punch
  */
 
@@ -42,9 +43,17 @@ private:
     void ApplyData(const unsigned char data);
     void ApplyHit(const unsigned char data);
 
-    void ApplyBit(bool& output, const unsigned char data, const int bit);
-    void ApplyLowBits(int& output, const unsigned char data, const int bits);
-    
+    void ApplyBit(bool& output,
+                  const unsigned char data,
+                  const int bit);
+    void ApplyLowBits(int& output,
+                      const unsigned char data,
+                      const int bits);
+    void ApplyBits(int& output,
+                   const int offset,
+                   const unsigned char data,
+                   const int bits);
+
     void ForwardDataIndex();
 };
 

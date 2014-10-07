@@ -62,16 +62,17 @@ void Protocol::ApplyData(const unsigned char data)
         case  3: ApplyLowBits(m_dj_glove.m_poti_0,        data, 7); break;
         case  4: ApplyLowBits(m_dj_glove.m_flex,          data, 7); break;
         case  5: ApplyLowBits(m_dj_glove.m_distance,      data, 7); break;
-        case  6: ApplyLowBits(m_dj_glove.m_orientation_x, data, 7); break;
-        case  7: ApplyLowBits(m_dj_glove.m_orientation_y, data, 7); break;
-        case  8: ApplyLowBits(m_dj_glove.m_orientation_z, data, 7); break;
-        case  9:
+        case  6: ApplyBits(m_dj_glove.m_orientation_x, 0, data, 7); break;
+        case  7: ApplyBits(m_dj_glove.m_orientation_x, 7, data, 7); break;
+        case  8: ApplyBits(m_dj_glove.m_orientation_y, 0, data, 7); break;
+        case  9: ApplyBits(m_dj_glove.m_orientation_y, 7, data, 7); break;
+        case 10:
             ApplyBit(m_dj_glove.m_button_push_4, data, 6);
             ApplyBit(m_dj_glove.m_button_push_3, data, 5);
             ApplyBit(m_dj_glove.m_button_push_2, data, 4);
             ApplyLowBits(m_dj_glove.m_channel,   data, 4); 
             break;
-        case 10:
+        case 11:
             ApplyBit(m_dj_glove.m_button_flip,   data, 6);
             ApplyBit(m_dj_glove.m_button_push_1, data, 5);
             ApplyBit(m_dj_glove.m_button_push_0, data, 4);
@@ -81,7 +82,9 @@ void Protocol::ApplyData(const unsigned char data)
     }
 }
 
-void Protocol::ApplyBit(bool& output, const unsigned char data, const int bit)
+void Protocol::ApplyBit(bool& output,
+                        const unsigned char data,
+                        const int bit)
 {
     assert(bit >= 0);
     assert(bit <= 7);
@@ -92,7 +95,9 @@ void Protocol::ApplyBit(bool& output, const unsigned char data, const int bit)
     output = (data & mask) != 0;
 }
 
-void Protocol::ApplyLowBits(int& output, const unsigned char data, const int bits)
+void Protocol::ApplyLowBits(int& output,
+                            const unsigned char data,
+                            const int bits)
 {
     assert(bits >= 1);
     assert(bits <= 7);
@@ -104,6 +109,25 @@ void Protocol::ApplyLowBits(int& output, const unsigned char data, const int bit
 
     assert(output >= 0);
     assert(output <= (int) mask);
+}
+
+void Protocol::ApplyBits(int& output,
+                         const int offset,
+                         const unsigned char data,
+                         const int bits)
+{
+    assert(offset >= 0);
+    assert(bits   >= 1);
+    assert(bits   <= 7);
+
+    // 0000 0001 to 0111 1111 possible
+    const unsigned char mask      = (unsigned char) (pow(2, bits) - 1);
+    const unsigned char data_bits = data & mask;
+
+    const int output_bits = ((int) data_bits) << offset;
+    output |= output_bits;
+
+    assert(output >= 0);
 }
 
 void Protocol::ForwardDataIndex()

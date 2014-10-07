@@ -43,7 +43,6 @@ private:
     int  m_distance;
     int  m_orientation_x;
     int  m_orientation_y;
-    int  m_orientation_z;
     int  m_flex;
     int  m_channel;
     int  m_program;
