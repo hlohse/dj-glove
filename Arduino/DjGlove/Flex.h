@@ -45,10 +45,10 @@ public:
   }
 
 private:
-  static const int num_update_readouts = 3;
-  static const int buffer_size = 11 * num_update_readouts; // For each protocol byte
-  static const int readout_min = 250;
-  static const int readout_max = 560;
+  static const int   num_update_readouts = 3;
+  static const int   buffer_size = 11 * num_update_readouts; // For each protocol byte
+  static const int   readout_min = 250;
+  static const int   readout_max = 560;
   static const float range_factor = 127.0 / (readout_max - readout_min);
   
   byte m_pin;

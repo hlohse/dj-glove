@@ -45,13 +45,16 @@ public:
   }
 
 private:
-  static const byte register_command = 0x00;
-  static const byte register_echo_1  = 0x02;
-  static const byte num_read_bytes   = 2;
+  static const byte  register_command = 0x00;
+  static const byte  register_echo_1  = 0x02;
+  static const byte  num_read_bytes   = 2;
+  static const int   readout_min      = 2000;
+  static const int   readout_max      = 10000;
+  static const float range_factor     = 127.0 / (readout_max - readout_min);
   
   byte          m_address;
   unit          m_unit;
-  int           m_value;
+  byte          m_value;
   unsigned long m_init_time;
   
   bool isSensorInitialized() const
@@ -74,9 +77,20 @@ private:
   
   void updateValue()
   {
-    const byte high = Wire.read();
-    const byte low  = Wire.read();
-    m_value = (((int) high) << 8) | low;
+    const byte  high    = Wire.read();
+    const byte  low     = Wire.read();
+    const int   readout = (((int) high) << 8) | low;
+    const float value   = ((float) (readout - readout_min)) * range_factor;
+    
+    if (value < 0) {
+      m_value = 0;
+    }
+    else if (value > 127) {
+      m_value = 127;
+    }
+    else {
+      m_value = value;
+    }
   }
 };
 
