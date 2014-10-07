@@ -111,7 +111,7 @@ private:
   
   byte flex()
   {
-    return (m_glove->flex.read() / 8) & 0x7F; // 0111 1111
+    return m_glove->flex.read() & 0x7F; // 0111 1111
   }
   
   byte distance()
