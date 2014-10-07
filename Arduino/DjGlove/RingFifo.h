@@ -6,6 +6,8 @@ template <typename T, int elements>
 class RingFifo {
 public:
   RingFifo()
+  : m_index(0),
+    m_is_full(false)
   {
     clear();
   }
@@ -24,8 +26,8 @@ public:
   // 0 for oldest inserted, count()-1 for most recently inserted etc.
   T getOrdered(const int index) const
   {
-    const int index_oldest = isFull() ? (m_index + 1) % elements : 0;
-    return m_elements[index_oldest + index];
+    const int index_oldest = isFull() ? m_index : 0;
+    return m_elements[(index_oldest + index) % elements];
   }
   
   // 0 for first in buffer, 1 for second etc.
