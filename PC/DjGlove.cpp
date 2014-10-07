@@ -33,7 +33,7 @@ DjGlove::~DjGlove()
 {
 }
 
-void DjGlove::Process(const unsigned char data)
+void DjGlove::Process(const char data)
 {
     m_data_protocol.ApplyNext(data);
     GenerateMidiSignals();
@@ -90,25 +90,25 @@ string DjGlove::DataString() const
 {
     ostringstream data;
 
-	data << m_hit_intensity << " "
+	data << m_hit_intensity << "\t"
          << BoolToText(m_button_push_0)
             << BoolToText(m_button_push_1)
             << BoolToText(m_button_push_2)
             << BoolToText(m_button_push_3)
-            << BoolToText(m_button_push_4) << " "
+            << BoolToText(m_button_push_4) << "\t"
         << BoolToText(m_button_touch_0)
             << BoolToText(m_button_touch_1)
             << BoolToText(m_button_touch_2)
-            << BoolToText(m_button_touch_3) << " "
-        << BoolToText(m_button_flip) << " "
-        << m_poti_0 << " "
-        << m_poti_1 << " "
-        << m_poti_2 << " "
-        << m_distance << " "
-        << m_orientation_x << " "
-        << m_orientation_y << " "
-        << m_flex << " "
-        << m_channel << " "
+            << BoolToText(m_button_touch_3) << "\t"
+        << BoolToText(m_button_flip) << "\t"
+        << m_poti_0 << "\t"
+        << m_poti_1 << "\t"
+        << m_poti_2 << "\t"
+        << m_distance << "\t"
+        << m_orientation_x << "\t"
+        << m_orientation_y << "\t"
+        << m_flex << "\t"
+        << m_channel << "\t"
         << m_program;
 
     return data.str();

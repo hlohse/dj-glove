@@ -68,11 +68,11 @@ int main(int argc, char* argv[])
     cout << glove.DataHeader() << endl;
 
 	bluetooth.Write(sync_signal);
+    //while(true) cout << (bluetooth.ReadNextAvailable()  == sync_signal[0]) << endl;
+    while (bluetooth.ReadNextAvailable() != sync_signal[0]);
 
     while (true) {
-        const char data = bluetooth.ReadNextAvailable();
-        glove.Process(data);
-        //cout << data << endl;
+        glove.Process(bluetooth.ReadNextAvailable());
         cout << glove.DataString() << endl;
 
         while (glove.HasMidiSignal()) {

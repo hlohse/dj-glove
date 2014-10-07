@@ -13,9 +13,9 @@ Protocol::~Protocol()
 {
 }
 
-void Protocol::ApplyNext(const unsigned char data)
+void Protocol::ApplyNext(const char data)
 {
-    const unsigned char prepared_data = Prepare(data);
+    const char prepared_data = Prepare(data);
 
     if (IsHit(prepared_data)) {
         ApplyHit(prepared_data);
@@ -26,7 +26,7 @@ void Protocol::ApplyNext(const unsigned char data)
     }
 }
 
-unsigned char Protocol::Prepare(const unsigned char data) const
+char Protocol::Prepare(const char data) const
 {
 /*  All values have to be decremented by 1. This is because zero/null bytes can
  *  not be send via Bluetooth and are therefore increment by 1.
@@ -34,18 +34,18 @@ unsigned char Protocol::Prepare(const unsigned char data) const
     return data - 1;
 }
 
-bool Protocol::IsHit(const unsigned char data) const
+bool Protocol::IsHit(const char data) const
 {
-    return data >> 7 == 1;  // First bit is 1
+    return ((unsigned char) data) > 0x80;  // First bit is 1
 }
 
-void Protocol::ApplyHit(const unsigned char data)
+void Protocol::ApplyHit(const char data)
 {
     assert(IsHit(data));
 	m_dj_glove.m_hit_intensity = data & 0x7E; // 0111 1110
 }
 
-void Protocol::ApplyData(const unsigned char data)
+void Protocol::ApplyData(const char data)
 {
     assert(m_index >= 0);
     assert(m_index <= max_data_index);
@@ -93,27 +93,27 @@ void Protocol::ApplyData(const unsigned char data)
 }
 
 void Protocol::ApplyBit(bool& output,
-                        const unsigned char data,
+                        const char data,
                         const int bit)
 {
     assert(bit >= 0);
     assert(bit <= 7);
 
     // 0000 0001 to 1000 0000 possible
-    const unsigned char mask = 1 << bit;
+    const char mask = 1 << bit;
 
     output = (data & mask) != 0;
 }
 
 void Protocol::ApplyLowBits(int& output,
-                            const unsigned char data,
+                            const char data,
                             const int bits)
 {
     assert(bits >= 1);
     assert(bits <= 7);
 
     // 0000 0001 to 0111 1111 possible
-    const unsigned char mask = (unsigned char) (pow(2, bits) - 1);
+    const char mask = (char) (pow(2, bits) - 1);
     
     output = (int) (data & mask);
 
@@ -123,7 +123,7 @@ void Protocol::ApplyLowBits(int& output,
 
 void Protocol::ApplyBits(int& output,
                          const int offset,
-                         const unsigned char data,
+                         const char data,
                          const int bits)
 {
     assert(offset >= 0);
@@ -131,13 +131,11 @@ void Protocol::ApplyBits(int& output,
     assert(bits   <= 7);
 
     // 0000 0001 to 0111 1111 possible
-    const unsigned char mask      = (unsigned char) (pow(2, bits) - 1);
-    const unsigned char data_bits = data & mask;
+    const char mask      = (char) (pow(2, bits) - 1);
+    const char data_bits = data & mask;
 
     const int output_bits = ((int) data_bits) << offset;
     output |= output_bits;
-
-    assert(output >= 0);
 }
 
 void Protocol::ForwardDataIndex()

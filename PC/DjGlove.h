@@ -14,7 +14,7 @@ public:
     DjGlove();
     ~DjGlove();
 
-    void Process(const unsigned char data);
+    void Process(const char data);
 
     bool HasMidiSignal() const;
     MidiSignal NextMidiSignal();

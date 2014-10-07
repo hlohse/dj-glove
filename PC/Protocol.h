@@ -29,29 +29,29 @@ public:
     Protocol(DjGlove& dj_glove);
     ~Protocol();
     
-    void ApplyNext(const unsigned char data);
+    void ApplyNext(const char data);
 
 private:
     static const int max_data_index = 11;
     DjGlove& m_dj_glove;
     int      m_index;
 
-    unsigned char Prepare(const unsigned char data) const;
+    char Prepare(const char data) const;
 
-    bool IsHit(const unsigned char data) const;
+    bool IsHit(const char data) const;
 
-    void ApplyData(const unsigned char data);
-    void ApplyHit(const unsigned char data);
+    void ApplyData(const char data);
+    void ApplyHit(const char data);
 
     void ApplyBit(bool& output,
-                  const unsigned char data,
+                  const char data,
                   const int bit);
     void ApplyLowBits(int& output,
-                      const unsigned char data,
+                      const char data,
                       const int bits);
     void ApplyBits(int& output,
                    const int offset,
-                   const unsigned char data,
+                   const char data,
                    const int bits);
 
     void ForwardDataIndex();
