@@ -139,13 +139,17 @@ private:
         value = bits(m_last_gyro_readout.x, 0, 7);
         break; 
       case 1:
-        value = bits(m_last_gyro_readout.x, 7, 7);
+        value  = bits(m_last_gyro_readout.x, 7, 6);
+        // Signed bit at 0SXX XXXX
+        value |= m_last_gyro_readout.x < 0 ? 0x40 : 0;
         break;
       case 2:
         value = bits(m_last_gyro_readout.y, 0, 7);
         break;
       case 3:
-        value = bits(m_last_gyro_readout.y, 7, 7);
+        value = bits(m_last_gyro_readout.y, 7, 6);
+        // Signed bit at 0SXX XXXX
+        value |= m_last_gyro_readout.y < 0 ? 0x40 : 0;
         break;
     }
     

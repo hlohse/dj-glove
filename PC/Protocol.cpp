@@ -63,9 +63,19 @@ void Protocol::ApplyData(const unsigned char data)
         case  4: ApplyLowBits(m_dj_glove.m_flex,          data, 7); break;
         case  5: ApplyLowBits(m_dj_glove.m_distance,      data, 7); break;
         case  6: ApplyBits(m_dj_glove.m_orientation_x, 0, data, 7); break;
-        case  7: ApplyBits(m_dj_glove.m_orientation_x, 7, data, 7); break;
+        case  7:
+            ApplyBits(m_dj_glove.m_orientation_x, 7, data, 6);
+            m_dj_glove.m_orientation_x |= (data & 0x40) != 0 ?
+                (int) pow(2, sizeof(m_dj_glove.m_orientation_x) * 8 - 1) :
+                0;
+            break;
         case  8: ApplyBits(m_dj_glove.m_orientation_y, 0, data, 7); break;
-        case  9: ApplyBits(m_dj_glove.m_orientation_y, 7, data, 7); break;
+        case  9:
+            ApplyBits(m_dj_glove.m_orientation_y, 7, data, 6);
+            m_dj_glove.m_orientation_y |= (data & 0x40) != 0 ?
+                (int) pow(2, sizeof(m_dj_glove.m_orientation_y) * 8) :
+                0;
+            break;
         case 10:
             ApplyBit(m_dj_glove.m_button_push_4, data, 6);
             ApplyBit(m_dj_glove.m_button_push_3, data, 5);

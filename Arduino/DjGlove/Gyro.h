@@ -21,6 +21,11 @@ public:
     Wire.write(register_ctrl_1);
     Wire.write(settings);
     Wire.endTransmission();
+    
+    Wire.beginTransmission(m_address);
+    Wire.write(register_ctrl_4);
+    Wire.write(B00110000); // 2000dps
+    Wire.endTransmission();
   }
   
   Readout read()
@@ -41,6 +46,7 @@ private:
   static const byte  settings         = B10001011; // x, y; normal mode; 400Hz @ 20 cut-off
   static const byte  status_available = B00000011; // x, y available
   static const byte  register_ctrl_1  = 0x20;
+  static const byte  register_ctrl_4  = 0x23;
   static const byte  register_status  = 0x27;
   static const byte  register_readout = B10101000; // Start at 0x28 (x low), auto increment
    
