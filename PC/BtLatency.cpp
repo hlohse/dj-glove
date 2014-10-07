@@ -51,6 +51,13 @@ void DetermineTimes(Bluetooth& bluetooth,
     
     SyncStart(bluetooth);
 
+    // Warmup
+    for (int i = 0; i < tries_per_message / warmup_factor; ++i) {
+        bluetooth.WaitUntilAvailable(i * message_size);
+    }
+    bluetooth.Clear();
+
+    // Run
     for (int i = 0; i < tries_per_message; ++i)
 	{
 #ifdef __linux__

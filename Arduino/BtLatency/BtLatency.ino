@@ -12,13 +12,16 @@ SoftwareSerial bluetooth(2, 3);
 #endif
 
 // NOTE: USE THIS VALUES IN PC PROJECT, TOO!
-const int  num_delays_ms     = 7;                                              
-const int  num_message_sizes = 6;        
-const int  delays_ms[num_delays_ms]         = {0, 1, 2, 4, 8, 16, 32};         
-const int  message_sizes[num_message_sizes] = {1, 2, 4, 8, 16, 32};
-const int  tries_per_message = 100;
-const char message_char      = 'M';
-const char start_signal      = '!';
+const int   num_delays_ms     = 7;                                              
+const int   num_message_sizes = 6;     
+
+const int   delays_ms[num_delays_ms]         = {0, 1, 2, 4, 8, 16, 32};         
+const int   message_sizes[num_message_sizes] = {1, 2, 4, 8, 16, 32};
+
+const float warmup_factor     = 1.1;
+const int   tries_per_message = 100 * warmup_factor;
+const char  message_char      = 'M';
+const char  start_signal      = '!';
 
 void setup()  
 {
