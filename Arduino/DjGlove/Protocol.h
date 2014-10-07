@@ -130,19 +130,26 @@ private:
   
   byte orientation(const int index)
   {
+    static bool x_negative;
+    static bool y_negative;
     byte value = 0;
     
     switch (index) {
       case 0:
-        m_last_gyro_readout    = m_glove->gyro.read();
-        m_last_gyro_readout.x /= 4; // Adjust to 14 bit
-        m_last_gyro_readout.y /= 4; // Adjust to 14 bit
+        m_last_gyro_readout = m_glove->gyro.read();
+        
+        x_negative = m_last_gyro_readout.x < 0;
+        y_negative = m_last_gyro_readout.y < 0;
+        
+        m_last_gyro_readout.x = abs(m_last_gyro_readout.x / 4); // Adjust to 14 bit
+        m_last_gyro_readout.y = abs(m_last_gyro_readout.y / 4); // Adjust to 14 bit
+        
         value = bits(m_last_gyro_readout.x, 0, 7);
         break; 
       case 1:
-        value  = bits(m_last_gyro_readout.x, 7, 6);
+        value = bits(m_last_gyro_readout.x, 7, 6);
         // Signed bit at 0SXX XXXX
-        value |= m_last_gyro_readout.x < 0 ? 0x40 : 0;
+        value |= x_negative ? 0x40 : 0;
         break;
       case 2:
         value = bits(m_last_gyro_readout.y, 0, 7);
@@ -150,7 +157,7 @@ private:
       case 3:
         value = bits(m_last_gyro_readout.y, 7, 6);
         // Signed bit at 0SXX XXXX
-        value |= m_last_gyro_readout.y < 0 ? 0x40 : 0;
+        value |= y_negative < 0 ? 0x40 : 0;
         break;
     }
     

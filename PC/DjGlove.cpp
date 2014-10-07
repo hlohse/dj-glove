@@ -22,7 +22,9 @@ DjGlove::DjGlove()
     m_poti_2(0),
     m_distance(0),
     m_orientation_x(0),
+    m_orientation_x_updating(false),
     m_orientation_y(0),
+    m_orientation_y_updating(false),
     m_flex(0),
     m_channel(0),
     m_program(0)

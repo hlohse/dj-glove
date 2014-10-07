@@ -42,7 +42,9 @@ private:
     int  m_poti_2;
     int  m_distance;
     int  m_orientation_x;
+    bool m_orientation_x_updating;
     int  m_orientation_y;
+    bool m_orientation_y_updating;
     int  m_flex;
     int  m_channel;
     int  m_program;
