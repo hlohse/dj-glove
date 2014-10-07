@@ -36,7 +36,7 @@ typedef struct {
 
 void SyncStart(Bluetooth& bluetooth)
 {
-	bluetooth.Write((unsigned char) start_signal);
+	bluetooth.Write((char) start_signal);
 }
 
 void DetermineTimes(Bluetooth& bluetooth,

@@ -263,7 +263,7 @@ string Bluetooth::ReadNextAvailable(const int length)
     return Read(length);
 }
 
-unsigned char Bluetooth::ReadNextAvailable()
+char Bluetooth::ReadNextAvailable()
 {
 	return ReadNextAvailable(1)[0];
 }
@@ -282,7 +282,7 @@ string Bluetooth::Read(const int length)
     return input;
 }
 
-unsigned char Bluetooth::Read()
+char Bluetooth::Read()
 {
 	return Read(1)[0];
 }
@@ -309,7 +309,7 @@ int Bluetooth::Write(const string& output)
     return bytes_written;
 }
 
-int Bluetooth::Write(const unsigned char output)
+int Bluetooth::Write(const char output)
 {
 	return Write(string(output, 1));
 }

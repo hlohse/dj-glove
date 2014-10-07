@@ -6,7 +6,7 @@
 #include <iomanip>
 using namespace std;
 
-const unsigned char sync_signal = '!';
+const char* sync_signal = "!";
 
 int main(int argc, char* argv[])
 {
@@ -70,7 +70,9 @@ int main(int argc, char* argv[])
 	bluetooth.Write(sync_signal);
 
     while (true) {
-        glove.Process(bluetooth.ReadNextAvailable());
+        const char data = bluetooth.ReadNextAvailable();
+        glove.Process(data);
+        //cout << data << endl;
         cout << glove.DataString() << endl;
 
         while (glove.HasMidiSignal()) {

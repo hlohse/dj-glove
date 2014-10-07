@@ -37,15 +37,15 @@ public:
     
     // Throw expcetion in case of failure
     std::string ReadNextAvailable(const int length);
-	unsigned char ReadNextAvailable();
+	char ReadNextAvailable();
 
     // Throw expcetion in case of failure
     std::string Read(const int length);
-	unsigned char Read();
+	char Read();
 
     // Throw expcetion in case of failure
     int Write(const std::string& output);
-	int Write(const unsigned char output);
+	int Write(const char output);
 
     void Clear();
 
