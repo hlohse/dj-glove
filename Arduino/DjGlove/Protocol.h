@@ -157,7 +157,7 @@ private:
       case 3:
         value = bits(m_last_gyro_readout.y, 7, 6);
         // Signed bit at 0SXX XXXX
-        value |= y_negative < 0 ? 0x40 : 0;
+        value |= y_negative ? 0x40 : 0;
         break;
     }
     
