@@ -49,10 +49,6 @@ private:
     void ApplyLowBits(int& output,
                       const char data,
                       const int bits);
-    void ApplyBits(int& output,
-                   const int offset,
-                   const char data,
-                   const int bits);
 
     void ForwardDataIndex();
 };

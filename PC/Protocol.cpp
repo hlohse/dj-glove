@@ -57,31 +57,15 @@ void Protocol::ApplyData(const char data)
             ApplyBit(m_dj_glove.m_button_touch_0, data, 1);
             ApplyBit(m_dj_glove.m_button_touch_3, data, 0);
             break;
-        case  1: ApplyLowBits(m_dj_glove.m_poti_2,        data, 7); break;
-        case  2: ApplyLowBits(m_dj_glove.m_poti_1,        data, 7); break;
-        case  3: ApplyLowBits(m_dj_glove.m_poti_0,        data, 7); break;
-        case  4: ApplyLowBits(m_dj_glove.m_flex,          data, 7); break;
-        case  5: ApplyLowBits(m_dj_glove.m_distance,      data, 7); break;
-        case  6:
-            m_dj_glove.m_orientation_x_updating = true;
-            m_dj_glove.m_orientation_x = 0;
-            ApplyBits(m_dj_glove.m_orientation_x, 0, data, 7);
-            break;
-        case  7:
-            ApplyBits(m_dj_glove.m_orientation_x, 7, data, 6);
-            m_dj_glove.m_orientation_x *= (data & 0x40) != 0 ? -1 : 1;
-            m_dj_glove.m_orientation_x_updating = false;
-            break;
-        case  8:
-            m_dj_glove.m_orientation_y_updating = true;
-            m_dj_glove.m_orientation_y = 0;
-            ApplyBits(m_dj_glove.m_orientation_y, 0, data, 7);
-            break;
-        case  9:
-            ApplyBits(m_dj_glove.m_orientation_y, 7, data, 6);
-            m_dj_glove.m_orientation_y *= (data & 0x40) != 0 ? -1 : 1;
-            m_dj_glove.m_orientation_y_updating = false;
-            break;
+        case  1: ApplyLowBits(m_dj_glove.m_poti_2,   data, 7); break;
+        case  2: ApplyLowBits(m_dj_glove.m_poti_1,   data, 7); break;
+        case  3: ApplyLowBits(m_dj_glove.m_poti_0,   data, 7); break;
+        case  4: ApplyLowBits(m_dj_glove.m_flex,     data, 7); break;
+        case  5: ApplyLowBits(m_dj_glove.m_distance, data, 7); break;
+        case  6: m_dj_glove.m_orientation_x.SetVelocityLow(data);  break;
+        case  7: m_dj_glove.m_orientation_x.SetVelocityHigh(data); break;
+        case  8: m_dj_glove.m_orientation_y.SetVelocityLow(data);  break;
+        case  9: m_dj_glove.m_orientation_y.SetVelocityHigh(data); break;
         case 10:
             ApplyBit(m_dj_glove.m_button_push_4, data, 6);
             ApplyBit(m_dj_glove.m_button_push_3, data, 5);
@@ -125,23 +109,6 @@ void Protocol::ApplyLowBits(int& output,
 
     assert(output >= 0);
     assert(output <= (int) mask);
-}
-
-void Protocol::ApplyBits(int& output,
-                         const int offset,
-                         const char data,
-                         const int bits)
-{
-    assert(offset >= 0);
-    assert(bits   >= 1);
-    assert(bits   <= 7);
-
-    // 0000 0001 to 0111 1111 possible
-    const char mask      = (char) (pow(2, bits) - 1);
-    const char data_bits = data & mask;
-
-    const int output_bits = ((int) data_bits) << offset;
-    output |= output_bits;
 }
 
 void Protocol::ForwardDataIndex()

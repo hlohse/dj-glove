@@ -21,10 +21,8 @@ DjGlove::DjGlove()
     m_poti_1(0),
     m_poti_2(0),
     m_distance(0),
-    m_orientation_x(0),
-    m_orientation_x_updating(false),
-    m_orientation_y(0),
-    m_orientation_y_updating(false),
+    m_orientation_x(Orientation::offset_x),
+    m_orientation_y(Orientation::offset_y),
     m_flex(0),
     m_channel(0),
     m_program(0)
@@ -107,8 +105,8 @@ string DjGlove::DataString() const
         << m_poti_1 << "\t"
         << m_poti_2 << "\t"
         << m_distance << "\t"
-        << m_orientation_x << "\t"
-        << m_orientation_y << "\t"
+        << m_orientation_x.Value() << "\t"
+        << m_orientation_y.Value() << "\t"
         << m_flex << "\t"
         << m_channel << "\t"
         << m_program;
