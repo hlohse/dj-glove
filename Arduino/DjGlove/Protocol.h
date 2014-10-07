@@ -124,7 +124,7 @@ private:
   int bits(const int value, const byte offset, const byte num_bits)
   {
     const int shifted = value >> offset;
-    return shifted & (1 << (num_bits - 1));
+    return shifted & (((int) pow(2, num_bits)) - 1);
   }
   
   byte orientation(const int index)
