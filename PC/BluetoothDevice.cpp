@@ -32,8 +32,8 @@ BluetoothDevice::BluetoothDevice(const string& name,
 
 	if (m_is_valid) {
 		m_socket_address.addressFamily  = AF_BTH;
-		m_socket_address.serviceClassId = GUID_NULL;
-		m_socket_address.port		   = 18;
+		m_socket_address.serviceClassId = RFCOMM_PROTOCOL_UUID;
+		m_socket_address.port           = BT_PORT_ANY;
 	}
 #endif
 }
