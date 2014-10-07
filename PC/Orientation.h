@@ -25,12 +25,14 @@ public:
     
     Orientation(const double offset);
 
-    double Value() const;
+    int Degree() const;
 
     void SetVelocityLow(const char abs);
     void SetVelocityHigh(const char signed_abs);
 
 private:
+    static const double value_per_90_degrees;
+
     double m_value;
     double m_offset;
     std::pair<double, int> m_previous_velocity;

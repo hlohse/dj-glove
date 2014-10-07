@@ -105,8 +105,8 @@ string DjGlove::DataString() const
         << m_poti_1 << "\t"
         << m_poti_2 << "\t"
         << m_distance << "\t"
-        << m_orientation_x.Value() << "\t"
-        << m_orientation_y.Value() << "\t"
+        << m_orientation_x.Degree() << "\t"
+        << m_orientation_y.Degree() << "\t"
         << m_flex << "\t"
         << m_channel << "\t"
         << m_program;

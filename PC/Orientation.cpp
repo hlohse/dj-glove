@@ -1,9 +1,10 @@
 #include "Orientation.h"
 using namespace std;
 
-// 10:24.5
+// 10:24.5 @ 100k
 const double Orientation::offset_x = 4.27213;
 const double Orientation::offset_y = -0.666;
+const double Orientation::value_per_90_degrees = 330000;
 
 Orientation::Orientation(const double offset)
 :   m_value(0),
@@ -13,9 +14,9 @@ Orientation::Orientation(const double offset)
 {
 }
 
-double Orientation::Value() const
+int Orientation::Degree() const
 {
-    return m_value;
+    return (int) (90.0 * (m_value / value_per_90_degrees));
 }
     
 void Orientation::SetVelocityLow(const char abs)
