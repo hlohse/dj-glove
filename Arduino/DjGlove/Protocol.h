@@ -70,7 +70,7 @@ private:
   {
     m_index++;
     
-    if (m_index > 10) {
+    if (m_index > 11) {
       m_index = 0;
     }
     

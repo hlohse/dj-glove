@@ -32,7 +32,7 @@ public:
     void ApplyNext(const unsigned char data);
 
 private:
-    static const int max_data_index = 10;
+    static const int max_data_index = 11;
     DjGlove& m_dj_glove;
     int      m_index;
 
