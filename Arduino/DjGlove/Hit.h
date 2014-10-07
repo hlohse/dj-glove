@@ -14,18 +14,18 @@ public:
   
   bool occured()
   {
-    const unsigned long dead_time = millis() - m_last_occurence_time;
-    
-    if (dead_time >= necessary_dead_time && m_acc->hasAvailable()) {
-      const int acc_y = m_acc->read().y;
-      m_buffer.insert(acc_y);
-      
-      if (acc_y >= threshold && m_buffer.isFull()) {
-        m_last_occurence_time = millis();
-        return true;
+    if(m_acc->hasAvailable()){
+      const unsigned long dead_time = millis() - m_last_occurence_time;
+      if (dead_time >= necessary_dead_time) {
+        const int acc_y = m_acc->read().y;
+        m_buffer.insert(acc_y);
+        
+        if (acc_y >= threshold && m_buffer.isFull()) {
+          m_last_occurence_time = millis();
+          return true;
+        }
       }
-    }
-    
+    } 
     return false;
   }
   
@@ -47,7 +47,7 @@ public:
   }
 
 private:
-  static const unsigned long necessary_dead_time = 30;
+  static const unsigned long necessary_dead_time = 75;
   static const int threshold = 3000;
 
   Acceleration*    m_acc;

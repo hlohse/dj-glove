@@ -43,8 +43,15 @@ public:
     else {
       result = nextSensorReadout();
     }
-    
+    #ifdef BTCONNECTED
     return result + 1; // No null byte allowed for Bt transmission
+    #else
+    return result;
+    #endif
+  }
+  
+  int getByteIndex(){
+    return m_index;
   }
 
 private:

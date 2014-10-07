@@ -8,6 +8,8 @@ const char sync_signal = '!';
 DjGlove* glove = DjGlove::instance();
 Protocol protocol(glove);
 
+// #define BTCONNECTED
+
 void sync()
 {
   while (true) {
@@ -23,11 +25,28 @@ void setup()
 {
   glove->initialize();
   Serial.begin(115200);
+  #ifdef BTCONNECTED
   sync();
+  #endif
 }
 
 void loop()
 {
-  Serial.write(protocol.nextByte());
+  #ifdef BTCONNECTED
+  Serial.print(protocol.nextByte());
+  #else
+
+  
+  //CHECKE SCHLAGSENSOR:
+  /*int byteToSend = data.nextByte(); 
+  if(byteToSend & 0x80) Serial.println(byteToSend, BIN);*/
+  
+  //CHECKE REST:
+  Serial.println("=====");
+  for(int i=0; i<11; i++) Serial.println(protocol.nextByte());
+  delay(100);
+  
+  #endif
+
 }
 
