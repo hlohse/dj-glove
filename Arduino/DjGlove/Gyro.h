@@ -43,7 +43,7 @@ public:
   }
 
 private:
-  static const byte  settings         = B10001011; // x, y; normal mode; 400Hz @ 20 cut-off
+  static const byte  settings         = B01111011; // x, y; normal mode; 200Hz @ 70 cut-off
   static const byte  status_available = B00000011; // x, y available
   static const byte  register_ctrl_1  = 0x20;
   static const byte  register_ctrl_4  = 0x23;

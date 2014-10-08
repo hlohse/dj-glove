@@ -33,6 +33,8 @@ void setup()
   #endif
 }
 
+int j = 1;
+
 void loop()
 {
   #ifdef BTCONNECTED
@@ -41,12 +43,23 @@ void loop()
   
   #else
   
-  for (int i = 0; i < 12; ++i) {
-    Serial.println(protocol.nextByte(), BIN);
+  for (int i = 0; i < 12;) {
+    const byte data = protocol.nextByte();
+    
+    if (data & 0x80) {
+      Serial.print("HITTTTTTTTTTTTTTTTTTTTTTTTTt ");
+      Serial.println(data, BIN);
+    }
+    else {
+      i++;
+      if (j >= 100) {
+        Serial.println(data, BIN);
+      }
+    }
   }
   
-  Serial.println("===");
-  delay(200);
+  j++;
+  if ( j > 100) j = 0;
   
   #endif
 }
