@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
    
     cout << "Server up and running!" << endl;
 
-    cout << glove.DataHeader() << endl;
+    //cout << glove.DataHeader() << endl;
 
 	bluetooth.Write(sync_signal);
     while (bluetooth.ReadNextAvailable() != sync_signal[0]);
@@ -91,6 +91,7 @@ int main(int argc, char* argv[])
     return 0;
 
 fail:
+	cin.ignore();
     Bluetooth::TearDown();
     return -1;
 }
