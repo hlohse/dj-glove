@@ -36,7 +36,7 @@ char Protocol::Prepare(const char data) const
 
 bool Protocol::IsHit(const char data) const
 {
-    return ((unsigned char) data) > 0x80;  // First bit is 1
+    return (data & 0x80) != 0;  // First bit is 1
 }
 
 void Protocol::ApplyHit(const char data)
