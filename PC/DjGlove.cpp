@@ -2,6 +2,7 @@
 #include "MidiSignal.h"
 #include "ControllerSwitch.h"
 #include "ControllerRange.h"
+#include "ControllerPush.h"
 #include <sstream>
 #include <cassert>
 using namespace std;
@@ -44,11 +45,11 @@ void DjGlove::Process(const char data)
 void DjGlove::GenerateMidiSignals()
 {
 	//Instances:
-	static ControllerSwitch DrumRecActivationSwitch(m_button_push_4, 0x20);
-	static ControllerSwitch DrumLoopStartStopSwitch(m_button_touch_2, 0x21);
+	static ControllerPush DrumRecActivationSwitch(m_button_push_4, 0x20);
+	static ControllerPush DrumLoopStartStopSwitch(m_button_touch_2, 0x21);
 	static ControllerSwitch ThNoteStartStopSwitch(m_button_push_2, 0x22);
-	static ControllerSwitch ThRecActivationSwitch(m_button_touch_3, 0x23);
-	static ControllerSwitch ThLoopStartStopSwitch(m_button_push_4, 0x24);
+	static ControllerPush ThRecActivationSwitch(m_button_touch_3, 0x23);
+	static ControllerPush ThLoopStartStopSwitch(m_button_push_4, 0x24);
 	static ControllerRange  ThFlexController(m_flex, 0x25);
 
 	//static int gyro_x = 0;
@@ -84,12 +85,12 @@ void DjGlove::GenerateMidiSignals()
 		if (m_button_touch_1) m_orientation_y.calibrate();
 
 		//Record-Activation:
-		if (DrumRecActivationSwitch.Switched()){
+		if (DrumRecActivationSwitch.Actuated()){
 			m_midi_signals.push_back(DrumRecActivationSwitch.Signal(m_channel));
 		}
 
 		//Loop Start and Stop:
-		if(DrumLoopStartStopSwitch.Switched()){
+		if(DrumLoopStartStopSwitch.Actuated()){
 			m_midi_signals.push_back(DrumLoopStartStopSwitch.Signal(m_channel));
 		}
 		break;
@@ -103,12 +104,12 @@ void DjGlove::GenerateMidiSignals()
 			m_midi_signals.push_back(ThNoteStartStopSwitch.Signal(m_channel));
 		}
 		//Record-Activation:
-		if (ThRecActivationSwitch.Switched()){
+		if (ThRecActivationSwitch.Actuated()){
 			m_midi_signals.push_back(ThRecActivationSwitch.Signal(m_channel));
 		}
 
 		//Loop Start and Stop:
-		if (ThLoopStartStopSwitch.Switched()){
+		if (ThLoopStartStopSwitch.Actuated()){
 			m_midi_signals.push_back(ThLoopStartStopSwitch.Signal(m_channel));
 		}
 

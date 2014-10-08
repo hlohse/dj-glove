@@ -57,6 +57,9 @@
     <ClInclude Include="ControllerRange.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ControllerPush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bluetooth.cpp">
@@ -87,6 +90,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ControllerRange.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerPush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
