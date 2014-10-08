@@ -17,9 +17,11 @@ long long Orientation::frequency;
 
 void Orientation::InitFrequency()
 {
+#ifdef _WIN32
 	LARGE_INTEGER frequency;
 	QueryPerformanceFrequency(&frequency);
 	Orientation::frequency = frequency.QuadPart;
+#endif
 }
 
 Orientation::Orientation(const double offset)

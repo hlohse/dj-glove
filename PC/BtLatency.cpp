@@ -51,13 +51,6 @@ void DetermineTimes(Bluetooth& bluetooth,
     
     SyncStart(bluetooth);
 
-    // Warmup
-    for (int i = 0; i < tries_per_message / warmup_factor; ++i) {
-        bluetooth.WaitUntilAvailable(i * message_size);
-    }
-    bluetooth.Clear();
-
-    // Run
     for (int i = 0; i < tries_per_message; ++i)
 	{
 #ifdef __linux__
@@ -66,7 +59,7 @@ void DetermineTimes(Bluetooth& bluetooth,
 		GetSystemTime(&start);
 #endif
 
-        bluetooth.WaitUntilAvailable(i * message_size);
+        bluetooth.WaitUntilAvailable((i + 1) * message_size);
 
 #ifdef __linux__
 		gettimeofday(&stop, NULL);
@@ -82,7 +75,7 @@ void DetermineTimesMs(const vector<TimeTuple>& times, vector<double>& times_ms)
 {
     times_ms.clear(); 
 
-    for (auto it = times.cbegin(); it != times.cend(); ++it)
+    for (auto it = times.cbegin() + 1; it != times.cend(); ++it)
 	{
 		double total_time_ms;
 
