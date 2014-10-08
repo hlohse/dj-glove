@@ -11,5 +11,6 @@
 #include "DjGlove.h"
 #include "Orientation.h"
 #include "Protocol.h"
+#include "ControllerSwitch.h"
 
 #endif // DJ_GLOVE_PC_LIB_DJ_GLOVE_H_

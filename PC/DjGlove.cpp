@@ -1,8 +1,8 @@
 #include "DjGlove.h"
 #include "MidiSignal.h"
+#include "ControllerSwitch.h"
 #include <sstream>
 #include <cassert>
-//#include "ButtonSwitcher.h"
 using namespace std;
 
 DjGlove::DjGlove()
@@ -44,9 +44,6 @@ void DjGlove::GenerateMidiSignals()
 {
 	switch (m_program) {
 	case 1: //DRUMS
-		//ButtonSwitcher loopStartStopSwitcher(&m_button_touch_2, 100); //FalscheStelle, muss ja erhalten bleiben
-		//ButtonSwitcher recActivateSwitcher(&m_button_push_3, 101);
-		//Drum-Hit:
 		if (m_hit_intensity > 0){
 			int hit_note = 36;
 			MidiSignal hitSignal;
@@ -59,10 +56,6 @@ void DjGlove::GenerateMidiSignals()
 			hitSignal.Velocity(m_hit_intensity);
 			m_midi_signals.push_back(hitSignal);
 		}
-		//Loop-Start/Stop-Button:
-		//MidiSignal loopStartStopSignal = loopStartStopSwitcher.checkAndGetSwitchSignal();
-		//Activate-Recording-Button:
-		//MidiSignal recActivateSignal = recActivateSwitcher.checkAndGetSwitchSignal();
 		
 		break;
 	}
@@ -108,7 +101,7 @@ string DjGlove::DataString() const
     ostringstream data;
 
 	data << m_hit_intensity << "\t"
-         << BoolToText(m_button_push_0)
+         /*<< BoolToText(m_button_push_0)
             << BoolToText(m_button_push_1)
             << BoolToText(m_button_push_2)
             << BoolToText(m_button_push_3)
@@ -121,12 +114,12 @@ string DjGlove::DataString() const
         << m_poti_0 << "\t"
         << m_poti_1 << "\t"
         << m_poti_2 << "\t"
-        << m_distance << "\t"
+        << m_distance << "\t"*/
         << m_orientation_x.Degree() << "\t"
         << m_orientation_y.Degree() << "\t"
-        << m_flex << "\t"
+        /*<< m_flex << "\t"
         << m_channel << "\t"
-        << m_program;
+        << m_program*/;
 
     return data.str();
 }

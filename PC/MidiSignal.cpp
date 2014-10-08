@@ -109,13 +109,13 @@ string MidiSignal::ToString() const
 {
     ostringstream result;
 
-    result << "[ " << m_data[0] << " " << m_data[1];
+    result << "[ " << (int) m_data[0] << " " << (int) m_data[1];
 
     if (SignalLength() == 3) {
-        result << " " << m_data[2];
+        result << " " << (int) m_data[2];
     }
 
-    result << "]";
+    result << " ]";
 
     return result.str();
 }
