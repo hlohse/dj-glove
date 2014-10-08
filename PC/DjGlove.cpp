@@ -55,6 +55,13 @@ void DjGlove::GenerateMidiSignals()
 			hitSignal.Key(hit_note);
 			hitSignal.Velocity(m_hit_intensity);
 			m_midi_signals.push_back(hitSignal);
+
+			MidiSignal off;
+			off.Status(Midi::Status::NoteOff);
+			off.Channel(m_channel);
+			off.Key(hit_note);
+			off.Velocity(m_hit_intensity);
+			m_midi_signals.push_back(off);
 		}
 		
 		break;
@@ -101,7 +108,7 @@ string DjGlove::DataString() const
     ostringstream data;
 
 	data << m_hit_intensity << "\t"
-         /*<< BoolToText(m_button_push_0)
+         << BoolToText(m_button_push_0)
             << BoolToText(m_button_push_1)
             << BoolToText(m_button_push_2)
             << BoolToText(m_button_push_3)
@@ -114,12 +121,12 @@ string DjGlove::DataString() const
         << m_poti_0 << "\t"
         << m_poti_1 << "\t"
         << m_poti_2 << "\t"
-        << m_distance << "\t"*/
+        << m_distance << "\t"
         << m_orientation_x.Degree() << "\t"
         << m_orientation_y.Degree() << "\t"
-        /*<< m_flex << "\t"
+        << m_flex << "\t"
         << m_channel << "\t"
-        << m_program*/;
+        << m_program;
 
     return data.str();
 }

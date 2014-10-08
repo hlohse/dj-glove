@@ -74,11 +74,24 @@ int main(int argc, char* argv[])
     while (bluetooth.ReadNextAvailable() != sync_signal[0]);
 
     while (true) {
-        glove.Process(bluetooth.ReadNextAvailable());
+		const char data = bluetooth.ReadNextAvailable();
+		glove.Process(data);
+
+		//Sleep(100);
+
+		/*
+		MidiSignal sadasdignal;
+		sadasdignal.Status(Midi::Status::NoteOn);
+		sadasdignal.Channel(1);
+		sadasdignal.Key(36);
+		sadasdignal.Velocity(63);
+		midi_port.Play(sadasdignal);
+		*/
 
 		i++;
-		if (i > 100) {
+		if (i == 100) {
 			cout << glove.DataString() << endl;
+			//cout << (int) data << endl;
 			i = 0;
 		}
 
@@ -95,6 +108,7 @@ int main(int argc, char* argv[])
                 goto fail;
             }
         }
+		
     }
 
     return 0;
