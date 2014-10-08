@@ -12,5 +12,6 @@
 #include "Orientation.h"
 #include "Protocol.h"
 #include "ControllerSwitch.h"
+#include "ControllerRange.h"
 
 #endif // DJ_GLOVE_PC_LIB_DJ_GLOVE_H_

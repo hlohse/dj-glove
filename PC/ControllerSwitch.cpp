@@ -42,4 +42,5 @@ MidiSignal ControllerSwitch::Signal(const Midi::byte_t channel)
 	else {
 		controller_signal.ControllerValue(m_low_value);
 	}
+	return controller_signal;
 }

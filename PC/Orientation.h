@@ -19,6 +19,8 @@ public:
     void SetVelocityLow(const char abs);
     void SetVelocityHigh(const char signed_abs);
 
+	void calibrate();
+
 private:
     static const double value_per_90_degrees;
 

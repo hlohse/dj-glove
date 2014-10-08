@@ -68,3 +68,7 @@ void Orientation::SetVelocityHigh(const char signed_abs)
     }
 }
 
+void Orientation::calibrate(){
+	m_value = 0;
+}
+

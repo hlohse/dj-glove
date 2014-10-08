@@ -1,6 +1,7 @@
 #include "DjGlove.h"
 #include "MidiSignal.h"
 #include "ControllerSwitch.h"
+#include "ControllerRange.h"
 #include <sstream>
 #include <cassert>
 using namespace std;
@@ -42,8 +43,24 @@ void DjGlove::Process(const char data)
 
 void DjGlove::GenerateMidiSignals()
 {
+	//Instances:
+	static ControllerSwitch DrumRecActivationSwitch(m_button_push_4, 0x20);
+	static ControllerSwitch DrumLoopStartStopSwitch(m_button_touch_2, 0x21);
+	static ControllerSwitch ThNoteStartStopSwitch(m_button_push_2, 0x22);
+	static ControllerSwitch ThRecActivationSwitch(m_button_touch_3, 0x23);
+	static ControllerSwitch ThLoopStartStopSwitch(m_button_push_4, 0x24);
+	static ControllerRange  ThFlexController(m_flex, 0x25);
+
+	//static int gyro_x = 0;
+	//static ControllerRange  GyroRegler(gyro_x, 0x26);
+	//gyro_x = m_orientation_x.Degree();
+
 	switch (m_program) {
+	
+
 	case 1: //DRUMS
+		
+		//Hit:
 		if (m_hit_intensity > 0){
 			int hit_note = 36;
 			MidiSignal hitSignal;
@@ -63,7 +80,81 @@ void DjGlove::GenerateMidiSignals()
 			off.Velocity(m_hit_intensity);
 			m_midi_signals.push_back(off);
 		}
-		
+		//Gyro-Recalibration:
+		if (m_button_touch_1) m_orientation_y.calibrate();
+
+		//Record-Activation:
+		if (DrumRecActivationSwitch.Switched()){
+			m_midi_signals.push_back(DrumRecActivationSwitch.Signal(m_channel));
+		}
+
+		//Loop Start and Stop:
+		if(DrumLoopStartStopSwitch.Switched()){
+			m_midi_signals.push_back(DrumLoopStartStopSwitch.Signal(m_channel));
+		}
+		break;
+	
+
+	case 2: //THEREMIN:
+		static int ThDistanceOldVal = 0;
+		static bool ThFlipOldVal = 0;
+		//StartNote:
+		if (ThNoteStartStopSwitch.Switched()){
+			m_midi_signals.push_back(ThNoteStartStopSwitch.Signal(m_channel));
+		}
+		//Record-Activation:
+		if (ThRecActivationSwitch.Switched()){
+			m_midi_signals.push_back(ThRecActivationSwitch.Signal(m_channel));
+		}
+
+		//Loop Start and Stop:
+		if (ThLoopStartStopSwitch.Switched()){
+			m_midi_signals.push_back(ThLoopStartStopSwitch.Signal(m_channel));
+		}
+
+		if (ThFlexController.Changed()) {
+			m_midi_signals.push_back(ThFlexController.Signal(m_channel));
+		}
+
+		int adjusted_distance = m_distance * 129;
+		if (adjusted_distance >= 0 && adjusted_distance <= 3277) {
+			adjusted_distance = 4682;
+		}
+		else if (adjusted_distance >= 3278 && adjusted_distance <= 6553) {
+			adjusted_distance = 7022;
+		}
+		else if (adjusted_distance >= 6554 && adjusted_distance <= 9830) {
+			adjusted_distance = 8192;
+		}
+		else if (adjusted_distance >= 9831 && adjusted_distance <= 13106) {
+			adjusted_distance = 12871;
+		}
+		else {
+			adjusted_distance = 16383;
+		}
+
+		if (adjusted_distance != ThDistanceOldVal) {
+			MidiSignal pitchsignal;
+			pitchsignal.Status(Midi::Status::PitchBend);
+			pitchsignal.Channel(m_channel);
+			pitchsignal.PitchBend(adjusted_distance);
+			m_midi_signals.push_back(pitchsignal);
+			ThDistanceOldVal = adjusted_distance;
+		}
+
+		if (m_button_flip != ThFlipOldVal){
+			MidiSignal flipsignal;
+			flipsignal.Status(Midi::Status::ControllerChange);
+			flipsignal.Channel(m_channel);
+			flipsignal.Controller((Midi::Controller) 0x26);
+			flipsignal.ControllerValue(m_button_flip * 127);
+			ThFlipOldVal = m_button_flip;
+			m_midi_signals.push_back(flipsignal);
+		}
+
+		//if (m_button_push_4 && GyroRegler.Changed()) {
+		//	m_midi_signals.push_back(GyroRegler.Signal(m_channel));
+		//}
 		break;
 	}
 }

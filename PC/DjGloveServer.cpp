@@ -77,27 +77,16 @@ int main(int argc, char* argv[])
 		const char data = bluetooth.ReadNextAvailable();
 		glove.Process(data);
 
-		//Sleep(100);
-
-		/*
-		MidiSignal sadasdignal;
-		sadasdignal.Status(Midi::Status::NoteOn);
-		sadasdignal.Channel(1);
-		sadasdignal.Key(36);
-		sadasdignal.Velocity(63);
-		midi_port.Play(sadasdignal);
-		*/
-
 		i++;
 		if (i == 100) {
-			cout << glove.DataString() << endl;
+			//cout << glove.DataString() << endl;
 			//cout << (int) data << endl;
 			i = 0;
 		}
 
         while (glove.HasMidiSignal()) {
             MidiSignal signal = glove.NextMidiSignal();
-			cout << signal.ToString() << endl;
+			//cout << signal.ToString() << endl;
             
             try {
                 midi_port.Play(signal);
