@@ -4,24 +4,13 @@
 #include "Export.h"
 #include <utility>
 
-#ifdef __linux__
-#include <unistd.h>
-#include <sys/time.h>
-#include <sys/resource.h>
-#elif _WIN32
-#include <windows.h>
-#endif
-
 class EXPORT Orientation {
 public:
-#ifdef __linux__
-    using Time = struct timeval;
-#elif _WIN32
-    using Time = SYSTEMTIME;
-#endif
-    
     static const double offset_x;
     static const double offset_y;
+
+	static long long frequency;
+	static void InitFrequency();
     
     Orientation(const double offset);
 

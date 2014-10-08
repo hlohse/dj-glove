@@ -15,6 +15,9 @@ int main(int argc, char* argv[])
     shared_ptr<BluetoothDevice> arduino;
     MidiPort midi_port;
     DjGlove glove;
+	int i = 0;
+
+	Orientation::InitFrequency();
     
     try {
         arguments.Apply(argc, argv);
@@ -49,7 +52,7 @@ int main(int argc, char* argv[])
     }
 
     cout << "Virtual MIDI port \"" << arguments.VirtualMidiPortName()
-         << "\" opened successfully!" << endl;
+		<< "\" opened successfully!" << endl;
 
     try {
         bluetooth.Connect(arduino, arguments.BluetoothTimeout());
@@ -71,11 +74,30 @@ int main(int argc, char* argv[])
     while (bluetooth.ReadNextAvailable() != sync_signal[0]);
 
     while (true) {
-        glove.Process(bluetooth.ReadNextAvailable());
-        //cout << glove.DataString() << endl;
+		const char data = bluetooth.ReadNextAvailable();
+		glove.Process(data);
+
+		//Sleep(100);
+
+		/*
+		MidiSignal sadasdignal;
+		sadasdignal.Status(Midi::Status::NoteOn);
+		sadasdignal.Channel(1);
+		sadasdignal.Key(36);
+		sadasdignal.Velocity(63);
+		midi_port.Play(sadasdignal);
+		*/
+
+		i++;
+		if (i == 100) {
+			cout << glove.DataString() << endl;
+			//cout << (int) data << endl;
+			i = 0;
+		}
 
         while (glove.HasMidiSignal()) {
             MidiSignal signal = glove.NextMidiSignal();
+			cout << signal.ToString() << endl;
             
             try {
                 midi_port.Play(signal);
@@ -86,6 +108,7 @@ int main(int argc, char* argv[])
                 goto fail;
             }
         }
+		
     }
 
     return 0;
