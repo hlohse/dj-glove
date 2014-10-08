@@ -311,7 +311,10 @@ int Bluetooth::Write(const string& output)
 
 int Bluetooth::Write(const char output)
 {
-	return Write(string(output, 1));
+    char buffer[2];
+    buffer[0] = output;
+    buffer[1] = '\0';
+	return Write(string(buffer));
 }
 
 void Bluetooth::Clear()
