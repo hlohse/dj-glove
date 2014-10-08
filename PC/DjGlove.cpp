@@ -2,6 +2,7 @@
 #include "MidiSignal.h"
 #include <sstream>
 #include <cassert>
+//#include "ButtonSwitcher.h"
 using namespace std;
 
 DjGlove::DjGlove()
@@ -42,16 +43,27 @@ void DjGlove::Process(const char data)
 void DjGlove::GenerateMidiSignals()
 {
 	switch (m_program) {
-	case 1:
+	case 1: //DRUMS
+		//ButtonSwitcher loopStartStopSwitcher(&m_button_touch_2, 100); //FalscheStelle, muss ja erhalten bleiben
+		//ButtonSwitcher recActivateSwitcher(&m_button_push_3, 101);
+		//Drum-Hit:
 		if (m_hit_intensity > 0){
+			int hit_note = 36;
 			MidiSignal hitSignal;
+			if (m_distance > 70) hit_note += 4;
+			if (m_orientation_y.Degree() > 0) hit_note += 2;
+			if (m_button_touch_3) hit_note += 1;
 			hitSignal.Status(Midi::Status::NoteOn);
 			hitSignal.Channel(m_channel);
-			hitSignal.Key(60);
+			hitSignal.Key(hit_note);
 			hitSignal.Velocity(m_hit_intensity);
 			m_midi_signals.push_back(hitSignal);
 		}
-
+		//Loop-Start/Stop-Button:
+		//MidiSignal loopStartStopSignal = loopStartStopSwitcher.checkAndGetSwitchSignal();
+		//Activate-Recording-Button:
+		//MidiSignal recActivateSignal = recActivateSwitcher.checkAndGetSwitchSignal();
+		
 		break;
 	}
 }
