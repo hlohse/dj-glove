@@ -25,14 +25,25 @@ public:
     MidiSignal();
     ~MidiSignal();
 
+    // Currently: ControllerChange, default: Key/Velocity
+    MidiSignal(const Midi::Status status,
+               const int channel,
+               const int value_1,
+               const int value_2);
+
+    // Currently: default: PitchBend
+    MidiSignal(const Midi::Status status,
+               const int channel,
+               const int value);
+
     char* Signal();
     int SignalLength() const;
 
-    void Channel(const int channel);
-    int Channel() const;
-
     void Status(const Midi::Status status);
     Midi::Status Status() const;
+    
+    void Channel(const int channel);
+    int Channel() const;
 
     void Key(const int key);
     int Key() const;

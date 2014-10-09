@@ -1,27 +1,55 @@
 #include "ControllerRange.h"
+using namespace std;
 
 ControllerRange::ControllerRange(int& value, const int controller_number)
-:   m_value(&value),
-    m_current_value(-1),
-	m_controller((Midi::Controller) controller_number)
+:   ControllerRange(value, controller_number, {})
 {
+}
+
+ControllerRange::ControllerRange(int& value, const int controller_number,
+                                 const vector<partition_t>& partitions)
+:   Controller(controller_number),
+    m_value(&value),
+    m_current_value(-1),
+    m_partitions(partitions)
+{
+}
+
+void ControllerRange::Partition(const partition_t& partition)
+{
+    m_partitions.push_back(partition);
 }
 
 bool ControllerRange::Changed()
 {
-	if (*m_value != m_current_value) {
+	if (PartitionValue(*m_value) != PartitionValue()) {
 		m_current_value = *m_value;
 		return true;
 	}
 	return false;
 }
 
-MidiSignal ControllerRange::Signal(const Midi::byte_t channel)
+MidiSignal ControllerRange::Signal(const int channel)
 {
-	MidiSignal signal;
-	signal.Status(Midi::Status::ControllerChange);
-	signal.Channel(channel);
-	signal.Controller(m_controller);
-	signal.ControllerValue(m_current_value);
-	return signal;
+    return {Midi::Status::ControllerChange, channel, m_controller, PartitionValue()};
 }
+
+int ControllerRange::PartitionValue() const
+{
+	return PartitionValue(m_current_value);
+}
+
+int ControllerRange::PartitionValue(const int value) const
+{
+    for (auto it = m_partitions.cbegin(); it != m_partitions.cend(); ++it) {
+        const partition_t& partition = *it;
+
+        if (value >= get<0>(partition)
+        &&  value <= get<1>(partition)) {
+            return get<2>(partition);
+        }
+    }
+
+    return value;
+}
+

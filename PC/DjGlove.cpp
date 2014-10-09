@@ -2,7 +2,6 @@
 #include "MidiSignal.h"
 #include "ControllerSwitch.h"
 #include "ControllerRange.h"
-#include "ControllerPush.h"
 #include <sstream>
 #include <cassert>
 using namespace std;
@@ -44,26 +43,37 @@ void DjGlove::Process(const char data)
 
 void DjGlove::GenerateMidiSignals()
 {
+    static const ControllerSwitch::Mode change = ControllerSwitch::Mode::OnButtonChange;
+    static const ControllerSwitch::Mode press  = ControllerSwitch::Mode::OnButtonPress;
 	//Instances:
-	static ControllerPush	DrumRecActivationSwitch(m_button_push_4, 0x20);
-	static ControllerPush	DrumLoopStartStopSwitch(m_button_touch_2, 0x21);
-	static ControllerPush	DrumOVDSwitch(m_button_touch_0, 0x27);
+
+	static ControllerSwitch	DrumRecActivationSwitch(m_button_push_4, 0x20, change);
+	static ControllerSwitch	DrumLoopStartStopSwitch(m_button_touch_2, 0x21, change);
+	static ControllerSwitch	DrumOVDSwitch(m_button_touch_0, 0x27, change);
 	static bool&			DrumGyroCalibButton = m_button_touch_1;
 
-	static ControllerPush	ThRecActivationSwitch(m_button_push_4, 0x23);
-	static ControllerPush	ThLoopStartStopSwitch(m_button_touch_2, 0x24);
-	static ControllerPush	ThNoteOffSwitch(m_button_touch_1, 0x22);
+	static ControllerSwitch	ThRecActivationSwitch(m_button_push_4, 0x23, change);
+	static ControllerSwitch	ThLoopStartStopSwitch(m_button_touch_2, 0x24, change);
+	static ControllerSwitch	ThNoteOffSwitch(m_button_touch_1, 0x22, change);
 	static int				ThDistanceOldVal = 0;
 	static int				ThAdjustedDistance = 0;
 
 	static bool				ThClFlipOldVal = 0;
 	static ControllerRange  ThClFlexController(m_flex, 0x25);
 	
-	static ControllerSwitch	ClSnareSwitch(m_button_touch_0, 0x27);
-	static ControllerSwitch	ClKickSwitch(m_button_touch_1, 0x28);
-	static ControllerSwitch	ClTriSwitch(m_button_touch_2, 0x29);
-	static ControllerPush	ClBassLoopStart(m_button_push_2, 0x2A);
+	static ControllerSwitch	ClSnareSwitch(m_button_touch_0, 0x27, press);
+	static ControllerSwitch	ClKickSwitch(m_button_touch_1, 0x28, press);
+	static ControllerSwitch	ClTriSwitch(m_button_touch_2, 0x29, press);
+	static ControllerSwitch	ClBassLoopStart(m_button_push_2, 0x2A, press);
 	static ControllerRange  ClSnowPadArp(m_poti_0, 0x25);
+
+	static ControllerRange  ThDistanceController(ThAdjustedDistance, 0, {
+        ControllerRange::partition_t(0,     3277,  57),
+        ControllerRange::partition_t(3278,  6553,  59),
+        ControllerRange::partition_t(6554,  9830,  60),
+        ControllerRange::partition_t(9831,  13106, 64),
+        ControllerRange::partition_t(13107, 16383, 67)
+    });
 
 	switch (m_program) {
 	
@@ -73,102 +83,65 @@ void DjGlove::GenerateMidiSignals()
 		//Hit:
 		if (m_hit_intensity > 0){
 			int hit_note = 36;
-			MidiSignal hitSignal;
 			if (m_distance > 70) hit_note += 4;
 			if (m_orientation_y.Degree() > 0) hit_note += 2;
 			if (m_button_touch_3) hit_note += 1;
-			hitSignal.Status(Midi::Status::NoteOn);
-			hitSignal.Channel(m_channel);
-			hitSignal.Key(hit_note);
-			hitSignal.Velocity(m_hit_intensity);
-			m_midi_signals.push_back(hitSignal);
-
-			MidiSignal off;
-			off.Status(Midi::Status::NoteOff);
-			off.Channel(m_channel);
-			off.Key(hit_note);
-			off.Velocity(m_hit_intensity);
-			m_midi_signals.push_back(off);
+            Register({Midi::Status::NoteOn,  m_channel, hit_note, m_hit_intensity});
+            Register({Midi::Status::NoteOff, m_channel, hit_note, m_hit_intensity});
 		}
 		
 		if (DrumGyroCalibButton) m_orientation_y.calibrate();
-		if (DrumRecActivationSwitch.Actuated()) m_midi_signals.push_back(DrumRecActivationSwitch.Signal(m_channel));
-		if (DrumLoopStartStopSwitch.Actuated()) m_midi_signals.push_back(DrumLoopStartStopSwitch.Signal(m_channel));
+		if (DrumRecActivationSwitch.Changed()) Register(DrumRecActivationSwitch.Signal(m_channel));
+		if (DrumLoopStartStopSwitch.Changed()) Register(DrumLoopStartStopSwitch.Signal(m_channel));
 		break;
 	
 
 	case 2: //THEREMIN:
 	
-		if (ThRecActivationSwitch.Actuated()) m_midi_signals.push_back(ThRecActivationSwitch.Signal(m_channel));
-		if (ThLoopStartStopSwitch.Actuated()) m_midi_signals.push_back(ThLoopStartStopSwitch.Signal(m_channel));
-		if (ThClFlexController.Changed()) m_midi_signals.push_back(ThClFlexController.Signal(m_channel));
+		if (ThRecActivationSwitch.Changed()) Register(ThRecActivationSwitch.Signal(m_channel));
+		if (ThLoopStartStopSwitch.Changed()) Register(ThLoopStartStopSwitch.Signal(m_channel));
+		if (ThClFlexController.Changed()) Register(ThClFlexController.Signal(m_channel));
 		
 		//Note over Distance:
 		ThAdjustedDistance = m_distance * 129;
-		if (ThAdjustedDistance >= 0 && ThAdjustedDistance <= 3277) ThAdjustedDistance = 27;//4682;
-		else if (ThAdjustedDistance >= 3278 && ThAdjustedDistance <= 6553) ThAdjustedDistance = 29;// 7022;
-		else if (ThAdjustedDistance >= 6554 && ThAdjustedDistance <= 9830) ThAdjustedDistance = 30;// 8192;
-		else if (ThAdjustedDistance >= 9831 && ThAdjustedDistance <= 13106) ThAdjustedDistance = 34;//12871;
-		else ThAdjustedDistance = 37;// 16383;
-		if (ThAdjustedDistance != ThDistanceOldVal) {
-			MidiSignal pitchsignal;
-			//pitchsignal.Status(Midi::Status::PitchBend);
-			pitchsignal.Status(Midi::Status::NoteOn);
-			pitchsignal.Channel(m_channel);
-			pitchsignal.Key(ThAdjustedDistance);
-			pitchsignal.Velocity((Midi::byte_t)m_poti_2);
-			m_midi_signals.push_back(pitchsignal);
-			MidiSignal off;
-			off.Status(Midi::Status::NoteOff);
-			off.Channel(m_channel);
-			off.Key(ThDistanceOldVal);
-			off.Velocity(0);
-			m_midi_signals.push_back(off);
-			ThDistanceOldVal = ThAdjustedDistance;
+		if (ThDistanceController.Changed()) {
+			Register({ Midi::Status::NoteOn,  m_channel, ThDistanceController.PartitionValue(), m_poti_2});
+			Register({ Midi::Status::NoteOff, m_channel, ThDistanceOldVal, 0 });
+			ThDistanceOldVal = ThDistanceController.PartitionValue();
 		}
 		//StopNote:
-		if (ThNoteOffSwitch.Actuated()){
-			MidiSignal stopSignal;
-			stopSignal.Status(Midi::Status::NoteOff);
-			stopSignal.Channel(m_channel);
-			stopSignal.Key(ThAdjustedDistance);
-			stopSignal.Velocity(0);
-			m_midi_signals.push_back(stopSignal);
+		if (ThNoteOffSwitch.Changed()){
+			Register({ Midi::Status::NoteOff, m_channel, ThDistanceController.PartitionValue(), 0 });
 		}
 		//Flip:
 		if (m_button_flip != ThClFlipOldVal){
-			MidiSignal flipsignal;
-			flipsignal.Status(Midi::Status::ControllerChange);
-			flipsignal.Channel(m_channel);
-			flipsignal.Controller((Midi::Controller) 0x26);
-			flipsignal.ControllerValue(m_button_flip * 127);
+			Register({ Midi::Status::ControllerChange, m_channel, 0x26, m_button_flip * 127 });
 			ThClFlipOldVal = m_button_flip;
-			m_midi_signals.push_back(flipsignal);
 		}
 		break;
 
 
 	case 3: //ClipControl:
 		
-		if (ThClFlexController.Changed()) m_midi_signals.push_back(ThClFlexController.Signal(m_channel));
-		if (ClSnowPadArp.Changed()) m_midi_signals.push_back(ClSnowPadArp.Signal(m_channel));
-		if (ClBassLoopStart.Actuated()) m_midi_signals.push_back(ClBassLoopStart.Signal(m_channel));
-		if (ClSnareSwitch.Switched()) m_midi_signals.push_back(ClSnareSwitch.Signal(m_channel));
-		if (ClKickSwitch.Switched()) m_midi_signals.push_back(ClKickSwitch.Signal(m_channel));
-		if (ClTriSwitch.Switched()) m_midi_signals.push_back(ClTriSwitch.Signal(m_channel));
+		if (ThClFlexController.Changed()) Register(ThClFlexController.Signal(m_channel));
+		if (ClSnowPadArp.Changed()) Register(ClSnowPadArp.Signal(m_channel));
+		if (ClBassLoopStart.Changed()) Register(ClBassLoopStart.Signal(m_channel));
+		if (ClSnareSwitch.Changed()) Register(ClSnareSwitch.Signal(m_channel));
+		if (ClKickSwitch.Changed()) Register(ClKickSwitch.Signal(m_channel));
+		if (ClTriSwitch.Changed()) Register(ClTriSwitch.Signal(m_channel));
 		
 		//Flip:
 		if (m_button_flip != ThClFlipOldVal){
-			MidiSignal flipsignal;
-			flipsignal.Status(Midi::Status::ControllerChange);
-			flipsignal.Channel(m_channel);
-			flipsignal.Controller((Midi::Controller) 0x26);
-			flipsignal.ControllerValue(m_button_flip * 127);
+			Register({ Midi::Status::ControllerChange, m_channel, 0x26, m_button_flip * 127 });
 			ThClFlipOldVal = m_button_flip;
-			m_midi_signals.push_back(flipsignal);
 		}
 		break;
 	}
+}
+
+void DjGlove::Register(const MidiSignal& midi_signal)
+{
+    m_midi_signals.push_back(midi_signal);
 }
 
 bool DjGlove::HasMidiSignal() const

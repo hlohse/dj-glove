@@ -57,7 +57,7 @@
     <ClInclude Include="ControllerRange.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ControllerPush.h">
+    <ClInclude Include="Controller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -90,9 +90,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ControllerRange.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ControllerPush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

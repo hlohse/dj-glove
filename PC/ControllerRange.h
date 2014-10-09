@@ -1,21 +1,32 @@
 #ifndef DJ_GLOVE_PC_CONTROLLER_RANGE_H_
 #define DJ_GLOVE_PC_CONTROLLER_RANGE_H_
 
-#include "Export.h"
-#include "Midi.h"
-#include "MidiSignal.h"
+#include "Controller.h"
+#include <vector>
+#include <tuple>
 
-class EXPORT ControllerRange {
+class EXPORT ControllerRange : public Controller {
 public:
-	ControllerRange(int& value, const int controller_number);
+    // min (inclusive), max (inclusive), value
+    using partition_t = std::tuple<int, int, int>;
 
-	bool Changed();
-	MidiSignal Signal(const Midi::byte_t channel);
+	ControllerRange(int& value, const int controller_number);
+	ControllerRange(int& value, const int controller_number,
+                    const std::vector<partition_t>& partitions);
+
+    // Use partition value for range, current_value otherwise
+    void Partition(const partition_t& partition);
+	int PartitionValue() const;
+	int PartitionValue(const int value) const;
+
+    // Inherited from Controller
+	virtual bool Changed();
+	virtual MidiSignal Signal(const int channel);
 
 private:
 	int* m_value;
 	int  m_current_value;
-	Midi::Controller m_controller;
+    std::vector<partition_t> m_partitions;
 };
 
 #endif // DJ_GLOVE_PC_CONTROLLER_RANGE_H_
