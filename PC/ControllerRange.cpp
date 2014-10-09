@@ -1,9 +1,9 @@
 #include "ControllerRange.h"
 
 ControllerRange::ControllerRange(int& value, const int controller_number)
-:   m_value(&value),
-    m_current_value(-1),
-	m_controller((Midi::Controller) controller_number)
+:   Controller(controller_number),
+    m_value(&value),
+    m_current_value(-1)
 {
 }
 
@@ -16,12 +16,7 @@ bool ControllerRange::Changed()
 	return false;
 }
 
-MidiSignal ControllerRange::Signal(const Midi::byte_t channel)
+MidiSignal ControllerRange::Signal(const int channel)
 {
-	MidiSignal signal;
-	signal.Status(Midi::Status::ControllerChange);
-	signal.Channel(channel);
-	signal.Controller(m_controller);
-	signal.ControllerValue(m_current_value);
-	return signal;
+    return {Midi::Status::ControllerChange, channel, m_controller, m_current_value};
 }
