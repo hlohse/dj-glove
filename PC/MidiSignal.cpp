@@ -27,12 +27,18 @@ MidiSignal::MidiSignal(const Midi::Status status,
     }
 }
 
-MidiSignal::MidiSignal(const int channel,
-                       const int pitch_bend)
+MidiSignal::MidiSignal(const Midi::Status status,
+                       const int channel,
+                       const int value)
 {
-    Status(Midi::Status::PitchBend);
+    Status(status);
     Channel(channel);
-    PitchBend(pitch_bend);
+    
+    switch (status) {
+        default:
+            PitchBend(value);
+            break;
+    }
 }
 
 MidiSignal::~MidiSignal()

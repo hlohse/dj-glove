@@ -49,6 +49,7 @@ private:
     int  m_program;
 
     void GenerateMidiSignals();
+    void Register(const MidiSignal& midi_signal);
 
     char BoolToText(const bool value) const;
 };
