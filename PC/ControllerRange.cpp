@@ -2,9 +2,16 @@
 using namespace std;
 
 ControllerRange::ControllerRange(int& value, const int controller_number)
+:   ControllerRange(value, controller_number, {})
+{
+}
+
+ControllerRange::ControllerRange(int& value, const int controller_number,
+                                 const vector<partition_t>& partitions)
 :   Controller(controller_number),
     m_value(&value),
-    m_current_value(-1)
+    m_current_value(-1),
+    m_partitions(partitions)
 {
 }
 

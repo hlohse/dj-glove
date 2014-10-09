@@ -11,6 +11,8 @@ public:
     using partition_t = std::tuple<int, int, int>;
 
 	ControllerRange(int& value, const int controller_number);
+	ControllerRange(int& value, const int controller_number,
+                    const std::vector<partition_t>& partitions);
 
     // Use partition value for range, current_value otherwise
     void Partition(const partition_t& partition);

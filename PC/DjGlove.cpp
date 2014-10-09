@@ -53,6 +53,15 @@ void DjGlove::GenerateMidiSignals()
 	static ControllerSwitch ThLoopStartStopSwitch(m_button_push_4, 0x24, change);
 	static ControllerRange  ThFlexController(m_flex, 0x25);
 
+    static int adjusted_distance = 0;
+    static ControllerRange  ThDistanceController(adjusted_distance, 0, {
+        ControllerRange::partition_t(0,     3277,  4682),
+        ControllerRange::partition_t(3278,  6553,  7022),
+        ControllerRange::partition_t(6554,  9830,  8192),
+        ControllerRange::partition_t(9831,  13106, 12871),
+        ControllerRange::partition_t(13107, 16383, 16383)
+    });
+
 	//static int gyro_x = 0;
 	//static ControllerRange  GyroRegler(gyro_x, 0x26);
 	//gyro_x = m_orientation_x.Degree();
@@ -87,7 +96,6 @@ void DjGlove::GenerateMidiSignals()
 	
 
 	case 2: //THEREMIN:
-		static int ThDistanceOldVal = 0;
 		static bool ThFlipOldVal = 0;
 		//StartNote:
 		if (ThNoteStartStopSwitch.Changed()){
@@ -107,26 +115,9 @@ void DjGlove::GenerateMidiSignals()
 			Register(ThFlexController.Signal(m_channel));
 		}
 
-		int adjusted_distance = m_distance * 129;
-		if (adjusted_distance >= 0 && adjusted_distance <= 3277) {
-			adjusted_distance = 4682;
-		}
-		else if (adjusted_distance >= 3278 && adjusted_distance <= 6553) {
-			adjusted_distance = 7022;
-		}
-		else if (adjusted_distance >= 6554 && adjusted_distance <= 9830) {
-			adjusted_distance = 8192;
-		}
-		else if (adjusted_distance >= 9831 && adjusted_distance <= 13106) {
-			adjusted_distance = 12871;
-		}
-		else {
-			adjusted_distance = 16383;
-		}
-
-		if (adjusted_distance != ThDistanceOldVal) {
+		adjusted_distance = m_distance * 129;
+		if (ThDistanceController.Changed()) {
             Register({Midi::Status::PitchBend, m_channel, adjusted_distance});
-			ThDistanceOldVal = adjusted_distance;
 		}
 
 		if (m_button_flip != ThFlipOldVal){
