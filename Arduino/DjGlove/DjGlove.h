@@ -98,20 +98,20 @@ private:
   
   static void nextChannel()
   {
-    next(DjGlove::instance()->channel, &Led::setLeft);
+    next(DjGlove::instance()->channel, 2, &Led::setLeft);
   }
   
   static void nextProgram()
   {
-    next(DjGlove::instance()->program, &Led::setRight);
+    next(DjGlove::instance()->program, 4, &Led::setRight);
   }
   
-  static void next(byte& value, void (Led::*setter)(const unsigned char))
+  static void next(byte& value, const byte limit, void (Led::*setter)(const unsigned char))
   {
     byte display_value;
     
     value++;
-    if (value >= 11) {
+    if (value > limit) {
       value = 1;
     }
     

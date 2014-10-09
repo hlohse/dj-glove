@@ -62,6 +62,7 @@
     <ClInclude Include="Bluetooth.h" />
     <ClInclude Include="BluetoothDevice.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="ControllerGyro.h" />
     <ClInclude Include="ControllerRange.h" />
     <ClInclude Include="ControllerSwitch.h" />
     <ClInclude Include="DjGlove.h" />
@@ -77,6 +78,7 @@
   <ItemGroup>
     <ClCompile Include="Bluetooth.cpp" />
     <ClCompile Include="BluetoothDevice.cpp" />
+    <ClCompile Include="ControllerGyro.cpp" />
     <ClCompile Include="ControllerRange.cpp" />
     <ClCompile Include="ControllerSwitch.cpp" />
     <ClCompile Include="DjGlove.cpp" />

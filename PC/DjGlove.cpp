@@ -51,6 +51,8 @@ void DjGlove::GenerateMidiSignals()
 	static ControllerSwitch	DrumRecActivationSwitch(m_button_push_4, 0x20, change);
 	static ControllerSwitch	DrumLoopStartStopSwitch(m_button_touch_2, 0x21, change);
 	static ControllerSwitch	DrumOVDSwitch(m_button_touch_0, 0x27, change);
+	static ControllerSwitch DrumPlaySongSwitch(m_button_push_2, 0x2E, change);
+	static ControllerSwitch DrumMetronome(m_button_push_3, 0x2F, change);
 	static bool&			DrumGyroCalibButton = m_button_touch_1;
 
 	static ControllerSwitch	ThRecActivationSwitch(m_button_push_4, 0x23, change);
@@ -78,7 +80,8 @@ void DjGlove::GenerateMidiSignals()
 
     static ControllerGyro GyroEffectControl0(m_button_touch_0, m_orientation_x, 0x2C);
     static ControllerGyro GyroEffectControl1(m_button_touch_1, m_orientation_x, 0x2D);
-    static ControllerGyro GyroEffectControl2(m_button_touch_2, m_orientation_x, 0x2E);
+    static ControllerGyro GyroEffectControl2(m_button_touch_2, m_orientation_x, 0x2B);
+	static ControllerSwitch EfStopSong(m_button_push_2, 0x30, change);
 
 	switch (m_program) {
 
@@ -97,6 +100,8 @@ void DjGlove::GenerateMidiSignals()
 		if (DrumGyroCalibButton) m_orientation_y.calibrate();
 		if (DrumRecActivationSwitch.Changed()) Register(DrumRecActivationSwitch.Signal(m_channel));
 		if (DrumLoopStartStopSwitch.Changed()) Register(DrumLoopStartStopSwitch.Signal(m_channel));
+		if (DrumPlaySongSwitch.Changed()) Register(DrumPlaySongSwitch.Signal(m_channel));
+		if (DrumMetronome.Changed()) Register(DrumMetronome.Signal(m_channel));
 		break;
 	
 
@@ -119,7 +124,7 @@ void DjGlove::GenerateMidiSignals()
 		}
 		//Flip:
 		if (m_button_flip != ThClFlipOldVal){
-			Register({ Midi::Status::ControllerChange, m_channel, 0x26, m_button_flip * 127 });
+			Register({ Midi::Status::ControllerChange, 3, 0x26, m_button_flip * 127 });
 			ThClFlipOldVal = m_button_flip;
 		}
 		break;
@@ -136,7 +141,7 @@ void DjGlove::GenerateMidiSignals()
 		
 		//Flip:
 		if (m_button_flip != ThClFlipOldVal){
-			Register({ Midi::Status::ControllerChange, m_channel, 0x26, m_button_flip * 127 });
+			Register({ Midi::Status::ControllerChange, 3, 0x26, m_button_flip * 127 });
 			ThClFlipOldVal = m_button_flip;
 		}
 		break;
@@ -153,9 +158,10 @@ void DjGlove::GenerateMidiSignals()
         }
 		//Flip:
 		if (m_button_flip != ThClFlipOldVal){
-			Register({ Midi::Status::ControllerChange, m_channel, 0x26, m_button_flip * 127 });
+			Register({ Midi::Status::ControllerChange, 3, 0x26, m_button_flip * 127 });
 			ThClFlipOldVal = m_button_flip;
 		}
+		if (EfStopSong.Changed()) Register(EfStopSong.Signal(m_channel));
         break;
 	}
 }

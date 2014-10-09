@@ -18,6 +18,7 @@ public:
 private:
     Orientation* m_orientation;
     int m_initial_degree;
+	int m_previous_degree;
     int m_previous_controller_value;
     int m_new_controller_value;
 };
