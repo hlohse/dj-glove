@@ -16,6 +16,7 @@ public:
 
     // Use partition value for range, current_value otherwise
     void Partition(const partition_t& partition);
+    int PartitionValue() const;
 
     // Inherited from Controller
 	virtual bool Changed();
@@ -25,8 +26,6 @@ private:
 	int* m_value;
 	int  m_current_value;
     std::vector<partition_t> m_partitions;
-
-    int PartitionValue() const;
 };
 
 #endif // DJ_GLOVE_PC_CONTROLLER_RANGE_H_

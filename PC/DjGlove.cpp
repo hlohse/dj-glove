@@ -117,7 +117,7 @@ void DjGlove::GenerateMidiSignals()
 
 		adjusted_distance = m_distance * 129;
 		if (ThDistanceController.Changed()) {
-            Register({Midi::Status::PitchBend, m_channel, adjusted_distance});
+            Register({Midi::Status::PitchBend, m_channel, ThDistanceController.PartitionValue()});
 		}
 
 		if (m_button_flip != ThFlipOldVal){
