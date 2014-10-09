@@ -50,9 +50,9 @@ void DjGlove::GenerateMidiSignals()
 
 	static ControllerSwitch	DrumRecActivationSwitch(m_button_push_4, 0x20, change);
 	static ControllerSwitch	DrumLoopStartStopSwitch(m_button_touch_2, 0x21, change);
-	static ControllerSwitch	DrumOVDSwitch(m_button_touch_0, 0x27, change);
+	static ControllerSwitch	DrumOVDSwitch(m_button_touch_0, 0x27, press);
 	static ControllerSwitch DrumPlaySongSwitch(m_button_push_2, 0x14, change);
-	static ControllerSwitch DrumMetronome(m_button_push_3, 0x15, change);
+	static ControllerSwitch DrumMetronome(m_button_push_3, 0x15, press);
 	static bool&			DrumGyroCalibButton = m_button_touch_1;
 
 	static ControllerSwitch	ThRecActivationSwitch(m_button_push_4, 0x23, change);
@@ -64,10 +64,10 @@ void DjGlove::GenerateMidiSignals()
 	static bool				ThClFlipOldVal = 0;
 	static ControllerRange  ThClFlexController(m_flex, 0x25);
 	
-	static ControllerSwitch	ClSnareSwitch(m_button_touch_0, 0x27, press);
+	static ControllerSwitch	ClSnareSwitch(m_button_touch_0, 0x19, press);
 	static ControllerSwitch	ClKickSwitch(m_button_touch_1, 0x28, press);
 	static ControllerSwitch	ClTriSwitch(m_button_touch_2, 0x29, press);
-	static ControllerSwitch	ClBassLoopStart(m_button_push_2, 0x2A, press);
+	static ControllerSwitch	ClBassLoopStart(m_button_push_4, 0x2A, press);
 	static ControllerRange  ClSnowPadArp(m_poti_0, 0x18);
 
 	static ControllerRange  ThDistanceController(ThAdjustedDistance, 0, {
@@ -90,7 +90,7 @@ void DjGlove::GenerateMidiSignals()
 		//Hit:
 		if (m_hit_intensity > 0){
 			int hit_note = 36;
-			if (m_distance > 70) hit_note += 4;
+			if (m_distance > 90) hit_note += 4;
 			if (m_orientation_y.Degree() > 0) hit_note += 2;
 			if (m_button_touch_3) hit_note += 1;
             Register({Midi::Status::NoteOn,  m_channel, hit_note, m_hit_intensity});

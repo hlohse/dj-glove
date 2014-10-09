@@ -47,7 +47,7 @@ public:
   }
 
 private:
-  static const unsigned long necessary_dead_time = 75;
+  static const unsigned long necessary_dead_time = 85;
   static const int threshold = 3000;
 
   Acceleration*    m_acc;
