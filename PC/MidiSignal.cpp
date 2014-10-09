@@ -3,11 +3,36 @@
 using namespace std;
 
 MidiSignal::MidiSignal()
+:   MidiSignal(Midi::Status::NoteOff, 1, 0, 0)
 {
-    Channel(0);
-	Status(Midi::Status::NoteOff);
-	Key(0);
-	Velocity(0);
+}
+
+MidiSignal::MidiSignal(const Midi::Status status,
+                       const int channel,
+                       const int value_1,
+                       const int value_2)
+{
+	Status(status);
+    Channel(channel);
+	
+    switch (status) {
+        case Midi::Status::ControllerChange:
+            Controller((Midi::Controller) value_1);
+            ControllerValue(value_2);
+            break;
+        default:
+            Key(value_1);
+            Velocity(value_2);
+            break;
+    }
+}
+
+MidiSignal::MidiSignal(const int channel,
+                       const int pitch_bend)
+{
+    Status(Midi::Status::PitchBend);
+    Channel(channel);
+    PitchBend(pitch_bend);
 }
 
 MidiSignal::~MidiSignal()
@@ -22,19 +47,6 @@ char* MidiSignal::Signal()
 int MidiSignal::SignalLength() const
 {
     return m_data_length;
-}
-
-void MidiSignal::Channel(const int channel) 
-{
-    m_data[0] = Midi::CombineStatusChannel(Status(), (Midi::byte_t) channel);
-}
-
-int MidiSignal::Channel() const
-{
-	Midi::Status status;
-	Midi::byte_t channel;
-    Midi::SplitStatusChannel(m_data[0], status, channel);
-    return (int) channel;
 }
 
 void MidiSignal::Status(const Midi::Status status)
@@ -58,6 +70,19 @@ Midi::Status MidiSignal::Status() const
 	Midi::byte_t channel;
     Midi::SplitStatusChannel(m_data[0], status, channel);
     return status;
+}
+
+void MidiSignal::Channel(const int channel) 
+{
+    m_data[0] = Midi::CombineStatusChannel(Status(), (Midi::byte_t) channel);
+}
+
+int MidiSignal::Channel() const
+{
+	Midi::Status status;
+	Midi::byte_t channel;
+    Midi::SplitStatusChannel(m_data[0], status, channel);
+    return (int) channel;
 }
 
 void MidiSignal::Value(const int value, const int m_dataindex)

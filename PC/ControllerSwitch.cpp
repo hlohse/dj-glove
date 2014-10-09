@@ -1,20 +1,48 @@
 #include "ControllerSwitch.h"
 
 ControllerSwitch::ControllerSwitch(
-	bool& button,
-	const int controller_number,
-	const Midi::byte_t low_value,
-	const Midi::byte_t high_value)
-:	m_button(&button),
+	bool&      button,
+	const int  controller_number,
+    const Mode mode,
+	const int  low_value,
+	const int  high_value)
+:	Controller(controller_number),
+    m_button(&button),
 	m_old_state(false),
 	m_is_activated(false),
-	m_controller((Midi::Controller) controller_number),
-	m_low_value(low_value),
-	m_high_value(high_value)
+	m_low_value((Midi::byte_t) low_value),
+	m_high_value((Midi::byte_t) high_value)
 {
+    switch (mode) {
+        case Mode::OnButtonChange:
+            m_high_value_reference = m_button;
+            m_changed_strategy = &ControllerSwitch::ButtonChanged;
+            break;
+        default: // OnButtonPress
+            m_high_value_reference = &m_is_activated;
+            m_changed_strategy = &ControllerSwitch::ButtonPressed;
+            break;
+    }
 }
 
-bool ControllerSwitch::Switched()
+bool ControllerSwitch::Changed()
+{
+    return (this->*m_changed_strategy)();
+}
+
+bool ControllerSwitch::ButtonChanged()
+{
+	bool result = false;
+
+	if (*m_button != m_old_state) {
+		result = true;
+	}
+
+	m_old_state = *m_button;
+	return result;
+}
+
+bool ControllerSwitch::ButtonPressed()
 {
 	bool result = false;
 
@@ -24,23 +52,11 @@ bool ControllerSwitch::Switched()
 	}
 
 	m_old_state = *m_button;
-
 	return result;
 }
 
-MidiSignal ControllerSwitch::Signal(const Midi::byte_t channel)
+MidiSignal ControllerSwitch::Signal(const int channel)
 {
-	MidiSignal controller_signal;
-
-	controller_signal.Status(Midi::Status::ControllerChange);
-	controller_signal.Channel(channel);
-	controller_signal.Controller(m_controller);
-
-	if (m_is_activated) {
-		controller_signal.ControllerValue(m_high_value);
-	}
-	else {
-		controller_signal.ControllerValue(m_low_value);
-	}
-	return controller_signal;
+    const int value = *m_high_value_reference ? m_high_value : m_low_value;
+    return {Midi::Status::ControllerChange, channel, m_controller, value};
 }

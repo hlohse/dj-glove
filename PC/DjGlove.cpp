@@ -2,7 +2,6 @@
 #include "MidiSignal.h"
 #include "ControllerSwitch.h"
 #include "ControllerRange.h"
-#include "ControllerPush.h"
 #include <sstream>
 #include <cassert>
 using namespace std;
@@ -44,12 +43,14 @@ void DjGlove::Process(const char data)
 
 void DjGlove::GenerateMidiSignals()
 {
+    static const ControllerSwitch::Mode change = ControllerSwitch::Mode::OnButtonChange;
+    static const ControllerSwitch::Mode press  = ControllerSwitch::Mode::OnButtonPress;
 	//Instances:
-	static ControllerPush DrumRecActivationSwitch(m_button_push_4, 0x20);
-	static ControllerPush DrumLoopStartStopSwitch(m_button_touch_2, 0x21);
-	static ControllerSwitch ThNoteStartStopSwitch(m_button_push_2, 0x22);
-	static ControllerPush ThRecActivationSwitch(m_button_touch_3, 0x23);
-	static ControllerPush ThLoopStartStopSwitch(m_button_push_4, 0x24);
+	static ControllerSwitch DrumRecActivationSwitch(m_button_push_4, 0x20, change);
+	static ControllerSwitch DrumLoopStartStopSwitch(m_button_touch_2, 0x21, change);
+	static ControllerSwitch ThNoteStartStopSwitch(m_button_push_2, 0x22, press);
+	static ControllerSwitch ThRecActivationSwitch(m_button_touch_3, 0x23, change);
+	static ControllerSwitch ThLoopStartStopSwitch(m_button_push_4, 0x24, change);
 	static ControllerRange  ThFlexController(m_flex, 0x25);
 
 	//static int gyro_x = 0;
@@ -85,12 +86,12 @@ void DjGlove::GenerateMidiSignals()
 		if (m_button_touch_1) m_orientation_y.calibrate();
 
 		//Record-Activation:
-		if (DrumRecActivationSwitch.Actuated()){
+		if (DrumRecActivationSwitch.Changed()){
 			m_midi_signals.push_back(DrumRecActivationSwitch.Signal(m_channel));
 		}
 
 		//Loop Start and Stop:
-		if(DrumLoopStartStopSwitch.Actuated()){
+		if(DrumLoopStartStopSwitch.Changed()){
 			m_midi_signals.push_back(DrumLoopStartStopSwitch.Signal(m_channel));
 		}
 		break;
@@ -100,16 +101,16 @@ void DjGlove::GenerateMidiSignals()
 		static int ThDistanceOldVal = 0;
 		static bool ThFlipOldVal = 0;
 		//StartNote:
-		if (ThNoteStartStopSwitch.Switched()){
+		if (ThNoteStartStopSwitch.Changed()){
 			m_midi_signals.push_back(ThNoteStartStopSwitch.Signal(m_channel));
 		}
 		//Record-Activation:
-		if (ThRecActivationSwitch.Actuated()){
+		if (ThRecActivationSwitch.Changed()){
 			m_midi_signals.push_back(ThRecActivationSwitch.Signal(m_channel));
 		}
 
 		//Loop Start and Stop:
-		if (ThLoopStartStopSwitch.Actuated()){
+		if (ThLoopStartStopSwitch.Changed()){
 			m_midi_signals.push_back(ThLoopStartStopSwitch.Signal(m_channel));
 		}
 
