@@ -68,7 +68,7 @@ void DjGlove::GenerateMidiSignals()
 	static ControllerSwitch	ClKickSwitch(m_button_touch_1, 0x28, press);
 	static ControllerSwitch	ClTriSwitch(m_button_touch_2, 0x29, press);
 	static ControllerSwitch	ClBassLoopStart(m_button_push_2, 0x2A, press);
-	static ControllerRange  ClSnowPadArp(m_poti_0, 0x25);
+	static ControllerRange  ClSnowPadArp(m_poti_0, 0x18);
 
 	static ControllerRange  ThDistanceController(ThAdjustedDistance, 0, {
         ControllerRange::partition_t(0,     3277,  57),
