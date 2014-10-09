@@ -11,49 +11,50 @@ set output "latency.mean.png"
 set title "Bluetooth Arduino to PC Mean Latency"
 set ylabel "Mean Latency [ms]"
 
-plot "latency.data" u (2**$0):3 every (28)::(0*5*28+27)::(1*5*28) w l t "no delay", \
-                 "" u (2**$0):3 every (28)::(1*5*28+27)::(2*5*28) w l t "    1 ms", \
-                 "" u (2**$0):3 every (28)::(2*5*28+27)::(3*5*28) w l t "    2 ms", \
-                 "" u (2**$0):3 every (28)::(3*5*28+27)::(4*5*28) w l t "    4 ms", \
-                 "" u (2**$0):3 every (28)::(4*5*28+27)::(5*5*28) w l t "    8 ms", \
-                 "" u (2**$0):3 every (28)::(5*5*28+27)::(6*5*28) w l t "   16 ms"
+plot "latency.data" u (2**$0):3 every (1003)::(0*1*1003+1002)::(1*4*1003) w l t "no delay", \
+                 "" u (2**$0):3 every (1003)::(1*1*1003+1002)::(2*4*1003) w l t "    1 ms", \
+                 "" u (2**$0):3 every (1003)::(2*1*1003+1002)::(3*4*1003) w l t "    2 ms", \
+                 "" u (2**$0):3 every (1003)::(3*1*1003+1002)::(4*4*1003) w l t "    4 ms", \
+                 "" u (2**$0):3 every (1003)::(4*1*1003+1002)::(5*4*1003) w l t "    8 ms"
 
 set output "latency.min.png"
 set title "Bluetooth Arduino to PC Min Latency"
 set ylabel "Min Latency [ms]"
 
-plot "latency.data" u (2**$0):1 every (28)::(0*5*28+27)::(1*5*28) w l t "no delay", \
-                 "" u (2**$0):1 every (28)::(1*5*28+27)::(2*5*28) w l t "    1 ms", \
-                 "" u (2**$0):1 every (28)::(2*5*28+27)::(3*5*28) w l t "    2 ms", \
-                 "" u (2**$0):1 every (28)::(3*5*28+27)::(4*5*28) w l t "    4 ms", \
-                 "" u (2**$0):1 every (28)::(4*5*28+27)::(5*5*28) w l t "    8 ms", \
-                 "" u (2**$0):1 every (28)::(5*5*28+27)::(6*5*28) w l t "   16 ms"
+plot "latency.data" u (2**$0):1 every (1003)::(0*1*1003+1002)::(1*4*1003) w l t "no delay", \
+                 "" u (2**$0):1 every (1003)::(1*1*1003+1002)::(2*4*1003) w l t "    1 ms", \
+                 "" u (2**$0):1 every (1003)::(2*1*1003+1002)::(3*4*1003) w l t "    2 ms", \
+                 "" u (2**$0):1 every (1003)::(3*1*1003+1002)::(4*4*1003) w l t "    4 ms", \
+                 "" u (2**$0):1 every (1003)::(4*1*1003+1002)::(5*4*1003) w l t "    8 ms"
 
 set output "latency.max.png"
 set title "Bluetooth Arduino to PC Max Latency"
 set ylabel "Max Latency [ms]"
 set key bottom right
 
-plot "latency.data" u (2**$0):2 every (28)::(0*5*28+27)::(1*5*28) w l t "no delay", \
-                 "" u (2**$0):2 every (28)::(1*5*28+27)::(2*5*28) w l t "    1 ms", \
-                 "" u (2**$0):2 every (28)::(2*5*28+27)::(3*5*28) w l t "    2 ms", \
-                 "" u (2**$0):2 every (28)::(3*5*28+27)::(4*5*28) w l t "    4 ms", \
-                 "" u (2**$0):2 every (28)::(4*5*28+27)::(5*5*28) w l t "    8 ms", \
-                 "" u (2**$0):2 every (28)::(5*5*28+27)::(6*5*28) w l t "   16 ms"
+plot "latency.data" u (2**$0):2 every (1003)::(0*1*1003+1002)::(1*4*1003) w l t "no delay", \
+                 "" u (2**$0):2 every (1003)::(1*1*1003+1002)::(2*4*1003) w l t "    1 ms", \
+                 "" u (2**$0):2 every (1003)::(2*1*1003+1002)::(3*4*1003) w l t "    2 ms", \
+                 "" u (2**$0):2 every (1003)::(3*1*1003+1002)::(4*4*1003) w l t "    4 ms", \
+                 "" u (2**$0):2 every (1003)::(4*1*1003+1002)::(5*4*1003) w l t "    8 ms"
 
 set output "latency.1b.png"
 set title "Bluetooth Time between Byte Receives"
 set xlabel "Time between Byte Sends (Arduino) [ms]"
 set ylabel "Time between Byte Receives (PC) [ms]"
 set xrange [0:8]
-set yrange [0:20]
+set yrange [0:32]
 set nologscale x
 set key top left
 
-plot "latency.1b.data" u 1:2 w l lw 6 t " min", \
-                    "" u 1:3 w l lw 6 t " max", \
-                    "" u 1:4 w l lw 6 t "mean", \
+plot "latency.1b.data" u 1:2 w l lw 6 t "   min", \
+                    "" u 1:3 w l lw 6 t "   max", \
+                    "" u 1:4 w l lw 6 t "  mean", \
+                    "" u 1:($4 + $5) w l lw 6 lt rgb "violet" t "stddev", \
+                    "" u 1:($4 - $5) w l lw 6 lt rgb "violet" t "", \
                     "" u 1:2 with points ps 3 t "", \
                     "" u 1:3 with points ps 3 t "", \
-                    "" u 1:4 with points ps 3 t "",
+                    "" u 1:4 with points ps 3 t "", \
+                    "" u 1:($4 + $5) with points ps 3 t "", \
+                    "" u 1:($4 - $5) with points ps 3 t ""
 
