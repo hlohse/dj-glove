@@ -21,7 +21,7 @@ public:
 	virtual bool Changed();
 	virtual MidiSignal Signal(const int channel);
 
-private:
+protected:
 	bool* m_button;
 	bool  m_old_state;
 	bool  m_is_activated;

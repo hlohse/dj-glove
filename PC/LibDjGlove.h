@@ -14,5 +14,6 @@
 #include "Controller.h"
 #include "ControllerSwitch.h"
 #include "ControllerRange.h"
+#include "ControllerGyro.h"
 
 #endif // DJ_GLOVE_PC_LIB_DJ_GLOVE_H_
