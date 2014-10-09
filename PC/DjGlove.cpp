@@ -45,16 +45,25 @@ void DjGlove::Process(const char data)
 void DjGlove::GenerateMidiSignals()
 {
 	//Instances:
-	static ControllerPush DrumRecActivationSwitch(m_button_push_4, 0x20);
-	static ControllerPush DrumLoopStartStopSwitch(m_button_touch_2, 0x21);
-	static ControllerSwitch ThNoteStartStopSwitch(m_button_push_2, 0x22);
-	static ControllerPush ThRecActivationSwitch(m_button_touch_3, 0x23);
-	static ControllerPush ThLoopStartStopSwitch(m_button_push_4, 0x24);
-	static ControllerRange  ThFlexController(m_flex, 0x25);
+	static ControllerPush	DrumRecActivationSwitch(m_button_push_4, 0x20);
+	static ControllerPush	DrumLoopStartStopSwitch(m_button_touch_2, 0x21);
+	static ControllerPush	DrumOVDSwitch(m_button_touch_0, 0x27);
+	static bool&			DrumGyroCalibButton = m_button_touch_1;
 
-	//static int gyro_x = 0;
-	//static ControllerRange  GyroRegler(gyro_x, 0x26);
-	//gyro_x = m_orientation_x.Degree();
+	static ControllerPush	ThRecActivationSwitch(m_button_push_4, 0x23);
+	static ControllerPush	ThLoopStartStopSwitch(m_button_touch_2, 0x24);
+	static ControllerPush	ThNoteOffSwitch(m_button_touch_1, 0x22);
+	static int				ThDistanceOldVal = 0;
+	static int				ThAdjustedDistance = 0;
+
+	static bool				ThClFlipOldVal = 0;
+	static ControllerRange  ThClFlexController(m_flex, 0x25);
+	
+	static ControllerSwitch	ClSnareSwitch(m_button_touch_0, 0x27);
+	static ControllerSwitch	ClKickSwitch(m_button_touch_1, 0x28);
+	static ControllerSwitch	ClTriSwitch(m_button_touch_2, 0x29);
+	static ControllerPush	ClBassLoopStart(m_button_push_2, 0x2A);
+	static ControllerRange  ClSnowPadArp(m_poti_0, 0x25);
 
 	switch (m_program) {
 	
@@ -81,81 +90,83 @@ void DjGlove::GenerateMidiSignals()
 			off.Velocity(m_hit_intensity);
 			m_midi_signals.push_back(off);
 		}
-		//Gyro-Recalibration:
-		if (m_button_touch_1) m_orientation_y.calibrate();
-
-		//Record-Activation:
-		if (DrumRecActivationSwitch.Actuated()){
-			m_midi_signals.push_back(DrumRecActivationSwitch.Signal(m_channel));
-		}
-
-		//Loop Start and Stop:
-		if(DrumLoopStartStopSwitch.Actuated()){
-			m_midi_signals.push_back(DrumLoopStartStopSwitch.Signal(m_channel));
-		}
+		
+		if (DrumGyroCalibButton) m_orientation_y.calibrate();
+		if (DrumRecActivationSwitch.Actuated()) m_midi_signals.push_back(DrumRecActivationSwitch.Signal(m_channel));
+		if (DrumLoopStartStopSwitch.Actuated()) m_midi_signals.push_back(DrumLoopStartStopSwitch.Signal(m_channel));
 		break;
 	
 
 	case 2: //THEREMIN:
-		static int ThDistanceOldVal = 0;
-		static bool ThFlipOldVal = 0;
-		//StartNote:
-		if (ThNoteStartStopSwitch.Switched()){
-			m_midi_signals.push_back(ThNoteStartStopSwitch.Signal(m_channel));
-		}
-		//Record-Activation:
-		if (ThRecActivationSwitch.Actuated()){
-			m_midi_signals.push_back(ThRecActivationSwitch.Signal(m_channel));
-		}
-
-		//Loop Start and Stop:
-		if (ThLoopStartStopSwitch.Actuated()){
-			m_midi_signals.push_back(ThLoopStartStopSwitch.Signal(m_channel));
-		}
-
-		if (ThFlexController.Changed()) {
-			m_midi_signals.push_back(ThFlexController.Signal(m_channel));
-		}
-
-		int adjusted_distance = m_distance * 129;
-		if (adjusted_distance >= 0 && adjusted_distance <= 3277) {
-			adjusted_distance = 4682;
-		}
-		else if (adjusted_distance >= 3278 && adjusted_distance <= 6553) {
-			adjusted_distance = 7022;
-		}
-		else if (adjusted_distance >= 6554 && adjusted_distance <= 9830) {
-			adjusted_distance = 8192;
-		}
-		else if (adjusted_distance >= 9831 && adjusted_distance <= 13106) {
-			adjusted_distance = 12871;
-		}
-		else {
-			adjusted_distance = 16383;
-		}
-
-		if (adjusted_distance != ThDistanceOldVal) {
+	
+		if (ThRecActivationSwitch.Actuated()) m_midi_signals.push_back(ThRecActivationSwitch.Signal(m_channel));
+		if (ThLoopStartStopSwitch.Actuated()) m_midi_signals.push_back(ThLoopStartStopSwitch.Signal(m_channel));
+		if (ThClFlexController.Changed()) m_midi_signals.push_back(ThClFlexController.Signal(m_channel));
+		
+		//Note over Distance:
+		ThAdjustedDistance = m_distance * 129;
+		if (ThAdjustedDistance >= 0 && ThAdjustedDistance <= 3277) ThAdjustedDistance = 27;//4682;
+		else if (ThAdjustedDistance >= 3278 && ThAdjustedDistance <= 6553) ThAdjustedDistance = 29;// 7022;
+		else if (ThAdjustedDistance >= 6554 && ThAdjustedDistance <= 9830) ThAdjustedDistance = 30;// 8192;
+		else if (ThAdjustedDistance >= 9831 && ThAdjustedDistance <= 13106) ThAdjustedDistance = 34;//12871;
+		else ThAdjustedDistance = 37;// 16383;
+		if (ThAdjustedDistance != ThDistanceOldVal) {
 			MidiSignal pitchsignal;
-			pitchsignal.Status(Midi::Status::PitchBend);
+			//pitchsignal.Status(Midi::Status::PitchBend);
+			pitchsignal.Status(Midi::Status::NoteOn);
 			pitchsignal.Channel(m_channel);
-			pitchsignal.PitchBend(adjusted_distance);
+			pitchsignal.Key(ThAdjustedDistance);
+			pitchsignal.Velocity((Midi::byte_t)m_poti_2);
 			m_midi_signals.push_back(pitchsignal);
-			ThDistanceOldVal = adjusted_distance;
+			MidiSignal off;
+			off.Status(Midi::Status::NoteOff);
+			off.Channel(m_channel);
+			off.Key(ThDistanceOldVal);
+			off.Velocity(0);
+			m_midi_signals.push_back(off);
+			ThDistanceOldVal = ThAdjustedDistance;
 		}
-
-		if (m_button_flip != ThFlipOldVal){
+		//StopNote:
+		if (ThNoteOffSwitch.Actuated()){
+			MidiSignal stopSignal;
+			stopSignal.Status(Midi::Status::NoteOff);
+			stopSignal.Channel(m_channel);
+			stopSignal.Key(ThAdjustedDistance);
+			stopSignal.Velocity(0);
+			m_midi_signals.push_back(stopSignal);
+		}
+		//Flip:
+		if (m_button_flip != ThClFlipOldVal){
 			MidiSignal flipsignal;
 			flipsignal.Status(Midi::Status::ControllerChange);
 			flipsignal.Channel(m_channel);
 			flipsignal.Controller((Midi::Controller) 0x26);
 			flipsignal.ControllerValue(m_button_flip * 127);
-			ThFlipOldVal = m_button_flip;
+			ThClFlipOldVal = m_button_flip;
 			m_midi_signals.push_back(flipsignal);
 		}
+		break;
 
-		//if (m_button_push_4 && GyroRegler.Changed()) {
-		//	m_midi_signals.push_back(GyroRegler.Signal(m_channel));
-		//}
+
+	case 3: //ClipControl:
+		
+		if (ThClFlexController.Changed()) m_midi_signals.push_back(ThClFlexController.Signal(m_channel));
+		if (ClSnowPadArp.Changed()) m_midi_signals.push_back(ClSnowPadArp.Signal(m_channel));
+		if (ClBassLoopStart.Actuated()) m_midi_signals.push_back(ClBassLoopStart.Signal(m_channel));
+		if (ClSnareSwitch.Switched()) m_midi_signals.push_back(ClSnareSwitch.Signal(m_channel));
+		if (ClKickSwitch.Switched()) m_midi_signals.push_back(ClKickSwitch.Signal(m_channel));
+		if (ClTriSwitch.Switched()) m_midi_signals.push_back(ClTriSwitch.Signal(m_channel));
+		
+		//Flip:
+		if (m_button_flip != ThClFlipOldVal){
+			MidiSignal flipsignal;
+			flipsignal.Status(Midi::Status::ControllerChange);
+			flipsignal.Channel(m_channel);
+			flipsignal.Controller((Midi::Controller) 0x26);
+			flipsignal.ControllerValue(m_button_flip * 127);
+			ThClFlipOldVal = m_button_flip;
+			m_midi_signals.push_back(flipsignal);
+		}
 		break;
 	}
 }
