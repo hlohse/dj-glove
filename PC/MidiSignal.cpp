@@ -35,6 +35,7 @@ MidiSignal::MidiSignal(const Midi::Status status,
     Channel(channel);
     
     switch (status) {
+		case Midi::Status::PitchBend:
         default:
             PitchBend(value);
             break;

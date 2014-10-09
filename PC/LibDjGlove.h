@@ -11,6 +11,7 @@
 #include "DjGlove.h"
 #include "Orientation.h"
 #include "Protocol.h"
+#include "Controller.h"
 #include "ControllerSwitch.h"
 #include "ControllerRange.h"
 

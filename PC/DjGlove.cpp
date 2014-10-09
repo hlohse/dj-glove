@@ -46,25 +46,34 @@ void DjGlove::GenerateMidiSignals()
     static const ControllerSwitch::Mode change = ControllerSwitch::Mode::OnButtonChange;
     static const ControllerSwitch::Mode press  = ControllerSwitch::Mode::OnButtonPress;
 	//Instances:
-	static ControllerSwitch DrumRecActivationSwitch(m_button_push_4, 0x20, change);
-	static ControllerSwitch DrumLoopStartStopSwitch(m_button_touch_2, 0x21, change);
-	static ControllerSwitch ThNoteStartStopSwitch(m_button_push_2, 0x22, press);
-	static ControllerSwitch ThRecActivationSwitch(m_button_touch_3, 0x23, change);
-	static ControllerSwitch ThLoopStartStopSwitch(m_button_push_4, 0x24, change);
-	static ControllerRange  ThFlexController(m_flex, 0x25);
 
-    static int adjusted_distance = 0;
-    static ControllerRange  ThDistanceController(adjusted_distance, 0, {
-        ControllerRange::partition_t(0,     3277,  4682),
-        ControllerRange::partition_t(3278,  6553,  7022),
-        ControllerRange::partition_t(6554,  9830,  8192),
-        ControllerRange::partition_t(9831,  13106, 12871),
-        ControllerRange::partition_t(13107, 16383, 16383)
+	static ControllerSwitch	DrumRecActivationSwitch(m_button_push_4, 0x20, change);
+	static ControllerSwitch	DrumLoopStartStopSwitch(m_button_touch_2, 0x21, change);
+	static ControllerSwitch	DrumOVDSwitch(m_button_touch_0, 0x27, change);
+	static bool&			DrumGyroCalibButton = m_button_touch_1;
+
+	static ControllerSwitch	ThRecActivationSwitch(m_button_push_4, 0x23, change);
+	static ControllerSwitch	ThLoopStartStopSwitch(m_button_touch_2, 0x24, change);
+	static ControllerSwitch	ThNoteOffSwitch(m_button_touch_1, 0x22, change);
+	static int				ThDistanceOldVal = 0;
+	static int				ThAdjustedDistance = 0;
+
+	static bool				ThClFlipOldVal = 0;
+	static ControllerRange  ThClFlexController(m_flex, 0x25);
+	
+	static ControllerSwitch	ClSnareSwitch(m_button_touch_0, 0x27, press);
+	static ControllerSwitch	ClKickSwitch(m_button_touch_1, 0x28, press);
+	static ControllerSwitch	ClTriSwitch(m_button_touch_2, 0x29, press);
+	static ControllerSwitch	ClBassLoopStart(m_button_push_2, 0x2A, press);
+	static ControllerRange  ClSnowPadArp(m_poti_0, 0x25);
+
+	static ControllerRange  ThDistanceController(ThAdjustedDistance, 0, {
+        ControllerRange::partition_t(0,     3277,  57),
+        ControllerRange::partition_t(3278,  6553,  59),
+        ControllerRange::partition_t(6554,  9830,  60),
+        ControllerRange::partition_t(9831,  13106, 64),
+        ControllerRange::partition_t(13107, 16383, 67)
     });
-
-	//static int gyro_x = 0;
-	//static ControllerRange  GyroRegler(gyro_x, 0x26);
-	//gyro_x = m_orientation_x.Degree();
 
 	switch (m_program) {
 	
@@ -80,54 +89,52 @@ void DjGlove::GenerateMidiSignals()
             Register({Midi::Status::NoteOn,  m_channel, hit_note, m_hit_intensity});
             Register({Midi::Status::NoteOff, m_channel, hit_note, m_hit_intensity});
 		}
-		//Gyro-Recalibration:
-		if (m_button_touch_1) m_orientation_y.calibrate();
-
-		//Record-Activation:
-		if (DrumRecActivationSwitch.Changed()){
-			Register(DrumRecActivationSwitch.Signal(m_channel));
-		}
-
-		//Loop Start and Stop:
-		if(DrumLoopStartStopSwitch.Changed()){
-			Register(DrumLoopStartStopSwitch.Signal(m_channel));
-		}
+		
+		if (DrumGyroCalibButton) m_orientation_y.calibrate();
+		if (DrumRecActivationSwitch.Changed()) Register(DrumRecActivationSwitch.Signal(m_channel));
+		if (DrumLoopStartStopSwitch.Changed()) Register(DrumLoopStartStopSwitch.Signal(m_channel));
 		break;
 	
 
 	case 2: //THEREMIN:
-		static bool ThFlipOldVal = 0;
-		//StartNote:
-		if (ThNoteStartStopSwitch.Changed()){
-			Register(ThNoteStartStopSwitch.Signal(m_channel));
-		}
-		//Record-Activation:
-		if (ThRecActivationSwitch.Changed()){
-			Register(ThRecActivationSwitch.Signal(m_channel));
-		}
-
-		//Loop Start and Stop:
-		if (ThLoopStartStopSwitch.Changed()){
-		    Register(ThLoopStartStopSwitch.Signal(m_channel));
-		}
-
-		if (ThFlexController.Changed()) {
-			Register(ThFlexController.Signal(m_channel));
-		}
-
-		adjusted_distance = m_distance * 129;
+	
+		if (ThRecActivationSwitch.Changed()) Register(ThRecActivationSwitch.Signal(m_channel));
+		if (ThLoopStartStopSwitch.Changed()) Register(ThLoopStartStopSwitch.Signal(m_channel));
+		if (ThClFlexController.Changed()) Register(ThClFlexController.Signal(m_channel));
+		
+		//Note over Distance:
+		ThAdjustedDistance = m_distance * 129;
 		if (ThDistanceController.Changed()) {
-            Register({Midi::Status::PitchBend, m_channel, ThDistanceController.PartitionValue()});
+			Register({ Midi::Status::NoteOn,  m_channel, ThDistanceController.PartitionValue(), m_poti_2});
+			Register({ Midi::Status::NoteOff, m_channel, ThDistanceOldVal, 0 });
+			ThDistanceOldVal = ThDistanceController.PartitionValue();
 		}
-
-		if (m_button_flip != ThFlipOldVal){
-            Register({Midi::Status::ControllerChange, m_channel, 0x26, m_button_flip * 127});
-			ThFlipOldVal = m_button_flip;
+		//StopNote:
+		if (ThNoteOffSwitch.Changed()){
+			Register({ Midi::Status::NoteOff, m_channel, ThDistanceController.PartitionValue(), 0 });
 		}
+		//Flip:
+		if (m_button_flip != ThClFlipOldVal){
+			Register({ Midi::Status::ControllerChange, m_channel, 0x26, m_button_flip * 127 });
+			ThClFlipOldVal = m_button_flip;
+		}
+		break;
 
-		//if (m_button_push_4 && GyroRegler.Changed()) {
-		//	m_midi_signals.push_back(GyroRegler.Signal(m_channel));
-		//}
+
+	case 3: //ClipControl:
+		
+		if (ThClFlexController.Changed()) Register(ThClFlexController.Signal(m_channel));
+		if (ClSnowPadArp.Changed()) Register(ClSnowPadArp.Signal(m_channel));
+		if (ClBassLoopStart.Changed()) Register(ClBassLoopStart.Signal(m_channel));
+		if (ClSnareSwitch.Changed()) Register(ClSnareSwitch.Signal(m_channel));
+		if (ClKickSwitch.Changed()) Register(ClKickSwitch.Signal(m_channel));
+		if (ClTriSwitch.Changed()) Register(ClTriSwitch.Signal(m_channel));
+		
+		//Flip:
+		if (m_button_flip != ThClFlipOldVal){
+			Register({ Midi::Status::ControllerChange, m_channel, 0x26, m_button_flip * 127 });
+			ThClFlipOldVal = m_button_flip;
+		}
 		break;
 	}
 }

@@ -16,7 +16,8 @@ public:
 
     // Use partition value for range, current_value otherwise
     void Partition(const partition_t& partition);
-    int PartitionValue() const;
+	int PartitionValue() const;
+	int PartitionValue(const int value) const;
 
     // Inherited from Controller
 	virtual bool Changed();

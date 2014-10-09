@@ -22,7 +22,7 @@ void ControllerRange::Partition(const partition_t& partition)
 
 bool ControllerRange::Changed()
 {
-	if (*m_value != m_current_value) {
+	if (PartitionValue(*m_value) != PartitionValue()) {
 		m_current_value = *m_value;
 		return true;
 	}
@@ -36,15 +36,20 @@ MidiSignal ControllerRange::Signal(const int channel)
 
 int ControllerRange::PartitionValue() const
 {
+	return PartitionValue(m_current_value);
+}
+
+int ControllerRange::PartitionValue(const int value) const
+{
     for (auto it = m_partitions.cbegin(); it != m_partitions.cend(); ++it) {
         const partition_t& partition = *it;
 
-        if (m_current_value >= get<0>(partition)
-        &&  m_current_value <= get<1>(partition)) {
+        if (value >= get<0>(partition)
+        &&  value <= get<1>(partition)) {
             return get<2>(partition);
         }
     }
 
-    return m_current_value;
+    return value;
 }
 
