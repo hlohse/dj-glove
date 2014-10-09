@@ -2,6 +2,7 @@
 #include "MidiSignal.h"
 #include "ControllerSwitch.h"
 #include "ControllerRange.h"
+#include "ControllerGyro.h"
 #include <sstream>
 #include <cassert>
 using namespace std;
@@ -75,8 +76,11 @@ void DjGlove::GenerateMidiSignals()
         ControllerRange::partition_t(13107, 16383, 67)
     });
 
+    static ControllerGyro GyroEffectControl0(m_button_touch_0, m_orientation_x, 0x2C);
+    static ControllerGyro GyroEffectControl1(m_button_touch_1, m_orientation_x, 0x2D);
+    static ControllerGyro GyroEffectControl2(m_button_touch_2, m_orientation_x, 0x2E);
+
 	switch (m_program) {
-	
 
 	case 1: //DRUMS
 		
@@ -136,6 +140,23 @@ void DjGlove::GenerateMidiSignals()
 			ThClFlipOldVal = m_button_flip;
 		}
 		break;
+
+    case 4: // GyroEffectControl 
+        if (GyroEffectControl0.Changed()) {
+            Register(GyroEffectControl0.Signal(m_channel));
+        }
+        if (GyroEffectControl1.Changed()) {
+            Register(GyroEffectControl1.Signal(m_channel));
+        }
+        if (GyroEffectControl2.Changed()) {
+            Register(GyroEffectControl2.Signal(m_channel));
+        }
+		//Flip:
+		if (m_button_flip != ThClFlipOldVal){
+			Register({ Midi::Status::ControllerChange, m_channel, 0x26, m_button_flip * 127 });
+			ThClFlipOldVal = m_button_flip;
+		}
+        break;
 	}
 }
 
