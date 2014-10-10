@@ -12,15 +12,8 @@ SoftwareSerial bluetooth(2, 3);
 #endif
 
 // NOTE: USE THIS VALUES IN PC PROJECT, TOO!
-const int   num_delays_ms     = 5;                                              
-const int   num_message_sizes = 1;     
-
-const int   delays_ms[num_delays_ms]         = {0, 1, 2, 4, 8};         
-const int   message_sizes[num_message_sizes] = {1};
-
-const int   tries_per_message = 1001;
-const char  message_char      = 'M';
-const char  start_signal      = '!';
+const int   iterations = 1001;
+const char  message    = '!';
 
 void setup()  
 {
@@ -31,54 +24,12 @@ void setup()
 #endif
 }
 
-void setMessage(char* message, const int characters)
-{
-  memset(message, message_char, characters);
-  message[characters] = '\0';
-}
-
-void syncStart()
-{
-  while (true) {
-    while (!SERIAL.available());
-    if (SERIAL.read() == start_signal) {
-      return;
-    }
-  }
-}
-
-void sendMessage(char* message)
-{
-  for (int i = 0; i < tries_per_message; ++i) {
-    SERIAL.print(message);
-  }
-}
-
-void sendMessageDelayed(char* message, const int delay_ms)
-{
-  for (int i = 0; i < tries_per_message; ++i) {
-    SERIAL.print(message);
-    delay(delay_ms);
-  }
-}
-
 void loop()
 {
-  for (int d = 0; d < num_delays_ms; ++d) {
-    for (int m = 0; m < num_message_sizes; ++m) {
-      const int delay_ms     = delays_ms[d];
-      const int message_size = message_sizes[m];
-      char message[message_size + 1];
-      setMessage(message, message_size);
-      
-      syncStart();
-      
-      if (delay_ms > 0) {
-        sendMessageDelayed(message, delay_ms);
-      }
-      else {
-        sendMessage(message);
-      }
+  for (int i = 0; i < iterations; ++i) {
+    while (!Serial.available());
+    if (Serial.read() == message) {
+      Serial.write(message);
     }
   }
 }

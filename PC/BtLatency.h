@@ -9,15 +9,8 @@
 
 namespace BtLatency {
 
-const int  num_delays_ms     = 5;
-const int  num_message_sizes = 1;
-
-const int  delays_ms[num_delays_ms]         = {0, 1, 2, 4, 8};
-const int  message_sizes[num_message_sizes] = {1};
-
-const int  tries_per_message = 1001;
-const char message_char      = 'M';
-const char start_signal      = '!';
+const int  iterations = 1001;
+const char message    = '!';
 
 }
 
