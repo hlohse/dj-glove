@@ -62,7 +62,7 @@ void DetermineTimes(Bluetooth& bluetooth, vector<TimeTuple>& times)
 
 void DetermineTimesMs(const vector<TimeTuple>& times, vector<double>& times_ms)
 {
-    for (auto it = times.cbegin() + 1; it != times.cend(); ++it)
+    for (auto it = times.cbegin() + 200; it != times.cend(); ++it)
 	{
 		double total_time_ms;
 
@@ -180,9 +180,6 @@ int main()
     
     result = GetResult(times_ms);
     ShowResult(result, times_ms);
-
-    cout << "Press any key to terminate." << endl;
-	cin.ignore();
 
 	Bluetooth::TearDown();
     return 0;

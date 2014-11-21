@@ -12,7 +12,7 @@ SoftwareSerial bluetooth(2, 3);
 #endif
 
 // NOTE: USE THIS VALUES IN PC PROJECT, TOO!
-const int   iterations = 1001;
+const int   iterations = 1200;
 const char  message    = '!';
 
 void setup()  

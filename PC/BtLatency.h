@@ -9,7 +9,7 @@
 
 namespace BtLatency {
 
-const int  iterations = 1001;
+const int  iterations = 1200;
 const char message    = '!';
 
 }
