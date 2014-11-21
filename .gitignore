@@ -7,6 +7,8 @@ data/*
 build-*
 *.ini
 dj-glove.sln.lnk
+BtLatency
+DjGloveServer
 
 # Sources:
 # - GitHub C++.gitingore
