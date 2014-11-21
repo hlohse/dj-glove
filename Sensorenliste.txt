@@ -1,0 +1,65 @@
+MOUSER:
+
+Flex-Sensor: 5,60€
+http://de.mouser.com/ProductDetail/Spectra-Symbol/FS-L-0055-253-ST/?qs=sGAEpiMZZMvWgbUE6GM3Ofju%2flHH8Zrp7aU5zcdDGyA1YG46VU0Tmw%3d%3d
+
+oder doch der lange?:
+
+
+3x Beschleunigungssensor (3-Axis): 1,34€
+http://de.mouser.com/ProductDetail/Freescale-Semiconductor/MMA8451QR1/?qs=sGAEpiMZZMvwE4h8i4g3cgOIRT3qYnDDG%2fhOLKv6PRo%3d
+
+Entfernungsmesser(1 - 200mm): 2,42€
+http://de.mouser.com/ProductDetail/Vishay-Semiconductors/VCNL3020-GS08/?qs=sGAEpiMZZMs3uAJYYmvlKyQHp3hxW1VMRlyMp%2f%2fnREE%3d
+
+6x empfindliche Minidruckknöpfe (zwischen die Finger): 0,80€
+http://de.mouser.com/ProductDetail/Panasonic/EVP-AWBA2A/?qs=sGAEpiMZZMsgGjVA3toVBGTSKfeK9LPKxL05x3Q68mA%3d
+
+4x Potentiometer 0,60€:
+http://de.mouser.com/ProductDetail/Bourns/PTV09A-4015F-B503/?qs=sGAEpiMZZMtC25l1F4XBU4LIzrlRxKBZi5l7wwo1KCE%3d
+
+7-segment-anzeige 8 (2 digits):
+http://de.mouser.com/ProductDetail/Kingbright/ACDA02-41SGWA-F01/?qs=sGAEpiMZZMvkC18yXH9iIgUw74MlgdmVx7VNV9SI%2fM4%3d
+
+7-segment-treiber + SR:
+http://de.mouser.com/ProductDetail/STMicroelectronics/STP16CP05MTR/?qs=sGAEpiMZZMsPdFgpQMKDR4yV%2fa8Z6LRlJDHXpowkhZY%3d
+
+4x Drehknöpfe: 0,634€
+http://de.mouser.com/ProductDetail/Eagle-Plastic-Devices/450-4760/?qs=sGAEpiMZZMuiwDVLTMm01RsmVxKSFf9sVY5f75lTHPI%3d
+eventuell auch andre mit eingebauter Druckknopffunktion oder Stufendrehschalter für Pgrogramm-/Kanal-Wahl
+
+10x Druckknöpfe:
+http://de.mouser.com/ProductDetail/Schurter/13019314/?qs=%2fha2pyFaduhX5GHBoqOnm9hop7%252bESl%2f2gjqOYDd4YXg%3d
+
+2x Spannungsregler:
+http://de.mouser.com/ProductDetail/Texas-Instruments/UA78M33CDCYR/?qs=sGAEpiMZZMuLLNXTG1MZam3vXed%2foa059ZU9ZXxfuOs%3d
+
+Schmitt-Trigger:
+http://de.mouser.com/ProductDetail/STMicroelectronics/M74HC14YRM13TR/?qs=sGAEpiMZZMv4BkFy%252bbL2aAcTzfc45ooRsIhQrJVYXpY%3d
+
+Kondensator: Elektrolyt 22uF
+http://de.mouser.com/ProductDetail/Nichicon/UWX0J220MCL2GB/?qs=sGAEpiMZZMtZ1n0r9vR22RxmuzErLMSV6cxZgqZwSVw%3d
+
+Kondensator: Elektrolyt 10uF
+http://www.mouser.de/ProductDetail/Cornell-Dubilier/AVE106M16A12T-F/?qs=sGAEpiMZZMtZ1n0r9vR22ZHbAXPxCSuogQk5vag16io%3d
+
+
+
+FARNELL:
+
+Gyroskop: 8,88€
+http://de.farnell.com/stmicroelectronics/l3g4200d/gyro-mems-3achsen-16llga-16lga/dp/1872924
+
+1,0V-Spannungswandler: 1,10€
+http://de.farnell.com/stmicroelectronics/ld39015m10r/v-reg-1-5-5-5v-0-15a-1v-5sot23/dp/2311330
+
+KeKo 10nF: 
+http://de.farnell.com/avx/08051c103jat2a/keramikkondensator-0-01uf-100v/dp/2332713
+
+Keko 470nF:
+http://de.farnell.com/jsp/search/productdetail.jsp?sku=1867963
+
+CONRAD:
+2x SChiebeschalter (on/off - bypass)
+LiPo (3,7V, 2000mAh mindestens): 10,81€
+
