@@ -40,40 +40,40 @@ void DetermineTimes(Bluetooth& bluetooth, vector<TimeTuple>& times)
     times.reserve(iterations);
     
     for (int i = 0; i < iterations; ++i)
-	{
+    {
 #ifdef __linux__
         gettimeofday(&start, NULL);
 #elif _WIN32
-		GetSystemTime(&start);
+        GetSystemTime(&start);
 #endif
 
         bluetooth.Write(message);
         bluetooth.WaitUntilAvailable(i + 1);
 
 #ifdef __linux__
-		gettimeofday(&stop, NULL);
+        gettimeofday(&stop, NULL);
 #elif _WIN32
-		GetSystemTime(&stop);
+        GetSystemTime(&stop);
 #endif
 
-		times.push_back(TimeTuple(start, stop));
+        times.push_back(TimeTuple(start, stop));
     }
 }
 
 void DetermineTimesMs(const vector<TimeTuple>& times, vector<double>& times_ms)
 {
     for (auto it = times.cbegin() + 200; it != times.cend(); ++it)
-	{
-		double total_time_ms;
+    {
+        double total_time_ms;
 
 #ifdef __linux__
         double start_time_us = it->first.tv_sec  * 1e6 + it->first.tv_usec;
         double stop_time_us  = it->second.tv_sec * 1e6 + it->second.tv_usec;
         total_time_ms = (stop_time_us - start_time_us) / 1e3;
 #elif _WIN32
-		double start_time_ms = it->first.wSecond  * 1e3 + it->first.wMilliseconds;
-		double stop_time_ms  = it->second.wSecond * 1e3 + it->second.wMilliseconds;
-		total_time_ms = stop_time_ms - start_time_ms;
+        double start_time_ms = it->first.wSecond  * 1e3 + it->first.wMilliseconds;
+        double stop_time_ms  = it->second.wSecond * 1e3 + it->second.wMilliseconds;
+        total_time_ms = stop_time_ms - start_time_ms;
 #endif
        
         times_ms.push_back(total_time_ms);
@@ -181,7 +181,7 @@ int main()
     result = GetResult(times_ms);
     ShowResult(result, times_ms);
 
-	Bluetooth::TearDown();
+    Bluetooth::TearDown();
     return 0;
 }
 

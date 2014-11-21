@@ -12,9 +12,9 @@ MidiSignal::MidiSignal(const Midi::Status status,
                        const int value_1,
                        const int value_2)
 {
-	Status(status);
+    Status(status);
     Channel(channel);
-	
+    
     switch (status) {
         case Midi::Status::ControllerChange:
             Controller((Midi::Controller) value_1);
@@ -35,7 +35,7 @@ MidiSignal::MidiSignal(const Midi::Status status,
     Channel(channel);
     
     switch (status) {
-		case Midi::Status::PitchBend:
+        case Midi::Status::PitchBend:
         default:
             PitchBend(value);
             break;
@@ -73,8 +73,8 @@ void MidiSignal::Status(const Midi::Status status)
 
 Midi::Status MidiSignal::Status() const
 {
-	Midi::Status status;
-	Midi::byte_t channel;
+    Midi::Status status;
+    Midi::byte_t channel;
     Midi::SplitStatusChannel(m_data[0], status, channel);
     return status;
 }
@@ -86,8 +86,8 @@ void MidiSignal::Channel(const int channel)
 
 int MidiSignal::Channel() const
 {
-	Midi::Status status;
-	Midi::byte_t channel;
+    Midi::Status status;
+    Midi::byte_t channel;
     Midi::SplitStatusChannel(m_data[0], status, channel);
     return (int) channel;
 }

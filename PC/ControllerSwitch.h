@@ -10,24 +10,24 @@ public:
         OnButtonPress   // Pressed changes high to low or low to high
     };
 
-	ControllerSwitch(
-		bool&      button,
-		const int  controller_number,
+    ControllerSwitch(
+        bool&      button,
+        const int  controller_number,
         const Mode mode,
-		const int  low_value = 0,
-		const int  high_value = 127);
+        const int  low_value = 0,
+        const int  high_value = 127);
 
     // Inherited from Controller
-	virtual bool Changed();
-	virtual MidiSignal Signal(const int channel);
+    virtual bool Changed();
+    virtual MidiSignal Signal(const int channel);
 
 protected:
-	bool* m_button;
-	bool  m_old_state;
-	bool  m_is_activated;
+    bool* m_button;
+    bool  m_old_state;
+    bool  m_is_activated;
     bool* m_high_value_reference;
-	Midi::byte_t m_low_value;
-	Midi::byte_t m_high_value;
+    Midi::byte_t m_low_value;
+    Midi::byte_t m_high_value;
     bool (ControllerSwitch::*m_changed_strategy)();
 
     bool ButtonChanged();

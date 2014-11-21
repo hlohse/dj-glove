@@ -10,22 +10,22 @@ public:
     // min (inclusive), max (inclusive), value
     using partition_t = std::tuple<int, int, int>;
 
-	ControllerRange(int& value, const int controller_number);
-	ControllerRange(int& value, const int controller_number,
+    ControllerRange(int& value, const int controller_number);
+    ControllerRange(int& value, const int controller_number,
                     const std::vector<partition_t>& partitions);
 
     // Use partition value for range, current_value otherwise
     void Partition(const partition_t& partition);
-	int PartitionValue() const;
-	int PartitionValue(const int value) const;
+    int PartitionValue() const;
+    int PartitionValue(const int value) const;
 
     // Inherited from Controller
-	virtual bool Changed();
-	virtual MidiSignal Signal(const int channel);
+    virtual bool Changed();
+    virtual MidiSignal Signal(const int channel);
 
 private:
-	int* m_value;
-	int  m_current_value;
+    int* m_value;
+    int  m_current_value;
     std::vector<partition_t> m_partitions;
 };
 

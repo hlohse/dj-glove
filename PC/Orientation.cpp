@@ -18,9 +18,9 @@ long long Orientation::frequency;
 void Orientation::InitFrequency()
 {
 #ifdef _WIN32
-	LARGE_INTEGER frequency;
-	QueryPerformanceFrequency(&frequency);
-	Orientation::frequency = frequency.QuadPart;
+    LARGE_INTEGER frequency;
+    QueryPerformanceFrequency(&frequency);
+    Orientation::frequency = frequency.QuadPart;
 #endif
 }
 
@@ -54,14 +54,14 @@ void Orientation::SetVelocityHigh(const char signed_abs)
     m_new_velocity.second *= signed_abs & 0x40 ? -1 : 1;
 
 #ifdef __linux__
-	struct timeval timestamp;
+    struct timeval timestamp;
     gettimeofday(&timestamp, NULL);
     m_new_velocity.first = timestamp.tv_sec * 1e3
                          + ((double) timestamp.tv_usec) / 1e3;
 #elif _WIN32
-	LARGE_INTEGER count;
-	QueryPerformanceCounter(&count);
-	m_new_velocity.first = ((double)count.QuadPart) / ((double)Orientation::frequency) * 1e3;
+    LARGE_INTEGER count;
+    QueryPerformanceCounter(&count);
+    m_new_velocity.first = ((double)count.QuadPart) / ((double)Orientation::frequency) * 1e3;
 #endif
 
     if (m_previous_velocity.first != 0) {
@@ -71,6 +71,6 @@ void Orientation::SetVelocityHigh(const char signed_abs)
 }
 
 void Orientation::calibrate(){
-	m_value = 0;
+    m_value = 0;
 }
 

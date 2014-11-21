@@ -42,7 +42,7 @@ bool Protocol::IsHit(const char data) const
 void Protocol::ApplyHit(const char data)
 {
     assert(IsHit(data));
-	m_dj_glove.m_hit_intensity = data & 0x7E; // 0111 1110
+    m_dj_glove.m_hit_intensity = data & 0x7E; // 0111 1110
 }
 
 void Protocol::ApplyData(const char data)
@@ -81,7 +81,7 @@ void Protocol::ApplyData(const char data)
         default: assert(false); break;
     }
 
-	m_dj_glove.m_hit_intensity = 0;
+    m_dj_glove.m_hit_intensity = 0;
 }
 
 void Protocol::ApplyBit(bool& output,

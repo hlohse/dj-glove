@@ -35,12 +35,12 @@
 
 class EXPORT BluetoothDevice {
 public:
-	static std::shared_ptr<BluetoothDevice> Arduino();
+    static std::shared_ptr<BluetoothDevice> Arduino();
 
 #ifdef __linux__
-	using SocketAddress = struct sockaddr_rc;
+    using SocketAddress = struct sockaddr_rc;
 #elif _WIN32
-	using SocketAddress = SOCKADDR_BTH;
+    using SocketAddress = SOCKADDR_BTH;
 #endif
 
     BluetoothDevice(const std::string& name,
@@ -49,22 +49,22 @@ public:
     ~BluetoothDevice();
 
     bool IsValid() const;
-	std::string ToString() const;
+    std::string ToString() const;
 
-	SocketAddress GetSocketAddress() const;
+    SocketAddress GetSocketAddress() const;
 
 private:
-	static const BluetoothDevice ArduinoDevice;
+    static const BluetoothDevice ArduinoDevice;
 
     std::string m_name;
     std::string m_address;
     int m_channel;
-	bool m_is_valid;
-	SocketAddress m_socket_address;
+    bool m_is_valid;
+    SocketAddress m_socket_address;
 
 #ifdef _WIN32
-	int StringToAddress(IN const std::string& m_addressstring,
-						OUT BTH_ADDR& address);
+    int StringToAddress(IN const std::string& m_addressstring,
+                        OUT BTH_ADDR& address);
 #endif
 };
 

@@ -9,8 +9,8 @@ public:
     static const double offset_x;
     static const double offset_y;
 
-	static long long frequency;
-	static void InitFrequency();
+    static long long frequency;
+    static void InitFrequency();
     
     Orientation(const double offset);
 
@@ -19,7 +19,7 @@ public:
     void SetVelocityLow(const char abs);
     void SetVelocityHigh(const char signed_abs);
 
-	void calibrate();
+    void calibrate();
 
 private:
     static const double value_per_90_degrees;

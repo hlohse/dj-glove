@@ -18,29 +18,29 @@ public:
 #elif _WIN32
     using port_t = LPVM_MIDI_PORT;
 #endif
-	
+    
     MidiPort();
-	~MidiPort();
+    ~MidiPort();
 
-	void Open(const std::string& name);
-	void Close();
-	bool IsOpen() const;
+    void Open(const std::string& name);
+    void Close();
+    bool IsOpen() const;
 
-	void Play(MidiSignal& midi_signal);
+    void Play(MidiSignal& midi_signal);
 
     std::string Name() const;
 
 private:
-	std::string m_name;
-	port_t      m_port;
+    std::string m_name;
+    port_t      m_port;
 
 #ifdef _WIN32
-	static const int buffer_size = 0x1FFFE;
+    static const int buffer_size = 0x1FFFE;
 
-	static void CALLBACK Callback(LPVM_MIDI_PORT midiPort,
-								  LPBYTE midiDataBytes,
-								  DWORD length,
-								  DWORD_PTR dwCallbackInstance);
+    static void CALLBACK Callback(LPVM_MIDI_PORT midiPort,
+                                  LPBYTE midiDataBytes,
+                                  DWORD length,
+                                  DWORD_PTR dwCallbackInstance);
 #endif
 };
 
