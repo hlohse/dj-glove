@@ -1,7 +1,3 @@
-================
-Prerequisites
-================
-
 Windows
 ------------
 
@@ -38,4 +34,19 @@ Pair your PC with the Arduino's Bluetooth module using the PIN 1234.
 
 Adjust default Bluetooth address to your module's in PC/BluetoothDevice.cpp, BluetoothDevice::Arduino.
 
+=========
+  Misc
+=========
 
+Advanced project of Robotics Lab ST14, University of Heidelberg, Germany.
+Authors: Jan-Lukas Tirpitz, Henning Lohse
+Supervisors: Karsten Krispin, Thomas Kloepfer
+
+Demo:
+https://www.youtube.com/watch?v=biKKQlQEOuE
+
+Project website (German): 
+http://ornella.iwr.uni-heidelberg.de/ROBOTICSLAB/ROBPROJECTS/COMPLETED/2014SS_DJHANDSCHUH/index.html
+
+Robotics Lab website:
+http://joanna.iwr.uni-heidelberg.de/rlab/en/about
