@@ -1,10 +1,8 @@
-TEST
-
 ================
-X. Prerequisites
+Prerequisites
 ================
 
-X.X. Windows
+Windows
 ------------
 
 Make sure the following software is installed:
@@ -22,7 +20,7 @@ To make use of virtual MIDI ports, use the following 3rd party software:
         teVirtualMidi32.lib
 
 
-X.X. Linux (Ubuntu 14.04)
+Linux (Ubuntu 14.04)
 -------------------------
 
 Make sure the following packages are installed:
@@ -33,11 +31,11 @@ Make sure the following packages are installed:
     libbluetooth-dev
 
 
-X.X. All Platforms
+All Platforms
 ------------------
 
 Pair your PC with the Arduino's Bluetooth module using the PIN 1234.
 
-Copy all directories inside Arduino/libraries to your Arduino installation's
-libraries directory.
+Adjust default Bluetooth address to your module's in PC/BluetoothDevice.cpp, BluetoothDevice::Arduino.
+
 
