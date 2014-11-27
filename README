@@ -1,5 +1,6 @@
-Windows
-------------
+# Compilation
+
+## Windows
 
 Make sure the following software is installed:
 
@@ -16,8 +17,7 @@ To make use of virtual MIDI ports, use the following 3rd party software:
         teVirtualMidi32.lib
 
 
-Linux (Ubuntu 14.04)
--------------------------
+## Linux (Ubuntu 14.04)
 
 Make sure the following packages are installed:
 
@@ -27,26 +27,23 @@ Make sure the following packages are installed:
     libbluetooth-dev
 
 
-All Platforms
-------------------
+## All Platforms
 
 Pair your PC with the Arduino's Bluetooth module using the PIN 1234.
 
 Adjust default Bluetooth address to your module's in PC/BluetoothDevice.cpp, BluetoothDevice::Arduino.
 
-=========
-  Misc
-=========
+# About
 
 Advanced project of Robotics Lab ST14, University of Heidelberg, Germany.
 Authors: Jan-Lukas Tirpitz, Henning Lohse
 Supervisors: Karsten Krispin, Thomas Kloepfer
 
-Demo:
-https://www.youtube.com/watch?v=biKKQlQEOuE
+[Demo Video](https://www.youtube.com/watch?v=biKKQlQEOuE)
+[Project website (German)](http://ornella.iwr.uni-heidelberg.de/ROBOTICSLAB/ROBPROJECTS/COMPLETED/2014SS_DJHANDSCHUH/index.html)
+[Robotics Lab website](http://joanna.iwr.uni-heidelberg.de/rlab/en/about)
 
-Project website (German): 
-http://ornella.iwr.uni-heidelberg.de/ROBOTICSLAB/ROBPROJECTS/COMPLETED/2014SS_DJHANDSCHUH/index.html
+# Copyright
 
-Robotics Lab website:
-http://joanna.iwr.uni-heidelberg.de/rlab/en/about
+Copyright (c) 2014 Jan-Lukas Tirpitz, Henning Lohse
+
