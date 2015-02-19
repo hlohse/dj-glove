@@ -43,7 +43,7 @@ Supervisors: Karsten Krispin, Thomas Kloepfer
 
 [Demo Video](https://www.youtube.com/watch?v=biKKQlQEOuE)
 
-[Project website (German)](http://ornella.iwr.uni-heidelberg.de/ROBOTICSLAB/ROBPROJECTS/COMPLETED/2014SS_DJHANDSCHUH/index.html)
+[Project website (German)](http://joanna.iwr.uni-heidelberg.de/projects/2014SS_DJHANDSCHUH/hardware.html)
 
 [Robotics Lab website](http://joanna.iwr.uni-heidelberg.de/rlab/en/about)
 
